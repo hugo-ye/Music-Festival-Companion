@@ -49,12 +49,6 @@ public class SearchResultView extends JPanel{
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.setPreferredSize(new Dimension(100, 100));
 
-        // sort the event by clicking the button
-        sortButton.addActionListener(e -> {
-            String selected = (String) sortingOptions.getSelectedItem();
-            sorting(selected);
-        });
-
         // adding the panels to the main panels
         add(sortingPanel);
         add(scrollPane);
@@ -89,39 +83,6 @@ public class SearchResultView extends JPanel{
             }
         resultPanel.revalidate();
         resultPanel.repaint();
-    }
-
-    /**
-     * picks what "sorting" to use (e.g. sort by name or sort by artists)
-     * @param sorting is an Object.
-     */
-    private void sorting(Object sorting){
-        switch(sorting.toString()){
-            case "Sort by Name":
-                sortByName();
-                break;
-            case "Sort by Artist":
-                sortByArtist();
-                break;
-        }
-    }
-
-    /**
-     * sorts the name of events alphabetically and displays the results by calling the displayEvent method
-     *
-     */
-    private void sortByName(){
-        results.sort(Comparator.comparing(Event::getName, String.CASE_INSENSITIVE_ORDER));
-        displayEvent(results);
-    }
-
-    /**
-     * this is a bit different from sortByName() because it concatenates the strings in the list and then sorts them.
-     * sorts the Artists name alphabetically and displays the results by calling the displayEvent method
-     */
-    private void sortByArtist(){
-        results.sort(Comparator.comparing(event -> String.join(", ", event.getArtists()), String.CASE_INSENSITIVE_ORDER));
-        displayEvent(results);
     }
 
     public static void main(String[] args) {
