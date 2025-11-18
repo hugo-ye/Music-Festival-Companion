@@ -78,7 +78,6 @@ public class SearchEventController {
         String startDateTime = formatDateTime(rawStartDate, true);
         String endDateTime = formatDateTime(rawEndDate, false);
         String genreIds = formatGenre(genre);
-
         // Create the input data
         final SearchEventInputData searchEventInputData = new SearchEventInputData(keyword, country, city, genreIds, startDateTime, endDateTime);
 
@@ -97,7 +96,7 @@ public class SearchEventController {
     private String formatDateTime(String rawDate, boolean isStart) {
         // Return null if its empty
         if (rawDate == null || rawDate.trim().isEmpty()) {
-            return null;
+            return "";
         }
 
         try {
