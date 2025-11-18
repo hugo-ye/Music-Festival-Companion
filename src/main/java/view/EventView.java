@@ -51,6 +51,8 @@ public class EventView extends JDialog {
         detailsPanel.add(genresLabel);
         detailsPanel.add(priceRangeLabel);
         detailsPanel.add(ticketPriceRangeLabel);
+        detailsPanel.add(buyButton);
+        detailsPanel.add(attendButton);
         add(detailsPanel, BorderLayout.CENTER);
 
         JPanel buttonPanel = new JPanel();
