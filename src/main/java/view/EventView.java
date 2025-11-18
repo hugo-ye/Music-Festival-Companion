@@ -127,7 +127,8 @@ public class EventView extends JDialog {
         view.setPriceRange(150, 900);
 
         ImageIcon sampleIcon = new ImageIcon(
-                "sample.png" // sample.png does not exist on our repo. this will break. test with your own URL
+                "C:\\Users\\amirb\\Documents\\VScode\\Java\\final\\example_image.png"
+                // sample.png does not exist on our repo. this will break. test with your own URL
         );
         view.setImageIcon(sampleIcon);
 
