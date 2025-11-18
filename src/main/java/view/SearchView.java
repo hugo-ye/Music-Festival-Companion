@@ -1,12 +1,27 @@
 package view;
 
 import javax.swing.*;
+
+import data_access.DBDataAccessObject;
+import interface_adapter.ViewManagerModel;
+import interface_adapter.search_event.SearchEventController;
+import interface_adapter.search_event.SearchEventPresenter;
+import interface_adapter.search_event.SearchEventState;
+import interface_adapter.search_event.SearchEventViewModel;
+import interface_adapter.search_event_result.SearchEventResultState;
 import org.jdatepicker.impl.*;
+import use_case.search_event.SearchEventDataAccessInterface;
+import use_case.search_event.SearchEventInteractor;
+
+import java.util.List;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.beans.PropertyChangeListener;
 import java.util.Properties;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /*
     I have not added or made any actionListener currently, 11/12
@@ -20,36 +35,52 @@ import java.util.Date;
     above information should be replaced later
 */
 
-public class SearchView extends JPanel{
+public class SearchView extends JPanel {
     // default information
-    String[] countries = {"Canada", "USA"};
-    String[] cities = {"Toronto", "London"};
-    String[] genre = {"Pop", "Rock", "Hip-pop"};
+    String[] genre = {
+            "alternative"
+            ,"ballads/romantic"
+            ,"blues"
+            ,"chanson francaise"
+            ,"children's music"
+            ,"classical"
+            ,"country"
+            ,"dance/electronic"
+            ,"folk"
+            ,"hip-hop/rap"
+            ,"holiday"
+            ,"jazz"
+            ,"medieval/renaissance"
+            ,"metal"
+            ,"new age"
+            ,"other"
+            ,"pop"
+            ,"r&b"
+            ,"reggae"
+            ,"religious"};
 
     // view name
-    private final String viewName = "Search Panel";
+    private final String viewName = "search event";
+    private final SearchEventViewModel searchViewModel;
+    private final SearchEventController controller;
+    private final ViewManagerModel viewManagerModel;
 
     // search field panel
-    private final JTextField searchField = new JTextField("your event name");
+    private final JTextField searchField = new JTextField("Enter event keyword");
 
-    // JComboBox panel
-    private final JComboBox countryComboBox = new JComboBox(countries);
-    private final JComboBox cityComboBox = new JComboBox(cities);
+    // JTextBox location panel
+    private final JLabel countriesLabel = new JLabel("Countries");
+    private final JTextField countriesField = new JTextField();
+    private final JLabel cityLabel = new JLabel("Town");
+    private final JTextField cityField = new JTextField();
 
     // artist name panel
     private final JLabel artistLabel = new JLabel("Artist");
     private final JTextField artistField = new JTextField();
 
-//    // price panel
-//    private final JLabel priceLabel = new JLabel("Price");
-//    private final JLabel priceMinLabel = new JLabel("Min:");
-//    private final JTextField priceMinField = new JTextField();
-//    private final JLabel priceMaxLabel = new JLabel("Max:");
-//    private final JTextField priceMaxField = new JTextField();
-
     //genre panel
     private final JLabel genreLabel = new JLabel("Genre");
-    private final JComboBox genreField = new JComboBox(genre);
+    private final JList genreField = new JList(genre);
 
     // data picker panel
     private final JLabel dateLabel = new JLabel("Date");
@@ -63,7 +94,11 @@ public class SearchView extends JPanel{
     // system information field
     private final JLabel systemInfoLabel = new JLabel();
 
-    public SearchView() {
+    public SearchView(SearchEventViewModel searchViewModel, SearchEventController controller, ViewManagerModel viewManagerModel) {
+        this.searchViewModel = searchViewModel;
+        this.controller = controller;
+        this.viewManagerModel = viewManagerModel;
+
         JFrame frame = new JFrame(viewName);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(400, 400);
@@ -96,8 +131,10 @@ public class SearchView extends JPanel{
         // panel
         JPanel comboBoxPanel = new JPanel();
         comboBoxPanel.setLayout(new BoxLayout(comboBoxPanel, BoxLayout.X_AXIS));
-        comboBoxPanel.add(countryComboBox);
-        comboBoxPanel.add(cityComboBox);
+        comboBoxPanel.add(countriesLabel);
+        comboBoxPanel.add(countriesField);
+        comboBoxPanel.add(cityLabel);
+        comboBoxPanel.add(cityField);
         frame.add(comboBoxPanel, gbc);
 
         // row 3
@@ -111,14 +148,6 @@ public class SearchView extends JPanel{
         artistNamePanel.add(artistField);
         frame.add(artistNamePanel, gbc);
 
-//        JPanel pricePanel = new JPanel();
-//        pricePanel.setLayout(new BoxLayout(pricePanel, BoxLayout.X_AXIS));
-//        pricePanel.add(priceLabel);
-//        pricePanel.add(priceMinLabel);
-//        pricePanel.add(priceMinField);
-//        pricePanel.add(priceMaxLabel);
-//        pricePanel.add(priceMaxField);
-
         // row 4
         gbc.gridx = 0; gbc.gridy = 3;
         gbc.anchor = GridBagConstraints.EAST;
@@ -127,8 +156,11 @@ public class SearchView extends JPanel{
         gbc.gridwidth = 1;
         JPanel genrePanel = new JPanel();
         genrePanel.setLayout(new BoxLayout(genrePanel, BoxLayout.X_AXIS));
+        JScrollPane genreScroll = new JScrollPane(genreField);
+        genreField.setVisibleRowCount(5);
+        genreField.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         genrePanel.add(genreLabel);
-        genrePanel.add(genreField);
+        genrePanel.add(genreScroll);
         frame.add(genrePanel, gbc);
 
         // row 5
@@ -162,17 +194,133 @@ public class SearchView extends JPanel{
         systemInfoPanel.setLayout(new BoxLayout(systemInfoPanel, BoxLayout.X_AXIS));
         systemInfoPanel.add(systemInfoLabel);
         frame.add(systemInfoPanel, gbc);
+        frame.pack();
 
-//        mainPanel.add(searchPanel);
-//        mainPanel.add(comboBoxPanel);
-//        mainPanel.add(artistNamePanel);
-////        mainPanel.add(pricePanel);
-//        mainPanel.add(genrePanel);
-//        mainPanel.add(datePickerPanel);
-//        mainPanel.add(findPanel);
-//        mainPanel.add(systemInfoPanel);
-//
-//        frame.add(mainPanel);
+        findButton.addActionListener(
+                new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        if (e.getSource().equals(findButton)) {
+                            SearchEventState currentState = searchViewModel.getState();
+                            controller.execute(
+                                    currentState.getSearch_keyword(),
+                                    currentState.getArtist(),
+                                    currentState.getCountry(),
+                                    currentState.getCity(),
+                                    currentState.getStartDate(),
+                                    currentState.getEndDate(),
+                                    currentState.getGenre()
+                            );
+                        }
+                    }
+                }
+        );
+
+        searchField.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                 SearchEventState currentState = searchViewModel.getState();
+                 currentState.setSearch_keyword(searchField.getText() + e.getKeyChar());
+                 searchViewModel.setState(currentState);
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+
+            }
+        });
+
+        countriesField.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                SearchEventState currentState = searchViewModel.getState();
+                currentState.setCountry(countriesField.getText() + e.getKeyChar());
+                searchViewModel.setState(currentState);
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+
+            }
+        });
+
+
+        cityField.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                SearchEventState currentState = searchViewModel.getState();
+                currentState.setCity(cityField.getText() + e.getKeyChar());
+                searchViewModel.setState(currentState);
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+
+            }
+        });
+
+
+        artistField.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                SearchEventState currentState = searchViewModel.getState();
+                currentState.setArtist(artistField.getText() + e.getKeyChar());
+                searchViewModel.setState(currentState);
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+
+            }
+        });
+
+
+        genreField.addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                List<String> selectedGenres = genreField.getSelectedValuesList();
+                SearchEventState currentState = searchViewModel.getState();
+                currentState.setGenre(selectedGenres);
+                searchViewModel.setState(currentState);
+            }
+        });
+
+
+        startDatePicker.addActionListener(e -> {
+            SearchEventState currentState = searchViewModel.getState();
+            currentState.setStartDate(startDatePicker.getJFormattedTextField().getText());
+            System.out.println("in view the start date is: " +  currentState.getStartDate());
+            searchViewModel.setState(currentState);
+        });
+
+        endDataPicker.addActionListener(e -> {
+            SearchEventState currentState = searchViewModel.getState();
+            currentState.setEndDate(endDataPicker.getJFormattedTextField().getText());
+            System.out.println("in view, end date is: " + currentState.getEndDate());
+            searchViewModel.setState(currentState);
+        });
+
+
+
         frame.setVisible(true);
     }
 
@@ -207,6 +355,13 @@ public class SearchView extends JPanel{
     }
 
     public static void main(String[] args){
-        SearchView view = new SearchView();
+        SearchEventViewModel searchViewModel = new SearchEventViewModel();
+        SearchEventDataAccessInterface dao = new DBDataAccessObject();
+        ViewManagerModel viewManager = new ViewManagerModel();
+        SearchEventResultState resutState = new SearchEventResultState();
+        SearchEventPresenter presenter = new SearchEventPresenter(searchViewModel, viewManager, resutState);
+        SearchEventInteractor interactor = new SearchEventInteractor(dao, presenter);
+        SearchEventController controller = new SearchEventController(interactor);
+        SearchView searchView = new SearchView(searchViewModel, controller, viewManager);
     }
 }
