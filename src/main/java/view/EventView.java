@@ -1,10 +1,22 @@
 package view;
 
+import interface_adapter.ViewManagerModel;
+import interface_adapter.attend_event.AttendEventController;
+import interface_adapter.attend_event.AttendEventViewModel;
+import interface_adapter.display_event.DisplayEventController;
+import interface_adapter.display_event.DisplayEventState;
+import interface_adapter.display_event.DisplayEventViewModel;
+import interface_adapter.save_event_to_list.SaveEventToListController;
+import interface_adapter.save_event_to_list.SaveEventToListViewModel;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.beans.PropertyChangeListener;
 import java.util.List;
 
-public class EventView extends JDialog {
+public class EventView extends JDialog{
 
     // image
     private final JLabel imageLabel = new JLabel();
@@ -27,9 +39,30 @@ public class EventView extends JDialog {
     // Url
     private String ticketUrl;
 
+    //interface
+    private final DisplayEventViewModel displayEventViewModel;
+    private final AttendEventController attendEventController;
+    private final AttendEventViewModel attendEventViewModel;
+    private final SaveEventToListController saveEventToListController;
+    private final SaveEventToListViewModel saveEventToListViewModel;
 
-    public EventView(JFrame parent) {
+
+
+    public EventView(JFrame parent,
+                     DisplayEventViewModel displayEventViewModel,
+                     AttendEventController attendEventController,
+                     AttendEventViewModel attendEventViewModel,
+                     SaveEventToListController saveEventToListController,
+                     SaveEventToListViewModel saveEventToListViewModel) {
+
         super(parent, "Event Details", true);
+
+        this.displayEventViewModel = displayEventViewModel;
+        this.attendEventController = attendEventController;
+        this.attendEventViewModel = attendEventViewModel;
+        this.saveEventToListController = saveEventToListController;
+        this.saveEventToListViewModel = saveEventToListViewModel;
+
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setPreferredSize(new Dimension(500, 400));
@@ -51,6 +84,8 @@ public class EventView extends JDialog {
         detailsPanel.add(genresLabel);
         detailsPanel.add(priceRangeLabel);
         detailsPanel.add(ticketPriceRangeLabel);
+        detailsPanel.add(buyButton);
+        detailsPanel.add(attendButton);
         add(detailsPanel, BorderLayout.CENTER);
 
         JPanel buttonPanel = new JPanel();
@@ -68,6 +103,11 @@ public class EventView extends JDialog {
                 }
             }
         });
+
+        attendButton.addActionListener(e -> {attendEventController.execute();});
+
+        saveButton.addActionListener(
+                e -> {saveEventToListController.execute();});
 
         add(buttonPanel, BorderLayout.SOUTH);
 
@@ -135,7 +175,7 @@ public class EventView extends JDialog {
         view.setPriceRange(150, 900);
 
         ImageIcon sampleIcon = new ImageIcon(
-                "/Users/hugoye/IdeaProjects/team-project/example_image.png" // sample.png does not exist on our repo. this will break. test with your own URL
+                "/Users/abudi/IdeaProjects/team-project2/src/main/java/download.jpeg" // sample.png does not exist on our repo. this will break. test with your own URL
         );
         view.setImageIcon(sampleIcon);
 
