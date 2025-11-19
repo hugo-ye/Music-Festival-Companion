@@ -8,4 +8,4 @@ public interface CreateEventListDataAccessInterface {
     void save(EventList eventList);
 }
 
-//existByName and save is done in data access layer for In Memory (Why In Memory?)
+//existByName and save is done in data access layer for In Memory
