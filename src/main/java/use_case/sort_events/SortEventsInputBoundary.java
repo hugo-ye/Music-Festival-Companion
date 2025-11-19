@@ -1,4 +1,5 @@
 package use_case.sort_events;
 
-public class SortEventsInputBoundary {
+public interface SortEventsInputBoundary {
+    void execute(SortEventsInputData input);
 }

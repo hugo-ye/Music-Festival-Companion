@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import java.time.LocalDate;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -107,4 +108,14 @@ public class Event {
                 "Image:      " + imageURL + "\n" +
                 "----------------------";
     }
+
+    public static final Comparator<Event> BY_NAME = Comparator.comparing(Event::getName, String.CASE_INSENSITIVE_ORDER);
+
+    public static final Comparator<Event> BY_DATE = Comparator.comparing(Event::getDate);
+
+    public static final Comparator<Event> BY_VENUE = Comparator.comparing(Event::getVenue, String.CASE_INSENSITIVE_ORDER);
+
+    public static final Comparator<Event> BY_PRICE = Comparator.comparing(Event::getPriceMin);
+
+
 }

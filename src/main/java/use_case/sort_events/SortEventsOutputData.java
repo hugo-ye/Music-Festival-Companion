@@ -1,17 +1,15 @@
 package use_case.sort_events;
 
-
 import entity.Event;
 
 import java.util.List;
 
-public class SortEventsInputData {
+public class SortEventsOutputData {
     private final List<Event> events;
     private final SortEventsMethod sortMethod;
     private final SortEventsOrder sortOrder;
 
-
-    public SortEventsInputData(List<Event> events, SortEventsMethod sortMethod, SortEventsOrder sortOrder){
+    public SortEventsOutputData(List<Event> events, SortEventsMethod sortMethod, SortEventsOrder sortOrder){
         this.events = events;
         this.sortMethod = sortMethod;
         this.sortOrder = sortOrder;
