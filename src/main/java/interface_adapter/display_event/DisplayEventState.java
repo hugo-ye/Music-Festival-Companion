@@ -15,6 +15,7 @@ public class DisplayEventState {
     private  String price = "";
     private  String ticketUrl = "";
     private  String imageUrl = "";
+
     // private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 
     // remove this

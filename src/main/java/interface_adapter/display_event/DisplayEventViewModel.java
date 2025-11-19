@@ -10,6 +10,7 @@ public class DisplayEventViewModel extends ViewModel<DisplayEventState> {
         super(viewName);
         setState(new DisplayEventState());
     }
+
     // private final PropertyChangeSupport support = new PropertyChangeSupport(this);
     // private DisplayEventState state = new DisplayEventState();
 
