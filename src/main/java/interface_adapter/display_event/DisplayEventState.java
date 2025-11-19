@@ -15,8 +15,10 @@ public class DisplayEventState {
     private  String price = "";
     private  String ticketUrl = "";
     private  String imageUrl = "";
-    private final PropertyChangeSupport support = new PropertyChangeSupport(this);
+    // private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 
+    // remove this
+    /*
     public DisplayEventState(DisplayEventState copy){
         eventName = copy.eventName;
         artists = copy.artists;
@@ -29,8 +31,10 @@ public class DisplayEventState {
         imageUrl = copy.imageUrl;
     }
 
-    public DisplayEventState(){
-    }
+     */
+
+    // public DisplayEventState(){
+    // }
 
     //getters
     public String getEventName(){return eventName;}
@@ -78,8 +82,8 @@ public class DisplayEventState {
     public void setImageUrl(String imageUrl){
         this.imageUrl = imageUrl;
     }
-
-    public void addPropertyChangeListener(PropertyChangeListener listener){
-        support.addPropertyChangeListener(listener);
-    }
+    // remove this
+    // public void addPropertyChangeListener(PropertyChangeListener listener){
+        // support.addPropertyChangeListener(listener);
+    // }
 }

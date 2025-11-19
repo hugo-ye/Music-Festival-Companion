@@ -5,19 +5,18 @@ import interface_adapter.ViewModel;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
-public class DisplayEventViewModel extends ViewModel<Object> {
-    private final PropertyChangeSupport support = new PropertyChangeSupport(this);
-    private DisplayEventState state = new DisplayEventState();
-
-
+public class DisplayEventViewModel extends ViewModel<DisplayEventState> {
     public DisplayEventViewModel(String viewName) {
         super(viewName);
+        setState(new DisplayEventState());
     }
+    // private final PropertyChangeSupport support = new PropertyChangeSupport(this);
+    // private DisplayEventState state = new DisplayEventState();
 
+    /*
     public DisplayEventState getState(){
         return state;
     }
-
     public void setState(DisplayEventState newState){
         DisplayEventState oldState = this.state;
         this.state = newState;
@@ -33,4 +32,6 @@ public class DisplayEventViewModel extends ViewModel<Object> {
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         support.addPropertyChangeListener(listener);
     }
+    *
+     */
 }
