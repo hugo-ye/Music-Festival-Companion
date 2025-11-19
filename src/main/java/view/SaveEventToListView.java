@@ -96,59 +96,6 @@ public class SaveEventToListView extends JPanel{
     }
 
 
-    public void createUIDemo(String[] EventLists) {
-        JFrame frame = new JFrame("Save Event to List View");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(300, 400);
-        frame.setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-
-        gbc.gridx = 0; gbc.gridy = 0;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.gridwidth = 1;
-        gbc.weightx = 1.0;
-
-        JLabel viewQuestion = new JLabel("Which list(s) you want to save your event in?");
-
-        frame.add(viewQuestion, gbc);
-
-        JCheckBox[] eventListCheckBoxes;
-
-        if(EventLists.length == 0){
-            JOptionPane.showMessageDialog(frame, "no EventList is created");
-            return;
-        }
-
-        else{
-            eventListCheckBoxes = new JCheckBox[EventLists.length];
-            for(int i = 0; i < EventLists.length; i++){
-                gbc.gridx = 0; gbc.gridy = 1 + i;
-                eventListCheckBoxes[i] = new JCheckBox(EventLists[i]);
-                frame.add(eventListCheckBoxes[i], gbc);
-            }
-        }
-
-        gbc.gridx = 0; gbc.gridy = 1 + EventLists.length;
-        gbc.anchor = GridBagConstraints.EAST;
-
-        JButton confirmButton = new JButton("Confirm Saving");
-
-        frame.add(confirmButton, gbc);
-
-        frame.setVisible(true);
-
-
-    }
-
-
     public static void main(String[] args) {
-        // method for debug, not for start, should be deleted after design
-//        SaveEventToListView view = new SaveEventToListView();
-//        String[] eventListEmpty = new String[0];
-//        String[] eventListNormal = {"A", "B", "C"};
-//        view.createUIDemo(eventListEmpty);
-//        view.createUIDemo(eventListNormal);
     }
 }

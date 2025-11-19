@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Event {
     final String id;
@@ -106,5 +107,17 @@ public class Event {
                 "Tickets:    " + ticketUrl + "\n" +
                 "Image:      " + imageURL + "\n" +
                 "----------------------";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Event event = (Event) o;
+        return Objects.equals(id, event.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }
