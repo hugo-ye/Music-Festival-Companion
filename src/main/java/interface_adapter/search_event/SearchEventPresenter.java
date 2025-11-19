@@ -13,5 +13,6 @@ import use_case.search_event.SearchEventOutputData;
         @Override
         public void present(SearchEventOutputData outputData) {
             //TODO Fill in the present function
+            System.out.println(outputData.getEvents());
         }
     }
