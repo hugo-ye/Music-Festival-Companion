@@ -1,100 +1,114 @@
 package view;
 import javax.swing.*;
 import java.awt.*;
-import java.time.LocalDate;
-import java.time.LocalDate.*;
-import java.util.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.List;
 
 import entity.Event;
+import interface_adapter.display_event.DisplayEventController;
+import interface_adapter.display_search_results.DisplaySearchResultsController;
+import interface_adapter.display_search_results.DisplaySearchResultsState;
+import interface_adapter.display_search_results.DisplaySearchResultsViewModel;
+import interface_adapter.sort_events.SortEventsController;
+import use_case.sort_events.SortEventsMethod;
+import use_case.sort_events.SortEventsOrder;
 
-public class SearchResultView extends JPanel{
+public class SearchResultView extends JPanel implements PropertyChangeListener {
 
-    // main frame
-    private final JFrame frame = new JFrame("Search Results");
-
-    // panels
-    private final JPanel resultPanel = new JPanel();
-    private final JPanel sortingPanel = new JPanel();
-
-    // button
-    private final JButton sortButton = new JButton("Sort");
-
-    // additional
-    JScrollPane scrollPane = new JScrollPane(resultPanel);
-
-    // results of the search
-    private final List<Event> results;
-
-    // options to choose from to sort
-    private final String[] options = {"Sort by Name", "Sort by Artist"};
-    JComboBox<String> sortingOptions = new JComboBox<>(options);
+    public final String viewName = "search result";
+    // Models and Controllers
+    private final DisplaySearchResultsViewModel displaySearchResultsViewModel;
+    private final DisplaySearchResultsController displaySearchResultsController;
+    private final SortEventsController sortEventsController;
+    private final DisplayEventController displayEventController;
 
 
-    public SearchResultView(List<Event> results) {
+    // Swing components
+    private final JComboBox<SortEventsMethod> sortMethodComboBox;
+    private final JComboBox<SortEventsOrder> sortOrderComboBox;
+    private final JButton sortButton;
+    private final JPanel eventsPanel;
+    private final JButton backButton;
 
-        this.results = results;
-        frame.setSize(600, 600);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    public SearchResultView(DisplaySearchResultsViewModel displaySearchResultsViewModel, DisplaySearchResultsController displaySearchResultsController, SortEventsController sortEventsController, DisplayEventController displayEventController) {
+        this.displaySearchResultsViewModel = displaySearchResultsViewModel;
+        this.displaySearchResultsController = displaySearchResultsController;
+        this.sortEventsController = sortEventsController;
+        this.displayEventController = displayEventController;
 
-        // display a result that is not sorted at the beginning
-        displayEvent(results);
+        this.displaySearchResultsViewModel.addPropertyChangeListener(this);
+        this.setLayout(new BorderLayout());
 
-        //sort panel
-        sortingPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
-        sortingPanel.add(sortingOptions);
-        sortingPanel.add(sortButton);
+        JPanel topPanel = new JPanel();
+        sortMethodComboBox = new JComboBox<>(SortEventsMethod.values());
+        sortOrderComboBox = new JComboBox<>(SortEventsOrder.values());
+        sortButton = new JButton("Sort");
 
-        // to enable the user to scroll.
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        scrollPane.setPreferredSize(new Dimension(100, 100));
+        sortButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                if (evt.getSource() == sortButton) {
+                    DisplaySearchResultsState currentState = displaySearchResultsViewModel.getState();
+                    List<Event> currentEvents = currentState.getEvents();
+                    SortEventsMethod selectedMethod = (SortEventsMethod) sortMethodComboBox.getSelectedItem();
+                    SortEventsOrder selectedOrder = (SortEventsOrder) sortOrderComboBox.getSelectedItem();
 
-        // adding the panels to the main panels
-        add(sortingPanel);
-        add(scrollPane);
+                    if (currentEvents != null) {
+                        SearchResultView.this.sortEventsController.execute(currentEvents, selectedMethod, selectedOrder);
+                    }
+                }
+            }
+        });
 
-        // adding the main panel to the frame
-        frame.setLayout(new BorderLayout());
-        frame.add(this.sortingPanel, BorderLayout.NORTH);
-        frame.add(this.scrollPane, BorderLayout.CENTER);
-    }
-    /**
-     *     * displays the result of the search.
-     *     * @param events a list of Events the yser searched for
-     *
-     */
-    private void displayEvent(List<Event> events) {
-        resultPanel.removeAll();
-        resultPanel.setLayout(new BoxLayout(resultPanel, BoxLayout.Y_AXIS));
-        for (Event event : events) {
-            JPanel panel = new JPanel();
-            panel.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
-            JLabel eventLabel = new JLabel(event.getName());
-            JLabel artistLabel = new JLabel(event.getArtists().toString());
-            JLabel spacer = new JLabel(" ".repeat(200));
-            JLabel spacer2 = new JLabel(" ".repeat(200));
-            JButton detailsButton = new JButton(event.getName() + " details");
-            panel.add(eventLabel);
-            panel.add(spacer);
-            panel.add(artistLabel);
-            panel.add(spacer2);
-            panel.add(detailsButton);
-            resultPanel.add(panel);
+        topPanel.add(new JLabel("Sort by"));
+        topPanel.add(sortMethodComboBox);
+        topPanel.add(sortOrderComboBox);
+        topPanel.add(sortButton);
+        add(topPanel, BorderLayout.NORTH);
+
+        eventsPanel = new JPanel();
+        eventsPanel.setLayout(new BoxLayout(eventsPanel, BoxLayout.Y_AXIS));
+        JScrollPane scrollPane = new JScrollPane(eventsPanel);
+        add(scrollPane, BorderLayout.CENTER);
+
+        JPanel bottomPanel = new JPanel();
+        backButton = new JButton("Back");
+        backButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+
+            }
+        });
+        bottomPanel.add(backButton);
+        add(backButton, BorderLayout.SOUTH);
+
+}
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (evt.getPropertyName().equals("state")) {
+            DisplaySearchResultsState state = (DisplaySearchResultsState) evt.getNewValue();
+            List<Event> events = state.getEvents();
+            eventsPanel.removeAll();
+
+            if (events != null) {
+                for (Event event : events) {
+                    JPanel eventRow = new JPanel();
+                    eventRow.setLayout( new FlowLayout(FlowLayout.LEFT));
+                    JLabel nameLabel = new JLabel(event.getName());
+                    eventRow.add(nameLabel);
+                    JLabel artistLabel = new JLabel(event.getArtists().toString());
+                    eventRow.add(artistLabel);
+                    JButton viewDetailsButton = new JButton("Details");
+                    eventRow.add(viewDetailsButton);
+                    eventsPanel.add(eventRow);
+                }
+            }
+            eventsPanel.revalidate();
+            eventsPanel.repaint();
         }
-        resultPanel.revalidate();
-        resultPanel.repaint();
     }
 
-    public static void main(String[] args) {
-        List<Event> lst = new ArrayList<>();
-        lst.add(new Event("Event2", "Event2",List.of("Artist3"), "venue",
-                "toronto", "canada", LocalDate.of(2020,5,1), 10, 20, "ticketurl", List.of("rock"), "dd"));
-        lst.add(new Event("Event1", "Event1",List.of("Artist2", "Artist 3"), "venue", "toronto",
-                "canada", LocalDate.of(2020,5,1), 10, 20, "ticketurl", List.of("rock"), "ww"));
-        lst.add(new Event("Event3", "Event3",List.of("Artist1"), "venue", "toronto",
-                "canada", LocalDate.now(), 10, 20, "ticketurl", List.of("rock"), "wg"));
-        SearchResultView searchResultView = new SearchResultView(lst);
-        searchResultView.frame.setVisible(true);
-    }
 
 }
