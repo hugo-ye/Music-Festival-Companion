@@ -30,22 +30,4 @@ public class CreateListDialog extends JDialog {
         setContentPane(panel); // Places the UI inside the window
         pack(); // Automatically resize
     }
-
-
-    // Testing, to be deleted
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            // Simple invisible parent frame just to center the dialog
-            JFrame frame = new JFrame("Parent Frame");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setSize(400, 300);
-            frame.setVisible(true);
-
-            CreateListDialog dialog = new CreateListDialog(frame);
-            dialog.setVisible(true);
-        });
-    }
-
 }
-
-
