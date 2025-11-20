@@ -1,4 +1,5 @@
 package use_case.attend_event;
 
-public class AttendEventInputBoundary {
+public interface AttendEventInputBoundary {
+    void execute(AttendEventInputData inputData);
 }
