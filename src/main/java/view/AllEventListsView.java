@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-public class ViewEventListView extends JPanel implements PropertyChangeListener {
+public class AllEventListsView extends JPanel implements PropertyChangeListener {
 
     public final String viewName = "event lists";
     // Implement View Models and Controllers here
@@ -18,7 +18,7 @@ public class ViewEventListView extends JPanel implements PropertyChangeListener 
     private final JButton masterViewButton;
     private final JButton backButton;
 
-    public ViewEventListView() {
+    public AllEventListsView() {
         // Instantiate the View Models and Controllers here
         this.setLayout(new BorderLayout());
 

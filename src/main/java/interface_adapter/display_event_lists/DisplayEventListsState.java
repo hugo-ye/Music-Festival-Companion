@@ -1,12 +1,13 @@
-package interface_adapter.display_all_event_lists;
+package interface_adapter.display_event_lists;
 
 import entity.EventList;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class DisplayAllEventListsState {
+public class DisplayEventListsState {
     private EventList masterList = null;
-    private List<EventList> eventLists = null;
+    private List<EventList> eventLists = new ArrayList<>();
 
     public EventList getMasterList() {
         return masterList;
