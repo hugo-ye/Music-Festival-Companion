@@ -1,8 +1,6 @@
 package use_case.sort_events;
 
-
 import entity.Event;
-
 import java.util.List;
 
 public class SortEventsInputData {

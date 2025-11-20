@@ -8,6 +8,7 @@ import java.beans.PropertyChangeListener;
 import java.util.List;
 
 import entity.Event;
+import interface_adapter.ViewManagerModel;
 import interface_adapter.display_event.DisplayEventController;
 import interface_adapter.display_search_results.DisplaySearchResultsController;
 import interface_adapter.display_search_results.DisplaySearchResultsState;
@@ -24,6 +25,7 @@ public class SearchResultView extends JPanel implements PropertyChangeListener {
     private final DisplaySearchResultsController displaySearchResultsController;
     private final SortEventsController sortEventsController;
     private final DisplayEventController displayEventController;
+    private final ViewManagerModel viewManagerModel;
 
 
     // Swing components
@@ -33,11 +35,12 @@ public class SearchResultView extends JPanel implements PropertyChangeListener {
     private final JPanel eventsPanel;
     private final JButton backButton;
 
-    public SearchResultView(DisplaySearchResultsViewModel displaySearchResultsViewModel, DisplaySearchResultsController displaySearchResultsController, SortEventsController sortEventsController, DisplayEventController displayEventController) {
+    public SearchResultView(DisplaySearchResultsViewModel displaySearchResultsViewModel, DisplaySearchResultsController displaySearchResultsController, SortEventsController sortEventsController, DisplayEventController displayEventController, ViewManagerModel viewManagerModel) {
         this.displaySearchResultsViewModel = displaySearchResultsViewModel;
         this.displaySearchResultsController = displaySearchResultsController;
         this.sortEventsController = sortEventsController;
         this.displayEventController = displayEventController;
+        this.viewManagerModel = viewManagerModel;
 
         this.displaySearchResultsViewModel.addPropertyChangeListener(this);
         this.setLayout(new BorderLayout());
@@ -77,7 +80,6 @@ public class SearchResultView extends JPanel implements PropertyChangeListener {
         backButton = new JButton("Back");
         backButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-
             }
         });
         bottomPanel.add(backButton);
@@ -101,6 +103,14 @@ public class SearchResultView extends JPanel implements PropertyChangeListener {
                     JLabel artistLabel = new JLabel(event.getArtists().toString());
                     eventRow.add(artistLabel);
                     JButton viewDetailsButton = new JButton("Details");
+
+                    viewDetailsButton.addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent evt) {
+                            if (evt.getSource() == viewDetailsButton) {
+                                displayEventController.execute(event);
+                            }
+                        }
+                    });
                     eventRow.add(viewDetailsButton);
                     eventsPanel.add(eventRow);
                 }
