@@ -5,22 +5,23 @@ import java.util.List;
 
 public class SortEventsInputData {
     private final List<Event> events;
-    private final SortEventsMethod sortMethod;
+    private final SortEventsCriteria sortEventsCriteria; // Changed from SortEventsMethod
     private final SortEventsOrder sortOrder;
 
-
-    public SortEventsInputData(List<Event> events, SortEventsMethod sortMethod, SortEventsOrder sortOrder){
+    public SortEventsInputData(List<Event> events, SortEventsCriteria criteria, SortEventsOrder sortOrder){
         this.events = events;
-        this.sortMethod = sortMethod;
+        this.sortEventsCriteria = criteria;
         this.sortOrder = sortOrder;
     }
 
     public List<Event> getEvents() {
         return events;
     }
-    public SortEventsMethod getSortMethod() {
-        return sortMethod;
+
+    public SortEventsCriteria getSortEventsCriteria() {
+        return sortEventsCriteria;
     }
+
     public SortEventsOrder getSortOrder() {
         return sortOrder;
     }

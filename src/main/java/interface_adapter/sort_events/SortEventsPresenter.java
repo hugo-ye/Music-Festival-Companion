@@ -16,7 +16,7 @@ public class SortEventsPresenter implements SortEventsOutputBoundary {
     public void prepareSuccessView(SortEventsOutputData outputData) {
         DisplaySearchResultsState state = displaySearchResultsViewModel.getState();
         state.setEvents(outputData.getEvents());
-        state.setSortMethod(outputData.getSortMethod());
+        state.setSortMethod(outputData.getCriteria());
         state.setSortOrder(outputData.getSortOrder());
         displaySearchResultsViewModel.setState(state);
         displaySearchResultsViewModel.firePropertyChanged("state");

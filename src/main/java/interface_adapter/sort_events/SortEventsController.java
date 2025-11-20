@@ -12,8 +12,8 @@ public class SortEventsController {
         this.sortEventsInteractor = sortEventsInteractor;
     }
 
-    public void execute(List<Event> events, SortEventsMethod sortMethod, SortEventsOrder sortOrder) {
-        final SortEventsInputData inputData = new SortEventsInputData(events, sortMethod, sortOrder);
+    public void execute(List<Event> events, SortEventsCriteria sortEventsCriteria, SortEventsOrder sortEventsOrder) {
+        final SortEventsInputData inputData = new SortEventsInputData(events, sortEventsCriteria, sortEventsOrder);
         sortEventsInteractor.execute(inputData);
 
     }

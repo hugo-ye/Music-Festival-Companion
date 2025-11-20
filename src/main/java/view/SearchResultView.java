@@ -10,34 +10,31 @@ import java.util.List;
 import entity.Event;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.display_event.DisplayEventController;
-import interface_adapter.display_search_results.DisplaySearchResultsController;
 import interface_adapter.display_search_results.DisplaySearchResultsState;
 import interface_adapter.display_search_results.DisplaySearchResultsViewModel;
 import interface_adapter.sort_events.SortEventsController;
-import use_case.sort_events.SortEventsMethod;
+import use_case.sort_events.SortEventsCriteria;
 import use_case.sort_events.SortEventsOrder;
 
 public class SearchResultView extends JPanel implements PropertyChangeListener {
 
-    public final String viewName = "search result";
+    public final String viewName = "search results";
     // Models and Controllers
     private final DisplaySearchResultsViewModel displaySearchResultsViewModel;
-    private final DisplaySearchResultsController displaySearchResultsController;
     private final SortEventsController sortEventsController;
     private final DisplayEventController displayEventController;
     private final ViewManagerModel viewManagerModel;
 
 
     // Swing components
-    private final JComboBox<SortEventsMethod> sortMethodComboBox;
+    private final JComboBox<SortEventsCriteria> sortMethodComboBox;
     private final JComboBox<SortEventsOrder> sortOrderComboBox;
     private final JButton sortButton;
     private final JPanel eventsPanel;
     private final JButton backButton;
 
-    public SearchResultView(DisplaySearchResultsViewModel displaySearchResultsViewModel, DisplaySearchResultsController displaySearchResultsController, SortEventsController sortEventsController, DisplayEventController displayEventController, ViewManagerModel viewManagerModel) {
+    public SearchResultView(DisplaySearchResultsViewModel displaySearchResultsViewModel, SortEventsController sortEventsController, DisplayEventController displayEventController, ViewManagerModel viewManagerModel) {
         this.displaySearchResultsViewModel = displaySearchResultsViewModel;
-        this.displaySearchResultsController = displaySearchResultsController;
         this.sortEventsController = sortEventsController;
         this.displayEventController = displayEventController;
         this.viewManagerModel = viewManagerModel;
@@ -46,7 +43,7 @@ public class SearchResultView extends JPanel implements PropertyChangeListener {
         this.setLayout(new BorderLayout());
 
         JPanel topPanel = new JPanel();
-        sortMethodComboBox = new JComboBox<>(SortEventsMethod.values());
+        sortMethodComboBox = new JComboBox<>(SortEventsCriteria.values());
         sortOrderComboBox = new JComboBox<>(SortEventsOrder.values());
         sortButton = new JButton("Sort");
 
@@ -55,11 +52,11 @@ public class SearchResultView extends JPanel implements PropertyChangeListener {
                 if (evt.getSource() == sortButton) {
                     DisplaySearchResultsState currentState = displaySearchResultsViewModel.getState();
                     List<Event> currentEvents = currentState.getEvents();
-                    SortEventsMethod selectedMethod = (SortEventsMethod) sortMethodComboBox.getSelectedItem();
+                    SortEventsCriteria selectedCriteria = (SortEventsCriteria) sortMethodComboBox.getSelectedItem();
                     SortEventsOrder selectedOrder = (SortEventsOrder) sortOrderComboBox.getSelectedItem();
 
                     if (currentEvents != null) {
-                        SearchResultView.this.sortEventsController.execute(currentEvents, selectedMethod, selectedOrder);
+                        SearchResultView.this.sortEventsController.execute(currentEvents, selectedCriteria, selectedOrder);
                     }
                 }
             }
@@ -80,6 +77,8 @@ public class SearchResultView extends JPanel implements PropertyChangeListener {
         backButton = new JButton("Back");
         backButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
+                viewManagerModel.setState("search events");
+                viewManagerModel.firePropertyChanged();
             }
         });
         bottomPanel.add(backButton);
