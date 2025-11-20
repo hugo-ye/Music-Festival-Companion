@@ -6,8 +6,8 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
 public class DisplayEventViewModel extends ViewModel<DisplayEventState> {
-    public DisplayEventViewModel(String viewName) {
-        super(viewName);
+    public DisplayEventViewModel() {
+        super("event details");
         setState(new DisplayEventState());
     }
 
