@@ -3,12 +3,8 @@ package data_access;
 import api.LocalDateAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
 import com.google.gson.reflect.TypeToken;
-import entity.EventList;
 import entity.User;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -64,7 +60,7 @@ public class FileListDataAccessObject {
         }
     }
 
-    public User readUser(String username) {
+    public User getByUsername(String username) {
         List<User> users = read();
         for (User user : users) {
             if (user.getUsername().equals(username)) {
@@ -77,7 +73,7 @@ public class FileListDataAccessObject {
 
     public void save(User user) {
         List<User> users = read();
-        User existingUser = userExists(user.getUsername(), users);
+        User existingUser = existsByUsername(user.getUsername(), users);
         if (existingUser != null) {
             replaceUser(existingUser, user, users);
         } else {
@@ -95,12 +91,22 @@ public class FileListDataAccessObject {
         }
     }
 
-    private User userExists(String username, List<User> users) {
+    private User existsByUsername(String username, List<User> users) {
         for (User user : users) {
             if (user.getUsername().equals(username)) {
                 return user;
             }
 
+        }
+        return null;
+    }
+
+    public User existsByUsername(String username) {
+        List<User> users = read();
+        for (User user : users) {
+            if (user.getUsername().equals(username)) {
+                return user;
+            }
         }
         return null;
     }
