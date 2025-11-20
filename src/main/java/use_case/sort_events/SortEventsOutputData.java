@@ -18,11 +18,11 @@ public class SortEventsOutputData {
         return events;
     }
 
-    public SortEventsCriteria getCriteria() {
+    public SortEventsCriteria getSortEventsCriteria() {
         return criteria;
     }
 
-    public SortEventsOrder getSortOrder() {
+    public SortEventsOrder getSortEventsOrder() {
         return sortOrder;
     }
 }

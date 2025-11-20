@@ -9,7 +9,7 @@ import java.util.List;
 public class DisplaySearchResultsState {
     private List<Event> events = null;
     private SortEventsCriteria sortEventsCriteria = null;
-    private SortEventsOrder sortOrder = null;
+    private SortEventsOrder sortEventsOrder = null;
 
     public List<Event> getEvents() {
         return events;
@@ -17,8 +17,8 @@ public class DisplaySearchResultsState {
     public SortEventsCriteria getSortEventsCriteria() {
         return sortEventsCriteria;
     }
-    public SortEventsOrder getSortOrder() {
-        return sortOrder;
+    public SortEventsOrder getSortEventsOrder() {
+        return sortEventsOrder;
     }
 
     public void setEvents(List<Event> events) {
@@ -27,8 +27,8 @@ public class DisplaySearchResultsState {
     public void setSortEventsCriteria(SortEventsCriteria sortEventsCriteria) {
         this.sortEventsCriteria = sortEventsCriteria;
     }
-    public void setSortOrder(SortEventsOrder sortOrder) {
-        this.sortOrder = sortOrder;
+    public void setSortEventsOrder(SortEventsOrder sortEventsOrder) {
+        this.sortEventsOrder = sortEventsOrder;
     }
 
 }
