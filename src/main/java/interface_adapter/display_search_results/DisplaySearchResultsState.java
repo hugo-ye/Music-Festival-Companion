@@ -24,8 +24,8 @@ public class DisplaySearchResultsState {
     public void setEvents(List<Event> events) {
         this.events = events;
     }
-    public void setSortMethod(SortEventsCriteria sortMethod) {
-        this.sortEventsCriteria = sortMethod;
+    public void setSortEventsCriteria(SortEventsCriteria sortEventsCriteria) {
+        this.sortEventsCriteria = sortEventsCriteria;
     }
     public void setSortOrder(SortEventsOrder sortOrder) {
         this.sortOrder = sortOrder;

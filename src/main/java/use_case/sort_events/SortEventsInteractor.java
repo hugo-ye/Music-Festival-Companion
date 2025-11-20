@@ -18,14 +18,14 @@ public class SortEventsInteractor implements SortEventsInputBoundary {
 
         Comparator<Event> strategy = SortEventsStrategyFactory.create(input.getSortEventsCriteria());
 
-        strategy = input.getSortOrder().apply(strategy);
+        strategy = input.getSortEventsOrder().apply(strategy);
 
         events.sort(strategy);
 
         SortEventsOutputData outputData = new SortEventsOutputData(
                 events,
                 input.getSortEventsCriteria(),
-                input.getSortOrder()
+                input.getSortEventsOrder()
         );
 
         presenter.prepareSuccessView(outputData);

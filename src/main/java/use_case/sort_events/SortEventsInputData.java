@@ -6,12 +6,12 @@ import java.util.List;
 public class SortEventsInputData {
     private final List<Event> events;
     private final SortEventsCriteria sortEventsCriteria; // Changed from SortEventsMethod
-    private final SortEventsOrder sortOrder;
+    private final SortEventsOrder sortEventsOrder;
 
     public SortEventsInputData(List<Event> events, SortEventsCriteria criteria, SortEventsOrder sortOrder){
         this.events = events;
         this.sortEventsCriteria = criteria;
-        this.sortOrder = sortOrder;
+        this.sortEventsOrder = sortOrder;
     }
 
     public List<Event> getEvents() {
@@ -22,7 +22,7 @@ public class SortEventsInputData {
         return sortEventsCriteria;
     }
 
-    public SortEventsOrder getSortOrder() {
-        return sortOrder;
+    public SortEventsOrder getSortEventsOrder() {
+        return sortEventsOrder;
     }
 }

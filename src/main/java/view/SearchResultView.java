@@ -27,7 +27,7 @@ public class SearchResultView extends JPanel implements PropertyChangeListener {
 
 
     // Swing components
-    private final JComboBox<SortEventsCriteria> sortMethodComboBox;
+    private final JComboBox<SortEventsCriteria> sortCriteriaComboBox;
     private final JComboBox<SortEventsOrder> sortOrderComboBox;
     private final JButton sortButton;
     private final JPanel eventsPanel;
@@ -43,7 +43,7 @@ public class SearchResultView extends JPanel implements PropertyChangeListener {
         this.setLayout(new BorderLayout());
 
         JPanel topPanel = new JPanel();
-        sortMethodComboBox = new JComboBox<>(SortEventsCriteria.values());
+        sortCriteriaComboBox = new JComboBox<>(SortEventsCriteria.values());
         sortOrderComboBox = new JComboBox<>(SortEventsOrder.values());
         sortButton = new JButton("Sort");
 
@@ -52,7 +52,7 @@ public class SearchResultView extends JPanel implements PropertyChangeListener {
                 if (evt.getSource() == sortButton) {
                     DisplaySearchResultsState currentState = displaySearchResultsViewModel.getState();
                     List<Event> currentEvents = currentState.getEvents();
-                    SortEventsCriteria selectedCriteria = (SortEventsCriteria) sortMethodComboBox.getSelectedItem();
+                    SortEventsCriteria selectedCriteria = (SortEventsCriteria) sortCriteriaComboBox.getSelectedItem();
                     SortEventsOrder selectedOrder = (SortEventsOrder) sortOrderComboBox.getSelectedItem();
 
                     if (currentEvents != null) {
@@ -63,7 +63,7 @@ public class SearchResultView extends JPanel implements PropertyChangeListener {
         });
 
         topPanel.add(new JLabel("Sort by"));
-        topPanel.add(sortMethodComboBox);
+        topPanel.add(sortCriteriaComboBox);
         topPanel.add(sortOrderComboBox);
         topPanel.add(sortButton);
         add(topPanel, BorderLayout.NORTH);
