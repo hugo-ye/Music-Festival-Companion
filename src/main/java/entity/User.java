@@ -3,6 +3,7 @@ package entity;
 import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class User {
     private final String username;
@@ -40,7 +41,24 @@ public class User {
     }
 
 
+    @Override
+    public String toString() {
+        String listNames = eventLists.stream()
+                .filter(list -> !list.getName().equals("master_list"))
+                .map(list -> String.format("%s (%d events)", list.getName(), list.getEvents().size()))
+                .collect(Collectors.joining("; "));
 
+        if (listNames.isEmpty()) {
+            listNames = "None";
+        }
 
+        // Count events in the master list
+        int masterListCount = masterList != null ? masterList.getEvents().size() : 0;
 
+        return "--- USER ACCOUNT DETAILS ---\n" +
+                "Username:      " + username + "\n" +
+                "Master List:   " + masterList.getName() + " (" + masterListCount + " events)\n" +
+                "Other Lists:   " + listNames + "\n" +
+                "----------------------------";
+    }
 }
