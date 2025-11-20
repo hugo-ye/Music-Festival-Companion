@@ -3,12 +3,12 @@ package use_case.display_event;
 import entity.Event;
 
 import java.time.LocalDate;
-import java.util.List;
+
 
 public class DisplayEventInteractor implements DisplayEventInputBoundary{
     private final DisplayEventOutputBoundary presenter;
 
-    public DisplayEventInteractor(DisplayEventDataAccessInterface dataAccess, DisplayEventOutputBoundary presenter) {
+    public DisplayEventInteractor(DisplayEventOutputBoundary presenter) {
         this.presenter = presenter;
     }
     @Override
