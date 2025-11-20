@@ -16,27 +16,6 @@ public class DisplayEventState {
     private  String ticketUrl = "";
     private  String imageUrl = "";
 
-    // private final PropertyChangeSupport support = new PropertyChangeSupport(this);
-
-    // remove this
-    /*
-    public DisplayEventState(DisplayEventState copy){
-        eventName = copy.eventName;
-        artists = copy.artists;
-        venue = copy.venue;
-        location = copy.location;
-        date = copy.date;
-        genres = copy.genres;
-        price = copy.price;
-        ticketUrl = copy.ticketUrl;
-        imageUrl = copy.imageUrl;
-    }
-
-     */
-
-    // public DisplayEventState(){
-    // }
-
     //getters
     public String getEventName(){return eventName;}
     public String getArtists(){return artists;}
