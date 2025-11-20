@@ -13,175 +13,113 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.List;
 
-public class EventView extends JDialog{
+public class EventView extends JDialog implements PropertyChangeListener {
+    public final String viewName = "event details";
+    // Add ViewModels and Controllers here
 
-    // image
-    private final JLabel imageLabel = new JLabel();
+    // Text fields and Labels
+    private final JLabel imageLabel;
+    private final JLabel eventNameLabel;
+    private final JLabel artistLabel;
+    private final JLabel venueLabel;
+    private final JLabel locationLabel;
+    private final JLabel dateLabel;
+    private final JLabel genresLabel;
+    private final JLabel priceRangeLabel;
 
-    // text fields
-    private final JLabel eventNameLabel = new JLabel("Default Event Name");
-    private final JLabel artistLabel = new JLabel("Default Artist");
-    private final JLabel venueLabel = new JLabel("Default Venue");
-    private final JLabel locationLabel = new JLabel("Default city, Default country");   // city, country
-    private final JLabel dateLabel = new JLabel("Default date");
-    private final JLabel genresLabel = new JLabel("Default genre");
-    private final JLabel priceRangeLabel = new JLabel("Pricing:");
-    private final JLabel ticketPriceRangeLabel = new JLabel("Default minPrice MaxPrice");
+    // Buttons
+    private final JButton buyButton;
+    private final JButton attendButton;
+    private final JButton saveButton;
+    private final JButton closeButton;
 
-    // buttons
-    private final JButton buyButton = new JButton("Buy Tickets");
-    private final JButton attendButton = new JButton("Attend Event");
-    private final JButton saveButton = new JButton("Save Event");
-
-    // Url
+    // Data
     private String ticketUrl;
 
-    //interface
-    private final DisplayEventViewModel displayEventViewModel;
-    private final AttendEventController attendEventController;
-    private final AttendEventViewModel attendEventViewModel;
-    private final SaveEventToListController saveEventToListController;
-    private final SaveEventToListViewModel saveEventToListViewModel;
+    public EventView(Frame owner) {
+        super(owner, "Event Details", true);
+        this.setSize(400, 600);
+        this.setLayout(new BorderLayout());
 
+        JPanel infoPanel = new JPanel();
+        infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
 
+        imageLabel = new JLabel("Event Image Placeholder");
+        infoPanel.add(imageLabel);
 
-    public EventView(JFrame parent,
-                     DisplayEventViewModel displayEventViewModel,
-                     AttendEventController attendEventController,
-                     AttendEventViewModel attendEventViewModel,
-                     SaveEventToListController saveEventToListController,
-                     SaveEventToListViewModel saveEventToListViewModel) {
+        eventNameLabel = new JLabel("Event Name");
+        infoPanel.add(eventNameLabel);
 
-        super(parent, "Event Details", true);
+        artistLabel = new JLabel("Artist Name");
+        infoPanel.add(artistLabel);
 
-        this.displayEventViewModel = displayEventViewModel;
-        this.attendEventController = attendEventController;
-        this.attendEventViewModel = attendEventViewModel;
-        this.saveEventToListController = saveEventToListController;
-        this.saveEventToListViewModel = saveEventToListViewModel;
+        venueLabel = new JLabel("Venue Name");
+        infoPanel.add(venueLabel);
 
-        setSize(800, 600);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setPreferredSize(new Dimension(500, 400));
-        setLocationRelativeTo(parent);
+        locationLabel = new JLabel("Location");
+        infoPanel.add(locationLabel);
 
-        imageLabel.setPreferredSize(new Dimension(400, 300)); // 4:3
-        imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        imageLabel.setPreferredSize(new Dimension(480, 200));
-        imageLabel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
-        add(imageLabel, BorderLayout.NORTH);
+        dateLabel = new JLabel("Date");
+        infoPanel.add(dateLabel);
 
-        JPanel detailsPanel = new JPanel();
-        detailsPanel.setLayout(new BoxLayout(detailsPanel, BoxLayout.Y_AXIS));
-        detailsPanel.add(eventNameLabel);
-        detailsPanel.add(artistLabel);
-        detailsPanel.add(venueLabel);
-        detailsPanel.add(locationLabel);
-        detailsPanel.add(dateLabel);
-        detailsPanel.add(genresLabel);
-        detailsPanel.add(priceRangeLabel);
-        detailsPanel.add(ticketPriceRangeLabel);
-        detailsPanel.add(buyButton);
-        detailsPanel.add(attendButton);
-        add(detailsPanel, BorderLayout.CENTER);
+        genresLabel = new JLabel("Genres");
+        infoPanel.add(genresLabel);
 
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
-        buttonPanel.add(attendButton);
-        buttonPanel.add(saveButton);
-        buttonPanel.add(buyButton);
+        priceRangeLabel = new JLabel("Price Range");
+        infoPanel.add(priceRangeLabel);
 
-        buyButton.addActionListener(e -> {
-            if (ticketUrl != null) {
-                try {
-                    Desktop.getDesktop().browse(new java.net.URI(ticketUrl));
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
+        add(infoPanel, BorderLayout.CENTER);
+
+        JPanel mainButtonPanel = new JPanel();
+        mainButtonPanel.setLayout(new BoxLayout(mainButtonPanel, BoxLayout.Y_AXIS));
+
+        JPanel buyPanel = new JPanel();
+        buyButton = new JButton("Buy Tickets");
+        buyButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                System.out.println("Buy button pressed");
             }
         });
+        buyPanel.add(buyButton);
+        mainButtonPanel.add(buyPanel);
 
-        attendButton.addActionListener(e -> {attendEventController.execute();});
+        JPanel actionPanel = new JPanel();
+        attendButton = new JButton("Attend");
+        attendButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                System.out.println("Attend button pressed");
+            }
+        });
+        actionPanel.add(attendButton);
 
-        saveButton.addActionListener(
-                e -> {saveEventToListController.execute();});
+        saveButton = new JButton("Save");
+        saveButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                System.out.println("Save button pressed");
+            }
+        });
+        actionPanel.add(saveButton);
+        mainButtonPanel.add(actionPanel);
 
-        add(buttonPanel, BorderLayout.SOUTH);
+        JPanel closePanel = new JPanel();
+        closeButton = new JButton("Close");
+        closeButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                dispose();
+            }
+        });
+        closePanel.add(closeButton);
+        mainButtonPanel.add(closePanel);
 
-        pack();
-
-    }
-    public void setEventName(String name) {
-        eventNameLabel.setText(name);
-    }
-
-    public void setArtists(java.util.List<String> artists) {
-        artistLabel.setText(String.join(", ", artists));
-    }
-
-    public void setVenue(String venue) {
-        venueLabel.setText(venue);
-    }
-
-    public void setLocation(String city, String country) {
-        locationLabel.setText(city + ", " + country);
-    }
-
-    public void setDate(String dateText) {
-        dateLabel.setText(dateText);
-    }
-
-    public void setGenres(java.util.List<String> genres) {
-        genresLabel.setText(String.join(", ", genres));
-    }
-
-    public void setPriceRange(int min, int max) {
-        ticketPriceRangeLabel.setText(min + " - " + max);
+        add(mainButtonPanel, BorderLayout.SOUTH);
     }
 
-    private ImageIcon scaleImage(ImageIcon icon, int width, int height) {
-        Image img = icon.getImage();
-        Image scaled = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
-        return new ImageIcon(scaled);
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
     }
 
-
-    public void setImageIcon(ImageIcon icon) {
-        ImageIcon scaled = scaleImage(icon, 300, 200); // 3:2 ratio
-        imageLabel.setIcon(scaled);
-    }
-
-
-    public void setTicketUrl(String ticketUrl) {
-        this.ticketUrl = ticketUrl;
-
-    }
-
-    public static void main(String[] args) {
-        JFrame parent = new JFrame();
-        parent.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        EventView view = new EventView(parent);
-
-        view.setEventName("Taylor Swift Concert");
-        view.setArtists(java.util.List.of("Taylor Swift"));
-        view.setVenue("Rogers Centre");
-        view.setLocation("Toronto", "Canada");
-        view.setDate("2025-07-18");
-        view.setGenres(List.of("Pop", "Country"));
-        view.setPriceRange(150, 900);
-
-        ImageIcon sampleIcon = new ImageIcon(
-                "/Users/abudi/IdeaProjects/team-project2/src/main/java/download.jpeg" // sample.png does not exist on our repo. this will break. test with your own URL
-        );
-        view.setImageIcon(sampleIcon);
-
-        view.setTicketUrl("https://www.ticketmaster.ca");
-        view.setVisible(true);
-
-    }
 
 }
