@@ -1,7 +1,7 @@
 package use_case.sort_events;
 
 public enum SortEventsCriteria {
-    NAME,
+    ALPHABETICAL,
     DATE,
     VENUE,
     PRICE

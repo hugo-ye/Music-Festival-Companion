@@ -5,7 +5,7 @@ import java.util.List;
 
 public class SortEventsInputData {
     private final List<Event> events;
-    private final SortEventsCriteria sortEventsCriteria; // Changed from SortEventsMethod
+    private final SortEventsCriteria sortEventsCriteria;
     private final SortEventsOrder sortEventsOrder;
 
     public SortEventsInputData(List<Event> events, SortEventsCriteria criteria, SortEventsOrder sortOrder){

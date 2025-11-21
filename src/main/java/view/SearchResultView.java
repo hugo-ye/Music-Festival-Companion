@@ -88,7 +88,7 @@ public class SearchResultView extends JPanel implements PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getPropertyName().equals("state")) {
+        if (evt.getPropertyName().equals("refresh")) {
             DisplaySearchResultsState state = (DisplaySearchResultsState) evt.getNewValue();
             List<Event> events = state.getEvents();
             eventsPanel.removeAll();

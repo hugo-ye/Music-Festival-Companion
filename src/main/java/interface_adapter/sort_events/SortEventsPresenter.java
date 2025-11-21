@@ -19,7 +19,7 @@ public class SortEventsPresenter implements SortEventsOutputBoundary {
         state.setSortEventsCriteria(outputData.getSortEventsCriteria());
         state.setSortEventsOrder(outputData.getSortEventsOrder());
         displaySearchResultsViewModel.setState(state);
-        displaySearchResultsViewModel.firePropertyChanged("state");
+        displaySearchResultsViewModel.firePropertyChanged("refresh");
 
     }
 }
