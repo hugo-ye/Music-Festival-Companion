@@ -31,6 +31,15 @@ public class EventList {
         return new ArrayList<>(events);
     }
 
+    public Event getEventById(String eventId) {
+        for (Event event : events) {
+            if (event.getId().equals(eventId)) {
+                return event;
+            }
+        }
+        return null;
+    }
+
     // Mutators
     public void addEvent(Event event) {
         if (!events.contains(event)){

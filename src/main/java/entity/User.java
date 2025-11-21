@@ -3,6 +3,7 @@ package entity;
 import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class User {
     private final String username;
@@ -38,9 +39,4 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
-
-
-
-
-
 }
