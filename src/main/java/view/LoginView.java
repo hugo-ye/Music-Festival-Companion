@@ -137,4 +137,7 @@ public class LoginView extends JPanel implements PropertyChangeListener {
             JOptionPane.showMessageDialog(this, state.getErrorMessage());
         }
     }
+    public String getViewName() {
+        return this.viewName;
+    }
 }

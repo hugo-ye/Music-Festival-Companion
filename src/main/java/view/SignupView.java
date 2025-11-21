@@ -174,5 +174,8 @@ public class SignupView extends JPanel implements PropertyChangeListener {
             JOptionPane.showMessageDialog(this, state.getErrorMessage());
         }
     }
+    public String getViewName() {
+        return this.viewName;
+    }
 
 }

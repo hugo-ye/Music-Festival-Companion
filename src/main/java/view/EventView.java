@@ -8,7 +8,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 public class EventView extends JDialog implements PropertyChangeListener {
-    public final String viewName = "event details";
+    private final String viewName = "event details";
     // Add ViewModels and Controllers here
 
     // Text fields and Labels
@@ -112,5 +112,8 @@ public class EventView extends JDialog implements PropertyChangeListener {
     public void propertyChange(PropertyChangeEvent evt) {
     }
 
+    public String getViewName() {
+        return this.viewName;
+    }
 
 }
