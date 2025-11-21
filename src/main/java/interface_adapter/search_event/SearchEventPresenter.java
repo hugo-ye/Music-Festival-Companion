@@ -19,13 +19,17 @@ import use_case.search_event.SearchEventOutputData;
 
         public void prepareSuccessView(SearchEventOutputData outputData) {
             //TODO Fill in the present function
+
             System.out.println(outputData.getEvents());
+
             viewModel.setState(new SearchEventState());
+
+
             DisplaySearchResultsState displayState = resultViewModel.getState();
             displayState.setEvents(outputData.getEvents());
-            System.out.println("search result view name is: " + resultViewModel.getViewName());
+
             resultViewModel.setState(displayState);
-            resultViewModel.firePropertyChanged();
+            resultViewModel.firePropertyChanged("refresh");
 
             viewManagerModel.setState(resultViewModel.getViewName());
             viewManagerModel.firePropertyChanged();
