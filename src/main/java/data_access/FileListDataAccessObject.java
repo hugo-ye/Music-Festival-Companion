@@ -102,9 +102,9 @@ public class FileListDataAccessObject {
         return null;
     }
 
-    public User existsByUsername(String username) {
+    public boolean existsByUsername(String username) {
         List<User> users = read();
-        return existsByUsername(username, users);
+        return existsByUsername(username, users) != null;
     }
 
     private void replaceUser(User oldUser, User newUser, List<User> users) {
