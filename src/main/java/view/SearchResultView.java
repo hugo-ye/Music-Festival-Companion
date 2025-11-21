@@ -18,7 +18,7 @@ import use_case.sort_events.SortEventsOrder;
 
 public class SearchResultView extends JPanel implements PropertyChangeListener {
 
-    public final String viewName = "search results";
+    private final String viewName = "search results";
     // Models and Controllers
     private final DisplaySearchResultsViewModel displaySearchResultsViewModel;
     private final SortEventsController sortEventsController;
@@ -118,6 +118,8 @@ public class SearchResultView extends JPanel implements PropertyChangeListener {
             eventsPanel.repaint();
         }
     }
-
+    public String getViewName() {
+        return this.viewName;
+    }
 
 }

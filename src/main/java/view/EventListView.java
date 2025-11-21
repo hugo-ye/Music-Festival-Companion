@@ -8,7 +8,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 public class EventListView extends JPanel implements PropertyChangeListener {
-    public final String viewName = "event list";
+    private final String viewName = "event list";
     // Add controllers and viewmodels here
     // Swing components
     private final JPanel eventsPanel;
@@ -35,5 +35,8 @@ public class EventListView extends JPanel implements PropertyChangeListener {
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
 
+    }
+    public String getViewName() {
+        return this.viewName;
     }
 }
