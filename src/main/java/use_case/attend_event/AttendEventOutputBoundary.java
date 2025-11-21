@@ -1,4 +1,6 @@
 package use_case.attend_event;
 
-public class AttendEventOutputBoundary {
+public interface AttendEventOutputBoundary {
+    void prepareSuccessView(AttendEventOutputData attendEventOutputData);
+    void prepareFailView(AttendEventOutputData attendEventOutputData);
 }

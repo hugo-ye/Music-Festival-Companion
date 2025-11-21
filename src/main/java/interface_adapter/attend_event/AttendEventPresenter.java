@@ -1,4 +1,44 @@
 package interface_adapter.attend_event;
 
-public class AttendEventPresenter {
+import interface_adapter.ViewManagerModel;
+import interface_adapter.display_event.DisplayEventState;
+import interface_adapter.display_event.DisplayEventViewModel;
+import use_case.attend_event.AttendEventOutputBoundary;
+import use_case.attend_event.AttendEventOutputData;
+
+public class AttendEventPresenter implements AttendEventOutputBoundary {
+    private final DisplayEventViewModel attendEventViewModel;
+    private final ViewManagerModel viewManagerModel;
+
+    public AttendEventPresenter(DisplayEventViewModel attendEventViewModel,
+                                ViewManagerModel viewManagerModel){
+        this.attendEventViewModel = attendEventViewModel;
+        this.viewManagerModel = viewManagerModel;
+    }
+
+    @Override
+    public void prepareSuccessView(AttendEventOutputData attendEventOutputData){
+        DisplayEventState attendEventState = attendEventViewModel.getState();
+        // to display something like Added coachella
+        attendEventState.setEventName(attendEventOutputData.getEventName());
+        // viewManagerModel.setActiveView(attendEventViewModel.getViewName());
+        viewManagerModel.firePropertyChanged();
+        attendEventViewModel.setState(attendEventState);
+        attendEventViewModel.firePropertyChanged();
+
+        /*
+        attendEventViewModel.firePropertyChanged();
+        viewManagerModel.setActiveView(attendEventViewModel.getViewName());
+        viewManagerModel.firePropertyChanged();
+
+         */
+    }
+    @Override
+    public void prepareFailView(AttendEventOutputData attendEventOutputData){
+        DisplayEventState attendEventState = attendEventViewModel.getState();
+        attendEventViewModel.setState(attendEventState);
+        attendEventViewModel.firePropertyChanged();
+        // viewManagerModel.setActiveView(attendEventViewModel.getViewName());
+        viewManagerModel.firePropertyChanged();
+    }
 }
