@@ -26,6 +26,7 @@ public class DBDataAccessObject implements SearchEventDataAccessInterface {
         urlBuilder.addQueryParameter("apikey", API_KEY);
         // Get only music events
         urlBuilder.addQueryParameter("classificationName", "music");
+        urlBuilder.addQueryParameter("size", "100");
 
         urlBuilder.addQueryParameter("countryCode", countryCode);
         urlBuilder.addQueryParameter("city", city);

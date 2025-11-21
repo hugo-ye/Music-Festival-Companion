@@ -59,18 +59,25 @@ public class SearchView extends JPanel {
     private final JLabel usernameLabel = new JLabel("Welcome, [USERNAME PLACEHOLDER]");
     private final JButton logoutButton = new JButton("Logout");
 
-    private final JTextField searchField = new JTextField("Enter event keyword");
+    private final JLabel searchLabel = new JLabel("Keyword");
+    private final JTextField searchField = new JTextField();
+
     private final JLabel countriesLabel = new JLabel("Countries");
     private final JTextField countriesField = new JTextField();
-    private final JLabel cityLabel = new JLabel("Town");
+
+    private final JLabel cityLabel = new JLabel("City");
     private final JTextField cityField = new JTextField();
+
     private final JLabel artistLabel = new JLabel("Artist");
     private final JTextField artistField = new JTextField();
+
     private final JLabel genreLabel = new JLabel("Genre");
     private final JList genreField = new JList(genre);
+
     private final JLabel dateLabel = new JLabel("Date");
     private final JDatePickerImpl startDatePicker = generateDataPicker();
     private final JDatePickerImpl endDatePicker = generateDataPicker();
+
     private final JButton findButton = new JButton("Find");
     private final JLabel systemInfoLabel = new JLabel();
 
@@ -79,9 +86,8 @@ public class SearchView extends JPanel {
         this.controller = controller;
         this.viewManagerModel = viewManagerModel;
 
-        // *** FIX: Setting layout directly on this JPanel ***
         this.setLayout(new GridBagLayout());
-        this.setPreferredSize(new Dimension(400, 600)); // Set preferred size for pack()
+        this.setPreferredSize(new Dimension(600, 600)); // Set preferred size for pack()
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
@@ -107,7 +113,11 @@ public class SearchView extends JPanel {
         gbc.anchor = GridBagConstraints.WEST;
         gbc.gridwidth = 3;
         gbc.weightx = 1.0;
-        this.add(searchField, gbc);
+        JPanel keywordPanel = new JPanel();
+        keywordPanel.setLayout(new BoxLayout(keywordPanel, BoxLayout.X_AXIS));
+        keywordPanel.add(searchLabel);
+        keywordPanel.add(searchField);
+        this.add(keywordPanel, gbc);
 
         // --- ROW 2: Location (Countries/City) ---
         gbc.gridx = 0;
