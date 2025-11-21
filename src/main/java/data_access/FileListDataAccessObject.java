@@ -1,6 +1,6 @@
 package data_access;
 
-import api.LocalDateAdapter;
+import data_formatters.LocalDateAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -32,16 +32,17 @@ import java.util.List;
 
 // hasnt been connected yet. just creating general functions
 public class FileListDataAccessObject {
-    private final String filePath = "userList.json";
+    private final String filePath;
     private final Gson gson;
     private static final Type USER_LIST_TYPE = new TypeToken<List<User>>() {
     }.getType();
 
-    public FileListDataAccessObject() {
+    public FileListDataAccessObject(String filePath) {
         gson = new GsonBuilder()
                 .setPrettyPrinting()
                 .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
                 .create();
+        this.filePath = filePath;
     }
 
     public List<User> read() {
@@ -55,7 +56,7 @@ public class FileListDataAccessObject {
             List<User> data = gson.fromJson(reader, USER_LIST_TYPE);
             return data != null ? data : new ArrayList<>();
         } catch (IOException e) {
-            System.out.println("Error reading from file");
+            System.out.println("Error reading file at filePath: " + filePath);
             throw new RuntimeException(e);
         }
     }
@@ -103,12 +104,7 @@ public class FileListDataAccessObject {
 
     public User existsByUsername(String username) {
         List<User> users = read();
-        for (User user : users) {
-            if (user.getUsername().equals(username)) {
-                return user;
-            }
-        }
-        return null;
+        return existsByUsername(username, users);
     }
 
     private void replaceUser(User oldUser, User newUser, List<User> users) {

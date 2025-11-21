@@ -1,4 +1,4 @@
-package api;
+package data_formatters;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
