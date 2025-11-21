@@ -1,9 +1,7 @@
 package use_case.attend_event;
 
 import entity.Event;
-import entity.User;
 
-import javax.swing.*;
 
 public class AttendEventInteractor implements AttendEventInputBoundary{
     public final AttendEventDataAccessInterface attendEventDataAccessInterface;
@@ -25,7 +23,7 @@ public class AttendEventInteractor implements AttendEventInputBoundary{
             attendEventDataAccessInterface.saveEvent(event);
             attendEventOutputBoundary.prepareSuccessView(outputData);
         }else {
-            attendEventOutputBoundary.prepareFailView(outputData);
+            attendEventOutputBoundary.prepareFailView("Event already Attended");
         }
     }
 

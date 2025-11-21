@@ -25,20 +25,13 @@ public class AttendEventPresenter implements AttendEventOutputBoundary {
         viewManagerModel.firePropertyChanged();
         attendEventViewModel.setState(attendEventState);
         attendEventViewModel.firePropertyChanged();
-
-        /*
-        attendEventViewModel.firePropertyChanged();
-        viewManagerModel.setActiveView(attendEventViewModel.getViewName());
-        viewManagerModel.firePropertyChanged();
-
-         */
     }
     @Override
-    public void prepareFailView(AttendEventOutputData attendEventOutputData){
+    public void prepareFailView(String error_message ){
         DisplayEventState attendEventState = attendEventViewModel.getState();
         attendEventViewModel.setState(attendEventState);
         attendEventViewModel.firePropertyChanged();
         // viewManagerModel.setActiveView(attendEventViewModel.getViewName());
-        viewManagerModel.firePropertyChanged();
+        viewManagerModel.firePropertyChanged(error_message);
     }
 }

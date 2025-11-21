@@ -1,7 +1,6 @@
 package use_case.attend_event;
 
 import entity.Event;
-import entity.User;
 
 public class AttendEventOutputData {
     private final String eventName;
