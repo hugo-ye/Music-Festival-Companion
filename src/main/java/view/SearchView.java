@@ -6,11 +6,11 @@ import javax.swing.event.DocumentListener;
 
 import data_access.DBDataAccessObject;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.display_search_results.DisplaySearchResultsViewModel;
 import interface_adapter.search_event.SearchEventController;
 import interface_adapter.search_event.SearchEventPresenter;
 import interface_adapter.search_event.SearchEventState;
 import interface_adapter.search_event.SearchEventViewModel;
-import interface_adapter.search_event_result.SearchEventResultState;
 import org.jdatepicker.impl.*;
 import use_case.search_event.SearchEventDataAccessInterface;
 import use_case.search_event.SearchEventInteractor;
@@ -25,6 +25,8 @@ import javax.swing.ListSelectionModel;
 
 
 public class SearchView extends JPanel {
+    private final String viewName = "search event";
+
     // default information
     String[] genre = {
             "alternative"
@@ -53,38 +55,23 @@ public class SearchView extends JPanel {
     private final ViewManagerModel viewManagerModel;
     private final SearchEventViewModel searchViewModel;
 
-    // view name
-    private final String viewName = "search event";
-    private final JLabel usernameLabel = new JLabel("Welcome, [USERNAME PLACEHOLDER]"); //TODO: Add username when the inmemmory is finished
-
+    // --- UI COMPONENTS ---
+    private final JLabel usernameLabel = new JLabel("Welcome, [USERNAME PLACEHOLDER]");
     private final JButton logoutButton = new JButton("Logout");
 
-    // search field panel
     private final JTextField searchField = new JTextField("Enter event keyword");
-
-    // JTextBox location panel
     private final JLabel countriesLabel = new JLabel("Countries");
     private final JTextField countriesField = new JTextField();
     private final JLabel cityLabel = new JLabel("Town");
     private final JTextField cityField = new JTextField();
-
-    // artist name panel
     private final JLabel artistLabel = new JLabel("Artist");
     private final JTextField artistField = new JTextField();
-
-    //genre panel
     private final JLabel genreLabel = new JLabel("Genre");
     private final JList genreField = new JList(genre);
-
-    // data picker panel
     private final JLabel dateLabel = new JLabel("Date");
     private final JDatePickerImpl startDatePicker = generateDataPicker();
     private final JDatePickerImpl endDatePicker = generateDataPicker();
-
-    // find button field
     private final JButton findButton = new JButton("Find");
-
-    // system information field
     private final JLabel systemInfoLabel = new JLabel();
 
     public SearchView(SearchEventViewModel searchViewModel, SearchEventController controller, ViewManagerModel viewManagerModel) {
@@ -92,12 +79,10 @@ public class SearchView extends JPanel {
         this.controller = controller;
         this.viewManagerModel = viewManagerModel;
 
-        JFrame frame = new JFrame(viewName);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 600); // Increased height to accommodate new header
+        // *** FIX: Setting layout directly on this JPanel ***
+        this.setLayout(new GridBagLayout());
+        this.setPreferredSize(new Dimension(400, 600)); // Set preferred size for pack()
 
-        // set general layout
-        frame.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -113,7 +98,7 @@ public class SearchView extends JPanel {
         headerPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 5));
         headerPanel.add(usernameLabel);
         headerPanel.add(logoutButton);
-        frame.add(headerPanel, gbc);
+        this.add(headerPanel, gbc);
         // ---------------------------------------------
 
         // --- ROW 1: Search Keyword Field ---
@@ -122,8 +107,7 @@ public class SearchView extends JPanel {
         gbc.anchor = GridBagConstraints.WEST;
         gbc.gridwidth = 3;
         gbc.weightx = 1.0;
-
-        frame.add(searchField, gbc);
+        this.add(searchField, gbc);
 
         // --- ROW 2: Location (Countries/City) ---
         gbc.gridx = 0;
@@ -138,7 +122,7 @@ public class SearchView extends JPanel {
         comboBoxPanel.add(countriesField);
         comboBoxPanel.add(cityLabel);
         comboBoxPanel.add(cityField);
-        frame.add(comboBoxPanel, gbc);
+        this.add(comboBoxPanel, gbc);
 
         // --- ROW 3: Artist Name ---
         gbc.gridx = 0;
@@ -151,7 +135,7 @@ public class SearchView extends JPanel {
         artistNamePanel.setLayout(new BoxLayout(artistNamePanel, BoxLayout.X_AXIS));
         artistNamePanel.add(artistLabel);
         artistNamePanel.add(artistField);
-        frame.add(artistNamePanel, gbc);
+        this.add(artistNamePanel, gbc);
 
         // --- ROW 4: Genre ---
         gbc.gridx = 0;
@@ -168,7 +152,7 @@ public class SearchView extends JPanel {
         genreField.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         genrePanel.add(genreLabel);
         genrePanel.add(genreScroll);
-        frame.add(genrePanel, gbc);
+        this.add(genrePanel, gbc);
 
         // --- ROW 5: Date Pickers ---
         gbc.gridx = 0;
@@ -182,7 +166,7 @@ public class SearchView extends JPanel {
         datePickerPanel.add(dateLabel);
         datePickerPanel.add(startDatePicker);
         datePickerPanel.add(endDatePicker);
-        frame.add(datePickerPanel, gbc);
+        this.add(datePickerPanel, gbc);
 
         // --- ROW 6: Find Button ---
         gbc.gridx = 0;
@@ -194,7 +178,7 @@ public class SearchView extends JPanel {
         JPanel findPanel = new JPanel();
         findPanel.setLayout(new BoxLayout(findPanel, BoxLayout.X_AXIS));
         findPanel.add(findButton);
-        frame.add(findPanel, gbc);
+        this.add(findPanel, gbc);
 
         // --- ROW 7: System Info ---
         gbc.gridx = 0;
@@ -223,24 +207,20 @@ public class SearchView extends JPanel {
             }
         });
 
-
         startDatePicker.addActionListener(e -> {
             SearchEventState currentState = searchViewModel.getState();
             currentState.setStartDate(startDatePicker.getJFormattedTextField().getText());
-            System.out.println("in view the start date is: " + currentState.getStartDate());
             searchViewModel.setState(currentState);
         });
 
         endDatePicker.addActionListener(e -> {
             SearchEventState currentState = searchViewModel.getState();
             currentState.setEndDate(endDatePicker.getJFormattedTextField().getText());
-            System.out.println("in view, end date is: " + currentState.getEndDate());
             searchViewModel.setState(currentState);
         });
 
 
-        frame.add(systemInfoPanel, gbc);
-        frame.pack();
+        this.add(systemInfoPanel, gbc);
 
         // --- Find Button Action Listener ---
         findButton.addActionListener(
@@ -260,27 +240,24 @@ public class SearchView extends JPanel {
                                     currentState.getCity(),
                                     currentState.getStartDate(),
                                     currentState.getEndDate(),
-                                    selectedGenres // Pass the selected list directly
+                                    selectedGenres
                             );
                         }
                     }
                 }
         );
 
-        // --- LOGOUT Button Action Listener (New) ---
+        // --- LOGOUT Button Action Listener---
         logoutButton.addActionListener(
                 new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         searchViewModel.setState(new SearchEventState());
-                        viewManagerModel.setState("logout");
-                        viewManagerModel.firePropertyChanged();
+                        viewManagerModel.setState("login"); // Using setActiveView
+                        viewManagerModel.firePropertyChanged("view"); // Use "view" property to signal ViewManager
                     }
                 }
         );
-
-
-        frame.setVisible(true);
     }
 
     static class DateLabelFormatter extends JFormattedTextField.AbstractFormatter {
@@ -421,16 +398,11 @@ public class SearchView extends JPanel {
         );
     }
 
+    public String getViewName() { return this.viewName; }
+
 
     public static void main(String[] args) {
         // Dummy setup for demonstration
-        SearchEventViewModel searchViewModel = new SearchEventViewModel();
-        SearchEventDataAccessInterface dao = new DBDataAccessObject();
-        ViewManagerModel viewManager = new ViewManagerModel();
-        SearchEventResultState resutState = new SearchEventResultState();
-        SearchEventPresenter presenter = new SearchEventPresenter(searchViewModel, viewManager, resutState);
-        SearchEventInteractor interactor = new SearchEventInteractor(dao, presenter);
-        SearchEventController controller = new SearchEventController(interactor);
-        SearchView searchView = new SearchView(searchViewModel, controller, viewManager);
     }
+
 }

@@ -6,15 +6,15 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.List;
 
-public class SearchEventResultState {
+public class DisplaySearchResultsViewModel {
     private List<Event> events;
     private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
-    public SearchEventResultState(SearchEventResultState copy) {
+    public DisplaySearchResultsViewModel(DisplaySearchResultsViewModel copy) {
         this.events = copy.getEvents();
     }
 
-    public SearchEventResultState() {
+    public DisplaySearchResultsViewModel() {
         this.events = null;
     }
 

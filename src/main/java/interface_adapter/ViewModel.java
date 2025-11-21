@@ -38,6 +38,7 @@ public class ViewModel<T> {
      * Fires a property changed event for the state of this ViewModel.
      */
     public void firePropertyChanged() {
+        System.out.println("fire property changed");
         this.support.firePropertyChange("state", null, this.state);
     }
 
