@@ -26,7 +26,6 @@ public class CreateEventListInteractor implements CreateEventListInputBoundary {
             presenter.prepareFailView("A list with this name already exists.");
             return;
         }
-
         // Generate ID for the new list
         String id = UUID.randomUUID().toString();
 
@@ -34,7 +33,7 @@ public class CreateEventListInteractor implements CreateEventListInputBoundary {
         EventList newList = new EventList(id, name);
 
         // Save to data access layer
-        dataAccess.save(newList);
+        dataAccess.create(newList);
 
         // Prepare output data for presenter
         CreateEventListOutputData outputData =

@@ -5,7 +5,7 @@ import entity.EventList;
 public interface CreateEventListDataAccessInterface {
 
     boolean existsByName(String listName);
-    void save(EventList eventList);
+    void create(EventList eventList);
 }
 
 //existByName and save is done in data access layer for In Memory
