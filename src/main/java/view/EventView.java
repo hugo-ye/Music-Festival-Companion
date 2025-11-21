@@ -1,5 +1,14 @@
 package view;
 
+import interface_adapter.ViewManagerModel;
+import interface_adapter.attend_event.AttendEventController;
+import interface_adapter.attend_event.AttendEventViewModel;
+import interface_adapter.display_event.DisplayEventController;
+import interface_adapter.display_event.DisplayEventState;
+import interface_adapter.display_event.DisplayEventViewModel;
+import interface_adapter.save_event_to_list.SaveEventToListController;
+import interface_adapter.save_event_to_list.SaveEventToListViewModel;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
