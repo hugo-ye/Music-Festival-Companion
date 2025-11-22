@@ -13,7 +13,9 @@ public class DeleteEventListInteractor implements DeleteEventListInputBoundary {
 
     @Override
     public void execute(DeleteEventListInputData inputData) {
-        String listId = inputData.getListId(); //
+
+        String rawId = inputData.getListId();
+        String listId = rawId.trim(); // Fixed
 
         // Check list exists
         if (!dataAccess.existsById(listId)) {
@@ -33,7 +35,5 @@ public class DeleteEventListInteractor implements DeleteEventListInputBoundary {
         DeleteEventListOutputData outputData =
                 new DeleteEventListOutputData(listId);
         presenter.prepareSuccessView(outputData);
-
-        // Addtional condition to check logged in state? to be implmeneted
     }
 }

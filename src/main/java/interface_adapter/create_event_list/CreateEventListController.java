@@ -11,9 +11,8 @@ public class CreateEventListController {
         this.interactor = interactor;
     }
 
-    public void create(String rawName) {
-        String name = rawName.trim(); // Fix raw user input
+    public void create(String name) {
         CreateEventListInputData inputData = new CreateEventListInputData(name); // Create input data object
-        interactor.execute(inputData); // 3. Call the use case
+        interactor.execute(inputData); // Call the use case
     }
 }

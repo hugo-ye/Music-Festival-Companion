@@ -15,11 +15,9 @@ public class CreateListDialog extends JDialog {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-        // Title
         JLabel titleLabel = new JLabel("Create List");
         panel.add(titleLabel);
 
-        // Name label + field
         JPanel namePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         namePanel.add(new JLabel("Name:"));
         namePanel.add(nameField);
@@ -29,5 +27,8 @@ public class CreateListDialog extends JDialog {
         panel.add(createButton);
         setContentPane(panel); // Places the UI inside the window
         pack(); // Automatically resize
+    }
+    public String getEnteredName() {
+        return nameField.getText();
     }
 }

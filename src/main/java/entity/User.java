@@ -8,22 +8,19 @@ import java.util.stream.Collectors;
 public class User {
     private final String username;
     private String password;
-    private final List<EventList> eventLists = new ArrayList<>();
+    private List<EventList> lists;
     private final EventList masterList = new EventList("master_list", "Master List");
 
     public User(String username, String password) {
         this.username = username;
         this.password = password;
+        this.lists = new ArrayList<>();
     }
 
     // Getters
 
     public String getUsername() {
         return username;
-    }
-
-    public List<EventList> getEventLists() {
-        return eventLists;
     }
 
     public EventList getMasterList() {
@@ -34,9 +31,37 @@ public class User {
         return password;
     }
 
-    // Mutators
+    public List<EventList> getLists() {
+        return lists;
+    }
 
+    public EventList getListById(String id) {
+        for (EventList list : lists) {
+            if (list.getId().equals(id)) {
+                return list;
+            }
+        }
+        return null;
+    }
+
+    public void setLists(List<EventList> lists) {
+        this.lists = lists;
+    }
+
+    // Mutators
     public void setPassword(String password) {
         this.password = password;
+
     }
-}
+    public void removeListById(String id) {
+        EventList toRemove = null;
+        for (EventList list : lists) {
+            if (list.getId().equals(id)) {
+                toRemove = list;
+                break;
+            }
+        }
+        if (toRemove != null) {
+            lists.remove(toRemove);
+        }
+    }}

@@ -4,4 +4,5 @@ import entity.User;
 
 public interface LoginSessionDataAccessInterface {
     void setCurrentUser(User user);
+    User getCurrentUser();
 }

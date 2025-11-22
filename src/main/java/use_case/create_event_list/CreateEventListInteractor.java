@@ -19,7 +19,14 @@ public class CreateEventListInteractor implements CreateEventListInputBoundary {
     @Override
     public void execute(CreateEventListInputData inputData) {
 
-        String name = inputData.getListName();
+        String rawName = inputData.getListName(); // Cleaned according to Abdullah's suggestion
+        String name = rawName.trim();
+
+        // List must not be empty
+        if (name.isEmpty()) {
+            presenter.prepareFailView("List name cannot be empty.");
+            return;
+        }
 
         // List names must be unique
         if (dataAccess.existsByName(name)) {

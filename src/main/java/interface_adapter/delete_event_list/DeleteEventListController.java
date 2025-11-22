@@ -10,14 +10,11 @@ public class DeleteEventListController {
     public DeleteEventListController(DeleteEventListInputBoundary interactor) {
         this.interactor = interactor;
     }
-    public void delete(String rawListId) {
-        // 1. Convert raw input (trim whitespace)
-        String listId = rawListId.trim();
+    public void delete(String listID) {
+        // Called by the UI when user clicks delete button for a given list
+        // @param listId the ID of the list to delete (as provided by the view)
+        DeleteEventListInputData inputData = new DeleteEventListInputData(listID);
 
-        // 2. Create Input Data DTO
-        DeleteEventListInputData inputData = new DeleteEventListInputData(listId);
-
-        // 3. Call interactor (use case)
         interactor.execute(inputData);
     }
 }

@@ -1,16 +1,14 @@
 package interface_adapter.delete_event_list;
 
-public class DeleteEventListViewModel {
-    private String listId;
-    private String message;
+import interface_adapter.ViewModel;
 
-    public String getListId() {
-        return listId; }
-    public void setListId(String listId) {
-        this.listId = listId; }
+public class DeleteEventListViewModel extends ViewModel<DeleteEventListState> {
 
-    public String getMessage() {
-        return message; }
-    public void setMessage(String message) {
-        this.message = message; }
+    public static final String VIEW_NAME = "event lists";
+
+    public DeleteEventListViewModel() {
+        super(VIEW_NAME);
+        // start with an empty state
+        setState(new DeleteEventListState());
+    }
 }
