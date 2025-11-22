@@ -10,6 +10,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.URL;
 
 public class EventView extends JPanel implements PropertyChangeListener {
     public final String viewName = "event details";
@@ -44,8 +48,6 @@ public class EventView extends JPanel implements PropertyChangeListener {
         this.viewManagerModel = viewManagerModel;
 
         this.displayEventViewModel.addPropertyChangeListener(this);
-
-
 
         this.setSize(400, 600);
         this.setLayout(new BorderLayout());
@@ -86,7 +88,15 @@ public class EventView extends JPanel implements PropertyChangeListener {
         buyButton = new JButton("Buy Tickets");
         buyButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                System.out.println("Buy button pressed");
+                if (ticketUrl != null) {
+                    try {
+                        Desktop.getDesktop().browse(new java.net.URI(ticketUrl));
+                    } catch (Exception e) {
+                        System.out.println("Could not open ticket URL.");
+                    }
+                } else {
+                    System.out.println("No ticket URL available.");
+                }
             }
         });
         buyPanel.add(buyButton);
@@ -123,6 +133,24 @@ public class EventView extends JPanel implements PropertyChangeListener {
         add(mainButtonPanel, BorderLayout.SOUTH);
     }
 
+    public void updateEventImage(String urlString) {
+        try {
+            // Check if url is valid
+            if (urlString != null && !urlString.isEmpty()) {
+                URL url = new URL(urlString);
+
+                BufferedImage image = ImageIO.read(url);
+                Image scaledImage = image.getScaledInstance(300, 300, Image.SCALE_SMOOTH);
+
+                imageLabel.setIcon(new ImageIcon(scaledImage));
+                imageLabel.setText("");
+            }
+        } catch (IOException e) {
+            imageLabel.setText("Image failed to load");
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         System.out.println("property changed in EventView with evt: " + evt.getPropertyName());
@@ -130,7 +158,7 @@ public class EventView extends JPanel implements PropertyChangeListener {
             DisplayEventState state = (DisplayEventState) evt.getNewValue();
 
             if (state != null) {
-                imageLabel.setText(imageLabel.getText() + state.getImageUrl());
+                updateEventImage(state.getImageUrl());
                 eventNameLabel.setText(eventNameLabel.getText() +  state.getEventName());
                 artistLabel.setText(artistLabel.getText() + state.getArtists());
                 venueLabel.setText(venueLabel.getText() +  state.getVenue());
