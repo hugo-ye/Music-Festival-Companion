@@ -22,7 +22,7 @@ Whether searching by artist, genre, or price, the application serves as a centra
 ## 3. User Stories
 The application is built to satisfy the following core user requirements:
 
-1.  I want to search for events by artist, genre, venue location, and date** so that I can easily find concerts that match my specific tastes and schedule. **Amir**
+1.  I want to search for events by artist, genre, venue location, and date so that I can easily find concerts that match my specific tastes and schedule. **Amir**
 2.  I want to sort my search results alphabetically, by date, by location, or by price, so that I can prioritize the most relevant options. **Hugo**
 3.  I want to view detailed information about an event and access a direct link to purchase tickets, so that I can make informed decisions and secure my spot quickly. **Abdullah**
 4.  I want to be able to "favorite" events I am going to attend to a main "Wishlist" with a single click, so that I don't lose track of potential concerts I want to attend. **Abdullah**
