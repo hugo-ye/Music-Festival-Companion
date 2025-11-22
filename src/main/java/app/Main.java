@@ -16,6 +16,7 @@ import use_case.display_event.DisplayEventInteractor;
 import use_case.search_event.SearchEventDataAccessInterface;
 import use_case.search_event.SearchEventInteractor;
 import use_case.sort_events.SortEventsInteractor;
+import view.EventView;
 import view.SearchResultView;
 import view.SearchView;
 import view.ViewManager;
@@ -30,13 +31,18 @@ public class Main {
 
         SearchEventViewModel searchViewModel = new SearchEventViewModel();
         SearchEventDataAccessInterface dao = new DBDataAccessObject();
+
         ViewManagerModel viewManager = new ViewManagerModel();
+
         DisplaySearchResultsViewModel resutState = new DisplaySearchResultsViewModel();
+
         SearchEventPresenter presenter = new SearchEventPresenter(searchViewModel, viewManager, resutState);
         SearchEventInteractor interactor = new SearchEventInteractor(dao, presenter);
         SearchEventController controller = new SearchEventController(interactor);
+
         CardLayout layout = new CardLayout();
         JPanel views = new JPanel(layout);
+
         SearchView searchView = new SearchView(searchViewModel, controller, viewManager);
         views.add(searchView, searchViewModel.getViewName());
 
@@ -48,8 +54,14 @@ public class Main {
         DisplayEventPresenter eventPresenter = new DisplayEventPresenter(eventViewModel, viewManager);
         DisplayEventInteractor eventInteractor = new DisplayEventInteractor(eventPresenter);
         DisplayEventController eventController = new DisplayEventController(eventInteractor);
+
         SearchResultView resultView = new SearchResultView(resutState, sortEventsController, eventController, viewManager);
         views.add(resultView, resutState.getViewName());
+
+        EventView eventView = new EventView(eventViewModel, viewManager);
+        views.add(eventView, eventViewModel.getViewName());
+
+
         ViewManager manager = new ViewManager(views, layout, viewManager);
 
         application.add(views);

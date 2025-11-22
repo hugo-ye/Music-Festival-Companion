@@ -1,5 +1,9 @@
 package view;
 
+import interface_adapter.ViewManagerModel;
+import interface_adapter.display_event.DisplayEventState;
+import interface_adapter.display_event.DisplayEventViewModel;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -7,8 +11,8 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-public class EventView extends JDialog implements PropertyChangeListener {
-    private final String viewName = "event details";
+public class EventView extends JPanel implements PropertyChangeListener {
+    public final String viewName = "event details";
     // Add ViewModels and Controllers here
 
     // Text fields and Labels
@@ -30,8 +34,19 @@ public class EventView extends JDialog implements PropertyChangeListener {
     // Data
     private String ticketUrl;
 
-    public EventView(Frame owner) {
-        super(owner, "Event Details", true);
+    // CA components
+    private final DisplayEventViewModel displayEventViewModel;
+    private final ViewManagerModel viewManagerModel;
+
+
+    public EventView(DisplayEventViewModel displayEventViewModel, ViewManagerModel viewManagerModel) {
+        this.displayEventViewModel = displayEventViewModel;
+        this.viewManagerModel = viewManagerModel;
+
+        this.displayEventViewModel.addPropertyChangeListener(this);
+
+
+
         this.setSize(400, 600);
         this.setLayout(new BorderLayout());
 
@@ -99,7 +114,7 @@ public class EventView extends JDialog implements PropertyChangeListener {
         closeButton = new JButton("Close");
         closeButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                dispose();
+                System.out.println("Close button pressed");
             }
         });
         closePanel.add(closeButton);
@@ -110,10 +125,26 @@ public class EventView extends JDialog implements PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
+        System.out.println("property changed in EventView with evt: " + evt.getPropertyName());
+        if (evt.getPropertyName().equals("refresh")) {
+            DisplayEventState state = (DisplayEventState) evt.getNewValue();
+
+            if (state != null) {
+                imageLabel.setText(imageLabel.getText() + state.getImageUrl());
+                eventNameLabel.setText(eventNameLabel.getText() +  state.getEventName());
+                artistLabel.setText(artistLabel.getText() + state.getArtists());
+                venueLabel.setText(venueLabel.getText() +  state.getVenue());
+                locationLabel.setText(locationLabel.getText() + state.getLocation());
+                dateLabel.setText(dateLabel.getText() + state.getDate());
+                genresLabel.setText(genresLabel.getText() + state.getGenres());
+                priceRangeLabel.setText(priceRangeLabel.getText() + state.getPrice());
+                ticketUrl = state.getTicketUrl();
+            }
+            revalidate();
+            repaint();
+
+        }
     }
 
-    public String getViewName() {
-        return this.viewName;
-    }
 
 }
