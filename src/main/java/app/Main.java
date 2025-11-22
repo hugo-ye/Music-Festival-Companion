@@ -1,6 +1,5 @@
 package app;
 
-
 import data_access.DBDataAccessObject;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.display_event.DisplayEventController;
@@ -26,48 +25,45 @@ import java.awt.*;
 
 public class Main {
     public static void main(String[] args) {
+
         JFrame application = new JFrame("Event Search Application");
         application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         SearchEventViewModel searchViewModel = new SearchEventViewModel();
         SearchEventDataAccessInterface dao = new DBDataAccessObject();
-
-        ViewManagerModel viewManager = new ViewManagerModel();
-
-        DisplaySearchResultsViewModel resutState = new DisplaySearchResultsViewModel();
-
-        SearchEventPresenter presenter = new SearchEventPresenter(searchViewModel, viewManager, resutState);
-        SearchEventInteractor interactor = new SearchEventInteractor(dao, presenter);
-        SearchEventController controller = new SearchEventController(interactor);
+        ViewManagerModel viewManagerModel = new ViewManagerModel();
+        DisplaySearchResultsViewModel resultViewModel = new DisplaySearchResultsViewModel();
+        DisplayEventViewModel eventViewModel = new DisplayEventViewModel();
 
         CardLayout layout = new CardLayout();
         JPanel views = new JPanel(layout);
+        ViewManager viewManager = new ViewManager(views, layout, viewManagerModel);
+        application.add(views);
 
-        SearchView searchView = new SearchView(searchViewModel, controller, viewManager);
+        SearchEventPresenter searchPresenter = new SearchEventPresenter(searchViewModel, viewManagerModel, resultViewModel);
+        SearchEventInteractor searchInteractor = new SearchEventInteractor(dao, searchPresenter);
+        SearchEventController searchController = new SearchEventController(searchInteractor);
+
+        SearchView searchView = new SearchView(searchViewModel, searchController, viewManagerModel);
         views.add(searchView, searchViewModel.getViewName());
 
-        SortEventsPresenter sortPresenter = new SortEventsPresenter(resutState);
+        SortEventsPresenter sortPresenter = new SortEventsPresenter(resultViewModel);
         SortEventsInteractor sortInteractor = new SortEventsInteractor(sortPresenter);
         SortEventsController sortEventsController = new SortEventsController(sortInteractor);
 
-        DisplayEventViewModel eventViewModel = new DisplayEventViewModel();
-        DisplayEventPresenter eventPresenter = new DisplayEventPresenter(eventViewModel, viewManager);
+        DisplayEventPresenter eventPresenter = new DisplayEventPresenter(eventViewModel, viewManagerModel);
         DisplayEventInteractor eventInteractor = new DisplayEventInteractor(eventPresenter);
         DisplayEventController eventController = new DisplayEventController(eventInteractor);
 
-        SearchResultView resultView = new SearchResultView(resutState, sortEventsController, eventController, viewManager);
-        views.add(resultView, resutState.getViewName());
+        SearchResultView resultView = new SearchResultView(resultViewModel, sortEventsController, eventController, viewManagerModel);
+        views.add(resultView, resultViewModel.getViewName());
 
-        EventView eventView = new EventView(eventViewModel, viewManager);
-        views.add(eventView, eventViewModel.getViewName());
+        // We do NOT add this to 'views' because it is a JDialog (floating window), not a JPanel.
+        // The popup view listens to the ViewModel and reveals itself when data arrives.
+        EventView eventPopup = new EventView(application, eventViewModel);
 
-
-        ViewManager manager = new ViewManager(views, layout, viewManager);
-
-        application.add(views);
-
-        viewManager.firePropertyChanged("view");
-
+        viewManagerModel.setState(searchViewModel.getViewName());
+        viewManagerModel.firePropertyChanged();
 
         application.pack();
         application.setVisible(true);

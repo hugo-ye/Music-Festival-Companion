@@ -36,8 +36,5 @@ public class DisplayEventPresenter implements DisplayEventOutputBoundary {
         this.viewModel.setState(displayEventState);
         this.viewModel.firePropertyChanged("refresh");
 
-        viewManagerModel.setState(viewModel.getViewName());
-        this.viewManagerModel.firePropertyChanged();
-
     }
 }

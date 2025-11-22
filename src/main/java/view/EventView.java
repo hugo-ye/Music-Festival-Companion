@@ -1,33 +1,32 @@
 package view;
 
-import interface_adapter.ViewManagerModel;
 import interface_adapter.display_event.DisplayEventState;
 import interface_adapter.display_event.DisplayEventViewModel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
 
-public class EventView extends JPanel implements PropertyChangeListener {
+public class EventView extends JDialog implements PropertyChangeListener {
     public final String viewName = "event details";
-    // Add ViewModels and Controllers here
 
-    // Text fields and Labels
+    // UI Components
     private final JLabel imageLabel;
-    private final JLabel eventNameLabel;
-    private final JLabel artistLabel;
-    private final JLabel venueLabel;
-    private final JLabel locationLabel;
-    private final JLabel dateLabel;
-    private final JLabel genresLabel;
-    private final JLabel priceRangeLabel;
+
+    // JTextArea allows for text wrapping, JLabel does not. Change.
+    private final JTextArea eventNameValue;
+    private final JTextArea artistValue;
+    private final JTextArea venueValue;
+    private final JTextArea locationValue;
+    private final JTextArea dateValue;
+    private final JTextArea genresValue;
+    private final JTextArea priceRangeValue;
 
     // Buttons
     private final JButton buyButton;
@@ -38,141 +37,185 @@ public class EventView extends JPanel implements PropertyChangeListener {
     // Data
     private String ticketUrl;
 
-    // CA components
+    // CA Components
     private final DisplayEventViewModel displayEventViewModel;
-    private final ViewManagerModel viewManagerModel;
 
+    // Constants
+    private static final Dimension IMAGE_SIZE = new Dimension(300, 300);
+    private static final Font LABEL_FONT = new Font("SansSerif", Font.BOLD, 12);
+    private static final Font VALUE_FONT = new Font("SansSerif", Font.PLAIN, 12);
 
-    public EventView(DisplayEventViewModel displayEventViewModel, ViewManagerModel viewManagerModel) {
+    private static final int TEXT_AREA_COLUMNS = 25;
+
+    public EventView(Frame owner, DisplayEventViewModel displayEventViewModel) {
+        super(owner, "Event Details", true);
         this.displayEventViewModel = displayEventViewModel;
-        this.viewManagerModel = viewManagerModel;
-
         this.displayEventViewModel.addPropertyChangeListener(this);
 
-        this.setSize(400, 600);
+        this.setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
         this.setLayout(new BorderLayout());
+        this.setResizable(false);
 
-        JPanel infoPanel = new JPanel();
-        infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
+        // Initialize fields using the helper method
+        eventNameValue = createValueArea();
+        artistValue = createValueArea();
+        venueValue = createValueArea();
+        locationValue = createValueArea();
+        dateValue = createValueArea();
+        genresValue = createValueArea();
+        priceRangeValue = createValueArea();
 
-        imageLabel = new JLabel("Event Image Placeholder");
-        infoPanel.add(imageLabel);
+        // Info panel for details
+        JPanel infoPanel = new JPanel(new GridBagLayout());
+        infoPanel.setBorder(BorderFactory.createEmptyBorder(15, 20, 15, 20));
+        GridBagConstraints gbc = new GridBagConstraints();
 
-        eventNameLabel = new JLabel("Event Name");
-        infoPanel.add(eventNameLabel);
+        // Image Setup
+        imageLabel = new JLabel("Loading...", SwingConstants.CENTER);
+        imageLabel.setPreferredSize(IMAGE_SIZE);
+        imageLabel.setMinimumSize(IMAGE_SIZE);
+        imageLabel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
 
-        artistLabel = new JLabel("Artist Name");
-        infoPanel.add(artistLabel);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        gbc.insets = new Insets(0, 0, 15, 0);
+        gbc.fill = GridBagConstraints.CENTER;
+        infoPanel.add(imageLabel, gbc);
 
-        venueLabel = new JLabel("Venue Name");
-        infoPanel.add(venueLabel);
+        // 2. Data Fields Setup
+        gbc.gridwidth = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.anchor = GridBagConstraints.NORTHWEST;
+        int row = 1;
 
-        locationLabel = new JLabel("Location");
-        infoPanel.add(locationLabel);
-
-        dateLabel = new JLabel("Date");
-        infoPanel.add(dateLabel);
-
-        genresLabel = new JLabel("Genres");
-        infoPanel.add(genresLabel);
-
-        priceRangeLabel = new JLabel("Price Range");
-        infoPanel.add(priceRangeLabel);
+        addLabelAndValue(infoPanel, "Event Name:", eventNameValue, gbc, row++);
+        addLabelAndValue(infoPanel, "Artist:", artistValue, gbc, row++);
+        addLabelAndValue(infoPanel, "Venue:", venueValue, gbc, row++);
+        addLabelAndValue(infoPanel, "Location:", locationValue, gbc, row++);
+        addLabelAndValue(infoPanel, "Date:", dateValue, gbc, row++);
+        addLabelAndValue(infoPanel, "Genres:", genresValue, gbc, row++);
+        addLabelAndValue(infoPanel, "Price Range:", priceRangeValue, gbc, row++);
 
         add(infoPanel, BorderLayout.CENTER);
 
-        JPanel mainButtonPanel = new JPanel();
-        mainButtonPanel.setLayout(new BoxLayout(mainButtonPanel, BoxLayout.Y_AXIS));
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        JPanel buyPanel = new JPanel();
         buyButton = new JButton("Buy Tickets");
-        buyButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                if (ticketUrl != null) {
-                    try {
-                        Desktop.getDesktop().browse(new java.net.URI(ticketUrl));
-                    } catch (Exception e) {
-                        System.out.println("Could not open ticket URL.");
-                    }
-                } else {
-                    System.out.println("No ticket URL available.");
-                }
-            }
-        });
-        buyPanel.add(buyButton);
-        mainButtonPanel.add(buyPanel);
+        buyButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        buyButton.setFont(new Font("SansSerif", Font.BOLD, 14));
+        buyButton.setOpaque(true);
+        buyButton.addActionListener(this::handleBuyTickets);
 
-        JPanel actionPanel = new JPanel();
+        JPanel secondaryActions = new JPanel(new FlowLayout(FlowLayout.CENTER));
         attendButton = new JButton("Attend");
-        attendButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                System.out.println("Attend button pressed");
-            }
-        });
-        actionPanel.add(attendButton);
-
         saveButton = new JButton("Save");
-        saveButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                System.out.println("Save button pressed");
-            }
-        });
-        actionPanel.add(saveButton);
-        mainButtonPanel.add(actionPanel);
-
-        JPanel closePanel = new JPanel();
         closeButton = new JButton("Close");
-        closeButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                System.out.println("Close button pressed");
-            }
-        });
-        closePanel.add(closeButton);
-        mainButtonPanel.add(closePanel);
 
-        add(mainButtonPanel, BorderLayout.SOUTH);
+        // Button listeners...
+        attendButton.addActionListener(evt -> System.out.println("Attend pressed"));
+        saveButton.addActionListener(evt -> System.out.println("Save pressed"));
+        closeButton.addActionListener(evt -> this.setVisible(false));
+
+        secondaryActions.add(attendButton);
+        secondaryActions.add(saveButton);
+        secondaryActions.add(closeButton);
+
+        buttonPanel.add(buyButton);
+        buttonPanel.add(Box.createVerticalStrut(5));
+        buttonPanel.add(secondaryActions);
+
+        add(buttonPanel, BorderLayout.SOUTH);
+
+        this.pack();
+        this.setLocationRelativeTo(owner);
     }
 
-    public void updateEventImage(String urlString) {
-        try {
-            // Check if url is valid
-            if (urlString != null && !urlString.isEmpty()) {
-                URL url = new URL(urlString);
+    /**
+     * Creates a JTextArea configured to look like a multiline Label.
+     */
+    private JTextArea createValueArea() {
+        JTextArea area = new JTextArea();
+        area.setFont(VALUE_FONT);
+        area.setLineWrap(true);
+        area.setWrapStyleWord(true);
+        area.setEditable(false);
+        area.setOpaque(false);
+        area.setColumns(TEXT_AREA_COLUMNS);
+        return area;
+    }
 
-                BufferedImage image = ImageIO.read(url);
-                Image scaledImage = image.getScaledInstance(300, 300, Image.SCALE_SMOOTH);
+    private void addLabelAndValue(JPanel panel, String labelText, JTextArea valueArea, GridBagConstraints gbc, int row) {
+        gbc.gridx = 0;
+        gbc.gridy = row;
+        gbc.weightx = 0.0;
+        gbc.insets = new Insets(0, 0, 5, 10);
+        JLabel staticLabel = new JLabel(labelText);
+        staticLabel.setFont(LABEL_FONT);
 
-                imageLabel.setIcon(new ImageIcon(scaledImage));
-                imageLabel.setText("");
+        gbc.anchor = GridBagConstraints.NORTHWEST;
+        panel.add(staticLabel, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = row;
+        gbc.weightx = 1.0;
+        gbc.insets = new Insets(0, 0, 5, 0);
+        panel.add(valueArea, gbc);
+    }
+
+    private void handleBuyTickets(java.awt.event.ActionEvent evt) {
+        if (ticketUrl != null && !ticketUrl.isEmpty()) {
+            try {
+                Desktop.getDesktop().browse(new URI(ticketUrl));
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Could not open link.");
             }
-        } catch (IOException e) {
-            imageLabel.setText("Image failed to load");
-            e.printStackTrace();
+        } else {
+            JOptionPane.showMessageDialog(this, "No ticket URL available.");
         }
+    }
+
+    public void setEventImage(String urlString) {
+        SwingUtilities.invokeLater(() -> {
+            try {
+                if (urlString != null && !urlString.isEmpty()) {
+                    URL url = new URL(urlString);
+                    BufferedImage image = ImageIO.read(url);
+                    Image scaledImage = image.getScaledInstance(IMAGE_SIZE.width, IMAGE_SIZE.height, Image.SCALE_SMOOTH);
+                    imageLabel.setIcon(new ImageIcon(scaledImage));
+                    imageLabel.setText("");
+                } else {
+                    imageLabel.setIcon(null);
+                    imageLabel.setText("No Image Available");
+                }
+            } catch (IOException e) {
+                imageLabel.setIcon(null);
+                imageLabel.setText("Image Error");
+            }
+        });
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        System.out.println("property changed in EventView with evt: " + evt.getPropertyName());
-        if (evt.getPropertyName().equals("refresh")) {
+        if ("refresh".equals(evt.getPropertyName())) {
             DisplayEventState state = (DisplayEventState) evt.getNewValue();
-
             if (state != null) {
-                updateEventImage(state.getImageUrl());
-                eventNameLabel.setText(eventNameLabel.getText() +  state.getEventName());
-                artistLabel.setText(artistLabel.getText() + state.getArtists());
-                venueLabel.setText(venueLabel.getText() +  state.getVenue());
-                locationLabel.setText(locationLabel.getText() + state.getLocation());
-                dateLabel.setText(dateLabel.getText() + state.getDate());
-                genresLabel.setText(genresLabel.getText() + state.getGenres());
-                priceRangeLabel.setText(priceRangeLabel.getText() + state.getPrice());
+                eventNameValue.setText(state.getEventName());
+                artistValue.setText(state.getArtists());
+                venueValue.setText(state.getVenue());
+                locationValue.setText(state.getLocation());
+                dateValue.setText(state.getDate());
+                genresValue.setText(state.getGenres());
+                priceRangeValue.setText(state.getPrice());
                 ticketUrl = state.getTicketUrl();
-            }
-            revalidate();
-            repaint();
 
+                setEventImage(state.getImageUrl());
+
+                this.pack();
+                this.setVisible(true);
+            }
         }
     }
-
-
 }
