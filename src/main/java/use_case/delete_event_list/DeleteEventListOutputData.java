@@ -1,10 +1,10 @@
 package use_case.delete_event_list;
 
-public class DeleteEventListInputData {
+public class DeleteEventListOutputData {
 
     private final String listId;
 
-    public DeleteEventListInputData(String listId) {
+    public DeleteEventListOutputData(String listId) {
         this.listId = listId;
     }
 
