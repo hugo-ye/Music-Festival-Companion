@@ -28,7 +28,7 @@ The application is built to satisfy the following core user requirements:
 4.  I want to be able to "favorite" events I am going to attend to a main "Wishlist" with a single click, so that I don't lose track of potential concerts I want to attend. **Abdullah**
 5.  I want to create custom-named lists (and delete them if necessary), so that I can categorize events (e.g., "Date Night options"). **Cheuk-Fung**
 6.  I want to add specific events to my custom lists and remove them if I change my mind, so my itinerary is always up to date. **Yifu**
-7.  I want to receive reminders about upcoming events whenever I open the app, so that I remember to attend.
+7.  I want to receive reminders about upcoming events whenever I open the app, so that I remember to attend. **Yifu**
 8.  I want to create secure accounts for myself, my friends, and my family, and log in with a password, so that my saved events and lists are private and accessible only to me. **Hugo**
 
 ---
