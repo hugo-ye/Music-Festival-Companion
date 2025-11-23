@@ -36,6 +36,7 @@ public class SearchView extends JPanel implements PropertyChangeListener {
     // UI components
     private final JLabel usernameLabel = new JLabel("Welcome, [User]");
     private final JButton logoutButton = new JButton("Logout");
+    private final JButton listsButton = new JButton("My Lists");
 
     private final JLabel searchLabel = new JLabel("Keyword:");
     private final JTextField searchField = new JTextField(20);
@@ -82,9 +83,15 @@ public class SearchView extends JPanel implements PropertyChangeListener {
 
         ViewStyle.applyHeaderStyle(usernameLabel);
         ViewStyle.applyButtonStyle(logoutButton);
+        ViewStyle.applyButtonStyle(listsButton);
+
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
+        buttonPanel.setOpaque(false); // Make sure it matches background
+        buttonPanel.add(listsButton);
+        buttonPanel.add(logoutButton);
 
         headerPanel.add(usernameLabel, BorderLayout.WEST);
-        headerPanel.add(logoutButton, BorderLayout.EAST);
+        headerPanel.add(buttonPanel, BorderLayout.EAST);
         this.add(headerPanel, BorderLayout.NORTH);
 
         // Form panel
@@ -265,6 +272,13 @@ public class SearchView extends JPanel implements PropertyChangeListener {
 
             viewManagerModel.setState("login");
             viewManagerModel.firePropertyChanged("view");
+        });
+
+        listsButton.addActionListener(e -> {
+            // Switch view to "Lists"
+            viewManagerModel.setState("Lists");
+            viewManagerModel.firePropertyChanged("view");
+            System.out.println("nav to lists");
         });
     }
 
