@@ -11,10 +11,15 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
-public class SearchView extends JPanel {
+public class SearchView extends JPanel implements PropertyChangeListener {
     public final String viewName = "search event";
 
     String[] genre = {
@@ -48,6 +53,8 @@ public class SearchView extends JPanel {
     private final JList<String> genreField;
 
     private final JLabel dateLabel = new JLabel("Date Range:");
+
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private final JDatePickerImpl startDatePicker = generateDataPicker();
     private final JDatePickerImpl endDatePicker = generateDataPicker();
 
@@ -62,13 +69,15 @@ public class SearchView extends JPanel {
         this.controller = controller;
         this.viewManagerModel = viewManagerModel;
 
+        this.searchViewModel.addPropertyChangeListener(this);
+
         genreField = new JList<>(genre);
 
         this.setLayout(new BorderLayout());
         this.setBackground(ViewStyle.WINDOW_BACKGROUND);
         this.setPreferredSize(new Dimension(800, 700));
 
-        // Header
+        // Header panel
         JPanel headerPanel = ViewStyle.createSectionPanel(new BorderLayout());
 
         ViewStyle.applyHeaderStyle(usernameLabel);
@@ -218,12 +227,12 @@ public class SearchView extends JPanel {
         ViewStyle.applyTextFieldStyle(artistField);
     }
 
-    // St up the listeners
     private void setupListeners() {
         addArtistListener();
         addCountriesListener();
         addCityListener();
         addKeywordListener();
+        addDateListeners();
 
         genreField.addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
@@ -236,7 +245,6 @@ public class SearchView extends JPanel {
 
         findButton.addActionListener(e -> {
             SearchEventState currentState = searchViewModel.getState();
-            List<String> selectedGenres = genreField.getSelectedValuesList();
 
             controller.execute(
                     currentState.getSearch_keyword(),
@@ -245,20 +253,24 @@ public class SearchView extends JPanel {
                     currentState.getCity(),
                     currentState.getStartDate(),
                     currentState.getEndDate(),
-                    selectedGenres
+                    currentState.getGenre()
             );
         });
 
         logoutButton.addActionListener(e -> {
-            searchViewModel.setState(new SearchEventState());
+            SearchEventState emptyState = new SearchEventState();
+            searchViewModel.setState(emptyState);
+            // Fire property change so the View updates (clears fields)
+            searchViewModel.firePropertyChanged();
+
             viewManagerModel.setState("login");
             viewManagerModel.firePropertyChanged("view");
         });
     }
-    // Date picker formatter
+
     static class DateLabelFormatter extends JFormattedTextField.AbstractFormatter {
         private final String datePattern = "yyyy-MM-dd";
-        private final java.text.SimpleDateFormat dateFormatter = new java.text.SimpleDateFormat(datePattern);
+        private final SimpleDateFormat dateFormatter = new SimpleDateFormat(datePattern);
 
         @Override
         public Object stringToValue(String text) throws java.text.ParseException {
@@ -268,8 +280,12 @@ public class SearchView extends JPanel {
         @Override
         public String valueToString(Object value) {
             if (value != null) {
-                java.util.Calendar cal = (java.util.Calendar) value;
-                return dateFormatter.format(cal.getTime());
+                if (value instanceof Calendar) {
+                    return dateFormatter.format(((Calendar) value).getTime());
+                }
+                if (value instanceof Date) {
+                    return dateFormatter.format(value);
+                }
             }
             return "";
         }
@@ -285,55 +301,127 @@ public class SearchView extends JPanel {
         return new JDatePickerImpl(datePanel, new DateLabelFormatter());
     }
 
-    private void addCountriesListener() {
-        countriesField.getDocument().addDocumentListener(new SimpleDocumentListener(() -> {
+
+    private void addDateListeners() {
+        // Listener for Start Date
+        startDatePicker.getModel().addChangeListener(e -> {
+            Date selectedDate = (Date) startDatePicker.getModel().getValue();
             SearchEventState currentState = searchViewModel.getState();
-            currentState.setCountry(countriesField.getText());
+            if (selectedDate != null) {
+                currentState.setStartDate(dateFormat.format(selectedDate));
+            } else {
+                currentState.setStartDate("");
+            }
             searchViewModel.setState(currentState);
-        }));
+        });
+
+        // Listener for End Date
+        endDatePicker.getModel().addChangeListener(e -> {
+            Date selectedDate = (Date) endDatePicker.getModel().getValue();
+            SearchEventState currentState = searchViewModel.getState();
+            if (selectedDate != null) {
+                currentState.setEndDate(dateFormat.format(selectedDate));
+            } else {
+                currentState.setEndDate("");
+            }
+            searchViewModel.setState(currentState);
+        });
+    }
+
+    private void addCountriesListener() {
+        countriesField.getDocument().addDocumentListener(new DocumentListener() {
+            private void update() {
+                SearchEventState currentState = searchViewModel.getState();
+                currentState.setCountry(countriesField.getText());
+                searchViewModel.setState(currentState);
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) { update(); }
+            @Override
+            public void removeUpdate(DocumentEvent e) { update(); }
+            @Override
+            public void changedUpdate(DocumentEvent e) { update(); }
+        });
     }
 
     private void addCityListener() {
-        cityField.getDocument().addDocumentListener(new SimpleDocumentListener(() -> {
-            SearchEventState currentState = searchViewModel.getState();
-            currentState.setCity(cityField.getText());
-            searchViewModel.setState(currentState);
-        }));
+        cityField.getDocument().addDocumentListener(new DocumentListener() {
+            private void update() {
+                SearchEventState currentState = searchViewModel.getState();
+                currentState.setCity(cityField.getText());
+                searchViewModel.setState(currentState);
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) { update(); }
+            @Override
+            public void removeUpdate(DocumentEvent e) { update(); }
+            @Override
+            public void changedUpdate(DocumentEvent e) { update(); }
+        });
     }
 
     private void addKeywordListener() {
-        searchField.getDocument().addDocumentListener(new SimpleDocumentListener(() -> {
-            SearchEventState currentState = searchViewModel.getState();
-            currentState.setSearch_keyword(searchField.getText());
-            searchViewModel.setState(currentState);
-        }));
+        searchField.getDocument().addDocumentListener(new DocumentListener() {
+            private void update() {
+                SearchEventState currentState = searchViewModel.getState();
+                currentState.setSearch_keyword(searchField.getText());
+                searchViewModel.setState(currentState);
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) { update(); }
+            @Override
+            public void removeUpdate(DocumentEvent e) { update(); }
+            @Override
+            public void changedUpdate(DocumentEvent e) { update(); }
+        });
     }
 
     private void addArtistListener() {
-        artistField.getDocument().addDocumentListener(new SimpleDocumentListener(() -> {
-            SearchEventState currentState = searchViewModel.getState();
-            currentState.setArtist(artistField.getText());
-            searchViewModel.setState(currentState);
-        }));
+        artistField.getDocument().addDocumentListener(new DocumentListener() {
+            private void update() {
+                SearchEventState currentState = searchViewModel.getState();
+                currentState.setArtist(artistField.getText());
+                searchViewModel.setState(currentState);
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) { update(); }
+            @Override
+            public void removeUpdate(DocumentEvent e) { update(); }
+            @Override
+            public void changedUpdate(DocumentEvent e) { update(); }
+        });
     }
 
-    @FunctionalInterface
-    interface SimpleDocumentUpdate {
-        void update();
-    }
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        SearchEventState state = (SearchEventState) evt.getNewValue();
 
-    static class SimpleDocumentListener implements DocumentListener {
-        private final SimpleDocumentUpdate updateLogic;
-
-        public SimpleDocumentListener(SimpleDocumentUpdate updateLogic) {
-            this.updateLogic = updateLogic;
+        // Update text fields if they don't match state
+        if (!searchField.getText().equals(state.getSearch_keyword())) {
+            searchField.setText(state.getSearch_keyword());
+        }
+        if (!countriesField.getText().equals(state.getCountry())) {
+            countriesField.setText(state.getCountry());
+        }
+        if (!cityField.getText().equals(state.getCity())) {
+            cityField.setText(state.getCity());
+        }
+        if (!artistField.getText().equals(state.getArtist())) {
+            artistField.setText(state.getArtist());
         }
 
-        @Override
-        public void insertUpdate(DocumentEvent e) { updateLogic.update(); }
-        @Override
-        public void removeUpdate(DocumentEvent e) { updateLogic.update(); }
-        @Override
-        public void changedUpdate(DocumentEvent e) { updateLogic.update(); }
+        systemInfoLabel.setText(state.getErrorMessage());
+
+        // If state dates are empty, clear the pickers
+        if (state.getStartDate().isEmpty()) {
+            startDatePicker.getModel().setValue(null);
+        }
+        if (state.getEndDate().isEmpty()) {
+            endDatePicker.getModel().setValue(null);
+        }
     }
 }
