@@ -5,11 +5,11 @@ import entity.EventList;
 
 public class SaveEventToListInteractor implements SaveEventToListInputBoundary{
     private final SaveEventToListDataAccessInterface dataAccess;
-    private final SaveEventToListOutputBoundary preseneter;
+    private final SaveEventToListOutputBoundary presenter;
 
     public SaveEventToListInteractor(SaveEventToListDataAccessInterface dataAccess, SaveEventToListOutputBoundary preseneter) {
         this.dataAccess = dataAccess;
-        this.preseneter = preseneter;
+        this.presenter = preseneter;
     }
 
     @Override
@@ -28,6 +28,6 @@ public class SaveEventToListInteractor implements SaveEventToListInputBoundary{
 
         SaveEventToListOutputData output= new SaveEventToListOutputData(event, eventLists, message.toString());
 
-        preseneter.present(output);
+        presenter.present(output);
     }
 }
