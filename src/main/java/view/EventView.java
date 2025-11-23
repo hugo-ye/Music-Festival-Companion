@@ -242,4 +242,5 @@ public class EventView extends JDialog implements PropertyChangeListener {
             }
         }
     }
+    public String getViewName(){return viewName;}
 }

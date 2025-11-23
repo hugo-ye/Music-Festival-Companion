@@ -424,4 +424,7 @@ public class SearchView extends JPanel implements PropertyChangeListener {
             endDatePicker.getModel().setValue(null);
         }
     }
+    public String getViewName() {
+        return viewName;
+    }
 }

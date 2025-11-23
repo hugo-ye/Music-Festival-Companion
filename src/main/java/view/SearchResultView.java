@@ -198,4 +198,7 @@ public class SearchResultView extends JPanel implements PropertyChangeListener {
         eventRow.setMaximumSize(new Dimension(500, 150));
         return eventRow;
     }
+    public String getViewName() {
+        return viewName;
+    }
 }
