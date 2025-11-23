@@ -1,11 +1,4 @@
 package view;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.List;
 
 import entity.Event;
 import interface_adapter.ViewManagerModel;
@@ -16,110 +9,196 @@ import interface_adapter.sort_events.SortEventsController;
 import use_case.sort_events.SortEventsCriteria;
 import use_case.sort_events.SortEventsOrder;
 
-public class SearchResultView extends JPanel implements PropertyChangeListener {
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.List;
 
-    private final String viewName = "search results";
-    // Models and Controllers
+public class SearchResultView extends JPanel implements PropertyChangeListener {
+    public final String viewName = "search results";
+
     private final DisplaySearchResultsViewModel displaySearchResultsViewModel;
     private final SortEventsController sortEventsController;
     private final DisplayEventController displayEventController;
     private final ViewManagerModel viewManagerModel;
 
-
-    // Swing components
     private final JComboBox<SortEventsCriteria> sortCriteriaComboBox;
     private final JComboBox<SortEventsOrder> sortOrderComboBox;
     private final JButton sortButton;
     private final JPanel eventsPanel;
     private final JButton backButton;
 
-    public SearchResultView(DisplaySearchResultsViewModel displaySearchResultsViewModel, SortEventsController sortEventsController, DisplayEventController displayEventController, ViewManagerModel viewManagerModel) {
+    public SearchResultView(DisplaySearchResultsViewModel displaySearchResultsViewModel,
+                            SortEventsController sortEventsController,
+                            DisplayEventController displayEventController,
+                            ViewManagerModel viewManagerModel) {
+
         this.displaySearchResultsViewModel = displaySearchResultsViewModel;
         this.sortEventsController = sortEventsController;
         this.displayEventController = displayEventController;
         this.viewManagerModel = viewManagerModel;
-
         this.displaySearchResultsViewModel.addPropertyChangeListener(this);
-        this.setLayout(new BorderLayout());
 
-        JPanel topPanel = new JPanel();
+        this.setLayout(new BorderLayout());
+        this.setBackground(ViewStyle.WINDOW_BACKGROUND);
+
+        // Top panel
+        JPanel topPanel = ViewStyle.createSectionPanel(new FlowLayout(FlowLayout.LEFT));
+
+        JLabel sortLabel = new JLabel("Sort by:");
+        ViewStyle.applySecondaryLabelStyle(sortLabel);
+
         sortCriteriaComboBox = new JComboBox<>(SortEventsCriteria.values());
         sortOrderComboBox = new JComboBox<>(SortEventsOrder.values());
         sortButton = new JButton("Sort");
 
-        sortButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                if (evt.getSource() == sortButton) {
-                    DisplaySearchResultsState currentState = displaySearchResultsViewModel.getState();
-                    List<Event> currentEvents = currentState.getEvents();
-                    SortEventsCriteria selectedCriteria = (SortEventsCriteria) sortCriteriaComboBox.getSelectedItem();
-                    SortEventsOrder selectedOrder = (SortEventsOrder) sortOrderComboBox.getSelectedItem();
+        ViewStyle.applyComboBoxStyle(sortCriteriaComboBox);
+        ViewStyle.applyComboBoxStyle(sortOrderComboBox);
+        ViewStyle.applyButtonStyle(sortButton);
 
-                    if (currentEvents != null) {
-                        SearchResultView.this.sortEventsController.execute(currentEvents, selectedCriteria, selectedOrder);
-                    }
-                }
+        sortButton.addActionListener(evt -> {
+            DisplaySearchResultsState currentState = displaySearchResultsViewModel.getState();
+            List<Event> currentEvents = currentState.getEvents();
+            SortEventsCriteria selectedCriteria = (SortEventsCriteria) sortCriteriaComboBox.getSelectedItem();
+            SortEventsOrder selectedOrder = (SortEventsOrder) sortOrderComboBox.getSelectedItem();
+            if (currentEvents != null) {
+                sortEventsController.execute(currentEvents, selectedCriteria, selectedOrder);
             }
         });
 
-        topPanel.add(new JLabel("Sort by"));
+        topPanel.add(sortLabel);
         topPanel.add(sortCriteriaComboBox);
         topPanel.add(sortOrderComboBox);
         topPanel.add(sortButton);
         add(topPanel, BorderLayout.NORTH);
 
+        // Event list panel
         eventsPanel = new JPanel();
-        eventsPanel.setLayout(new BoxLayout(eventsPanel, BoxLayout.Y_AXIS));
+        eventsPanel.setLayout(new GridBagLayout());
+        eventsPanel.setBackground(ViewStyle.WINDOW_BACKGROUND);
+
         JScrollPane scrollPane = new JScrollPane(eventsPanel);
+        ViewStyle.applyScrollPaneStyle(scrollPane);
         add(scrollPane, BorderLayout.CENTER);
 
-        JPanel bottomPanel = new JPanel();
+        // Bottom panel
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        bottomPanel.setBackground(ViewStyle.WINDOW_BACKGROUND);
+        bottomPanel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(1, 0, 0, 0, ViewStyle.BORDER_SUBTLE),
+                BorderFactory.createEmptyBorder(10, 10, 10, 10)
+        ));
+
         backButton = new JButton("Back");
-        backButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                viewManagerModel.setState("search events");
-                viewManagerModel.firePropertyChanged();
-            }
+        ViewStyle.applyButtonStyle(backButton);
+        backButton.addActionListener(evt -> {
+            System.out.println("Back button pressed");
+            viewManagerModel.setState("search event");
+            viewManagerModel.firePropertyChanged();
         });
         bottomPanel.add(backButton);
-        add(backButton, BorderLayout.SOUTH);
-
-}
+        add(bottomPanel, BorderLayout.SOUTH);
+    }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getPropertyName().equals("refresh")) {
+        if ("refresh".equals(evt.getPropertyName())) {
             DisplaySearchResultsState state = (DisplaySearchResultsState) evt.getNewValue();
             List<Event> events = state.getEvents();
+
             eventsPanel.removeAll();
-
             if (events != null) {
-                for (Event event : events) {
-                    JPanel eventRow = new JPanel();
-                    eventRow.setLayout( new FlowLayout(FlowLayout.LEFT));
-                    JLabel nameLabel = new JLabel(event.getName());
-                    eventRow.add(nameLabel);
-                    JLabel artistLabel = new JLabel(event.getArtists().toString());
-                    eventRow.add(artistLabel);
-                    JButton viewDetailsButton = new JButton("Details");
+                GridBagConstraints gbc = new GridBagConstraints();
+                gbc.gridwidth = GridBagConstraints.REMAINDER;
+                gbc.weightx = 1;
+                gbc.fill = GridBagConstraints.HORIZONTAL;
+                gbc.insets = new Insets(5, 10, 5, 10);
 
-                    viewDetailsButton.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent evt) {
-                            if (evt.getSource() == viewDetailsButton) {
-                                displayEventController.execute(event);
-                            }
-                        }
-                    });
-                    eventRow.add(viewDetailsButton);
-                    eventsPanel.add(eventRow);
+                for (Event event : events) {
+                    JPanel eventRow = createEventRow(event);
+                    eventsPanel.add(eventRow, gbc);
                 }
+
+                GridBagConstraints fillerGbc = new GridBagConstraints();
+                fillerGbc.weighty = 1;
+                eventsPanel.add(Box.createGlue(), fillerGbc);
             }
             eventsPanel.revalidate();
             eventsPanel.repaint();
         }
     }
-    public String getViewName() {
-        return this.viewName;
-    }
 
+    private JPanel createEventRow(Event event) {
+        String priceString = (event.getPriceMin() == -1)
+                ? "Price unavailable"
+                : String.format("Min: %d, Max: %d", event.getPriceMin(), event.getPriceMax());
+
+        JPanel eventRow = ViewStyle.createCardPanel();
+        eventRow.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+        JPanel textPanel = new JPanel();
+        textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS));
+        textPanel.setOpaque(false);
+
+        // Event Name
+        JLabel nameLabel = new JLabel(event.getName());
+        ViewStyle.applyHeaderStyle(nameLabel);
+
+        // Date
+        JLabel dateLabel = new JLabel("Date: " + (event.getDate() == null ? "TBD" : event.getDate()));
+        ViewStyle.applySecondaryLabelStyle(dateLabel);
+
+        // Venue
+
+        JLabel venueLabel = new JLabel("Venue: " + event.getVenue());
+        ViewStyle.applySecondaryLabelStyle(venueLabel);
+
+        // Price (Green Text)
+        JLabel priceLabel = new JLabel("Price: " + priceString);
+        priceLabel.setFont(ViewStyle.BODY_FONT_BOLD);
+        priceLabel.setForeground(ViewStyle.TEXT_PRICE);
+
+        // Artists (Meta Text)
+        JLabel artistLabel = new JLabel("Artists: " + event.getArtists());
+        ViewStyle.applyMetaLabelStyle(artistLabel);
+
+        textPanel.add(nameLabel);
+        textPanel.add(Box.createVerticalStrut(5));
+        textPanel.add(dateLabel);
+        textPanel.add(Box.createVerticalStrut(2));
+        textPanel.add(venueLabel);
+        textPanel.add(Box.createVerticalStrut(2));
+        textPanel.add(priceLabel);
+        textPanel.add(Box.createVerticalStrut(5));
+        textPanel.add(artistLabel);
+
+        eventRow.add(textPanel, BorderLayout.CENTER);
+
+        eventRow.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                displayEventController.execute(event);
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                eventRow.setBackground(ViewStyle.HEADER_BACKGROUND);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                eventRow.setBackground(ViewStyle.CARD_BACKGROUND);
+            }
+        });
+
+        eventRow.setPreferredSize(new Dimension(400, 150));
+        eventRow.setMaximumSize(new Dimension(500, 150));
+        return eventRow;
+    }
+    public String getViewName() {
+        return viewName;
+    }
 }

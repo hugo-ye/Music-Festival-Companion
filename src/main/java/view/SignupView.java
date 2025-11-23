@@ -178,4 +178,8 @@ public class SignupView extends JPanel implements PropertyChangeListener {
         return this.viewName;
     }
 
+    public String getViewName() {
+        return viewName;
+    }
+
 }
