@@ -9,7 +9,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 
@@ -55,7 +54,7 @@ public class EventView extends JDialog implements PropertyChangeListener {
         ViewStyle.applyValueStyle(locationValue);
         ViewStyle.applyValueStyle(dateValue);
         ViewStyle.applyValueStyle(genresValue);
-        ViewStyle.applyPriceStyle(priceRangeValue); // Green text
+        ViewStyle.applyPriceStyle(priceRangeValue);
 
         // Main Panel
         JPanel mainPanel = new JPanel(new GridBagLayout());
@@ -140,7 +139,6 @@ public class EventView extends JDialog implements PropertyChangeListener {
 
     private void addLabelAndValue(JPanel panel, String labelText, JTextArea valueArea,
                                   GridBagConstraints gbc, int row) {
-        // Static label
         gbc.gridx = 0;
         gbc.gridy = row;
         gbc.weightx = 0.0;
@@ -148,10 +146,9 @@ public class EventView extends JDialog implements PropertyChangeListener {
         gbc.anchor = GridBagConstraints.NORTHWEST;
 
         JLabel staticLabel = new JLabel(labelText);
-        ViewStyle.applyLabelStyle(staticLabel); // Uses grey text
+        ViewStyle.applyLabelStyle(staticLabel);
         panel.add(staticLabel, gbc);
 
-        // Value area
         gbc.gridx = 1;
         gbc.gridy = row;
         gbc.weightx = 1.0;
@@ -172,55 +169,67 @@ public class EventView extends JDialog implements PropertyChangeListener {
     }
 
     public void setEventImage(String urlString) {
-        SwingUtilities.invokeLater(() -> {
-            try {
-                if (urlString != null && !urlString.isEmpty()) {
-                    URL url = new URL(urlString);
-                    BufferedImage originalImage = ImageIO.read(url);
-
-                    // Target dimensions
-                    int targetWidth = 300;
-                    int targetHeight = 300;
-
-                    // Calculate the Scaling Factor
-                    double widthRatio = (double) targetWidth / originalImage.getWidth();
-                    double heightRatio = (double) targetHeight / originalImage.getHeight();
-                    double scaleFactor = Math.max(widthRatio, heightRatio);
-
-                    // Calculate new scaled dimensions (will be >= 300)
-                    int scaledWidth = (int) (originalImage.getWidth() * scaleFactor);
-                    int scaledHeight = (int) (originalImage.getHeight() * scaleFactor);
-
-                    // Create the intermediate scaled image
-                    Image scaledImage = originalImage.getScaledInstance(scaledWidth, scaledHeight, Image.SCALE_SMOOTH);
-
-                    // Create a specific 300x300 "Crop Box"
-                    BufferedImage croppedImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
-                    Graphics2D g2 = croppedImage.createGraphics();
-
-                    // Rendering settings
-                    g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-
-                    // Calculate coordinates to center the image
-                    int x = (targetWidth - scaledWidth) / 2;
-                    int y = (targetHeight - scaledHeight) / 2;
-
-                    // Draw the image onto the 300x300 canvas
-                    g2.drawImage(scaledImage, x, y, null);
-                    g2.dispose();
-
-                    imageLabel.setIcon(new ImageIcon(croppedImage));
-                    imageLabel.setText("");
-                } else {
-                    imageLabel.setIcon(null);
-                    imageLabel.setText("No Image Available");
+        // Download and Process Image in the background
+        SwingWorker<ImageIcon, Void> worker = new SwingWorker<>() {
+            @Override
+            protected ImageIcon doInBackground() throws Exception {
+                if (urlString == null || urlString.isEmpty()) {
+                    return null;
                 }
-            } catch (IOException e) {
-                imageLabel.setIcon(null);
-                imageLabel.setText("Image Error");
-                e.printStackTrace();
+
+                URL url = new URL(urlString);
+                BufferedImage originalImage = ImageIO.read(url);
+
+                // Target dimensions
+                int targetWidth = 300;
+                int targetHeight = 300;
+
+                // Calculate Scaling
+                double widthRatio = (double) targetWidth / originalImage.getWidth();
+                double heightRatio = (double) targetHeight / originalImage.getHeight();
+                double scaleFactor = Math.max(widthRatio, heightRatio);
+
+                int scaledWidth = (int) (originalImage.getWidth() * scaleFactor);
+                int scaledHeight = (int) (originalImage.getHeight() * scaleFactor);
+
+                Image scaledImage = originalImage.getScaledInstance(scaledWidth, scaledHeight, Image.SCALE_SMOOTH);
+
+                // Crop
+                BufferedImage croppedImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
+                Graphics2D g2 = croppedImage.createGraphics();
+                g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+
+                int x = (targetWidth - scaledWidth) / 2;
+                int y = (targetHeight - scaledHeight) / 2;
+
+                g2.drawImage(scaledImage, x, y, null);
+                g2.dispose();
+
+                return new ImageIcon(croppedImage);
             }
-        });
+
+            // Runs on EDT when task is done
+            @Override
+            protected void done() {
+                try {
+                    ImageIcon icon = get();
+                    if (icon != null) {
+                        imageLabel.setIcon(icon);
+                        imageLabel.setText("");
+                    } else {
+                        imageLabel.setIcon(null);
+                        imageLabel.setText("No Image Available");
+                    }
+                } catch (Exception e) {
+                    imageLabel.setIcon(null);
+                    imageLabel.setText("Image Error");
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        // Execute the worker
+        worker.execute();
     }
 
     @Override
@@ -228,6 +237,7 @@ public class EventView extends JDialog implements PropertyChangeListener {
         if ("refresh".equals(evt.getPropertyName())) {
             DisplayEventState state = (DisplayEventState) evt.getNewValue();
             if (state != null) {
+
                 titleLabel.setText(state.getEventName());
                 artistValue.setText(state.getArtists());
                 venueValue.setText(state.getVenue());
@@ -236,7 +246,15 @@ public class EventView extends JDialog implements PropertyChangeListener {
                 genresValue.setText(state.getGenres());
                 priceRangeValue.setText(state.getPrice());
                 ticketUrl = state.getTicketUrl();
+
+                // Reset Image to "Loading" immediately
+                // This wipes the previous event's image before the new one downloads
+                imageLabel.setIcon(null);
+                imageLabel.setText("Loading...");
+
+                // Start background download
                 setEventImage(state.getImageUrl());
+
                 this.pack();
                 this.setVisible(true);
             }
