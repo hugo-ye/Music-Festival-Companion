@@ -1,6 +1,7 @@
 package interface_adapter.login;
 
 import interface_adapter.ViewManagerModel;
+import interface_adapter.search_event.SearchEventState;
 import interface_adapter.search_event.SearchEventViewModel;
 import use_case.login.LoginOutputBoundary;
 import use_case.login.LoginOutputData;
@@ -8,10 +9,12 @@ import use_case.login.LoginOutputData;
 public class LoginPresenter implements LoginOutputBoundary {
     private final LoginViewModel loginViewModel;
     private final ViewManagerModel viewManagerModel;
+    private final SearchEventViewModel searchEventViewModel;
 
-    public LoginPresenter(ViewManagerModel viewManagerModel, LoginViewModel loginViewModel) {
+    public LoginPresenter(ViewManagerModel viewManagerModel, LoginViewModel loginViewModel , SearchEventViewModel searchEventViewModel) {
         this.loginViewModel = loginViewModel;
         this.viewManagerModel = viewManagerModel;
+        this.searchEventViewModel = searchEventViewModel;
     }
 
     public void prepareSuccessView(LoginOutputData response) {
@@ -20,7 +23,12 @@ public class LoginPresenter implements LoginOutputBoundary {
         this.loginViewModel.setState(loginState);
         this.loginViewModel.firePropertyChanged();
 
-        // viewManagerModel.setState(SearchEventViewModel.getViewName());// TODO, merge with Amir branch so this works
+        SearchEventState searchState = searchEventViewModel.getState();
+        searchState.setUsername(response.getUsername());
+        this.searchEventViewModel.setState(searchState);
+        this.searchEventViewModel.firePropertyChanged();
+
+        viewManagerModel.setState(searchEventViewModel.getViewName());
         viewManagerModel.firePropertyChanged();
 
 
@@ -28,6 +36,8 @@ public class LoginPresenter implements LoginOutputBoundary {
     public void prepareFailView(String error) {
         LoginState loginState = loginViewModel.getState();
         loginState.setErrorMessage(error);
+        loginViewModel.setState(loginState);
+
         loginViewModel.firePropertyChanged();
     }
 

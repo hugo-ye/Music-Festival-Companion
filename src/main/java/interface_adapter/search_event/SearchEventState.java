@@ -17,6 +17,7 @@ public class SearchEventState {
     private final PropertyChangeSupport support = new PropertyChangeSupport(this);
     private List<Event> events;
     private String errorMessage;
+    private String username;
 
     public SearchEventState(SearchEventState copy) {
         search_keyword = copy.search_keyword;
@@ -26,11 +27,14 @@ public class SearchEventState {
         artist = copy.artist;
         startDate = copy.startDate;
         endDate = copy.endDate;
+        username = copy.username;
     }
 
     public SearchEventState() {
     }
-
+    public String getUsername() {
+        return username;
+    }
     public String getSearch_keyword() {
         return search_keyword;
     }
@@ -74,7 +78,9 @@ public class SearchEventState {
     public void setGenre(List<String> genres) {
         this.genres = genres;
     }
-
+    public void setUsername(String username) {
+        this.username = username;
+    }
     public void setArtist(String artist) {
         this.artist = artist;
     }

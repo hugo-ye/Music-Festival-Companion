@@ -148,9 +148,16 @@ public class LoginView extends JPanel implements PropertyChangeListener {
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         LoginState state = (LoginState) evt.getNewValue();
-        if (state.getErrorMessage() != null) {
+        if (state.getErrorMessage() != null && !state.getErrorMessage().isEmpty()) {
             JOptionPane.showMessageDialog(this, state.getErrorMessage());
+            state.setErrorMessage(null);
         }
+
+        if (state.getUsername() != null && !usernameField.getText().equals(state.getUsername())) {
+            usernameField.setText(state.getUsername());
+        }
+        passwordField.setText("");
+
     }
 
     public String getViewName() {

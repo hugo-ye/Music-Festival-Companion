@@ -411,7 +411,10 @@ public class SearchView extends JPanel implements PropertyChangeListener {
     public void propertyChange(PropertyChangeEvent evt) {
         SearchEventState state = (SearchEventState) evt.getNewValue();
 
-        // Update text fields if they don't match state
+        if (state.getUsername() != null) {
+            usernameLabel.setText("Welcome, " + state.getUsername());
+        }
+
         if (!searchField.getText().equals(state.getSearch_keyword())) {
             searchField.setText(state.getSearch_keyword());
         }
@@ -427,17 +430,18 @@ public class SearchView extends JPanel implements PropertyChangeListener {
 
         systemInfoLabel.setText(state.getErrorMessage());
 
-        // If state dates are empty, clear the pickers
-        if (state.getStartDate().isEmpty()) {
+        if (state.getStartDate() == null || state.getStartDate().isEmpty()) {
             startDatePicker.getModel().setValue(null);
         }
-        if (state.getEndDate().isEmpty()) {
+        if (state.getEndDate() == null || state.getEndDate().isEmpty()) {
             endDatePicker.getModel().setValue(null);
         }
+
         if (state.getGenre().isEmpty()) {
             genreField.clearSelection();
         }
     }
+
     public String getViewName() {
         return viewName;
     }

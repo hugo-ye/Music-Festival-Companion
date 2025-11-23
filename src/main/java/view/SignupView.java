@@ -175,8 +175,8 @@ public class SignupView extends JPanel implements PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        SignupState state = (SignupState) evt.getNewValue();
-        if (state.getErrorMessage() != null) {
+        final SignupState state = (SignupState) evt.getNewValue();
+        if (!state.getErrorMessage().isEmpty()) {
             JOptionPane.showMessageDialog(this, state.getErrorMessage());
         }
     }
