@@ -63,4 +63,8 @@ public class EventList {
     public int hashCode() {
         return Objects.hashCode(id);
     }
+
+    public List<Event> getAllEvents(){
+        return events;
+    }
 }

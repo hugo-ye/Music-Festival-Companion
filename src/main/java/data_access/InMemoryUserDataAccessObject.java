@@ -1,13 +1,20 @@
 package data_access;
 
 import entity.Event;
+import entity.EventList;
 import entity.User;
 import use_case.attend_event.AttendEventDataAccessInterface;
+import use_case.display_notifications.DisplayNotificationsDataAccessInterface;
 import use_case.login.LoginSessionDataAccessInterface;
 import use_case.logout.LogoutSessionDataAccessInterface;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
+
 public class InMemoryUserDataAccessObject implements LoginSessionDataAccessInterface, LogoutSessionDataAccessInterface,
-        AttendEventDataAccessInterface {
+        AttendEventDataAccessInterface, DisplayNotificationsDataAccessInterface {
 
     private User currentUser;
 
@@ -28,5 +35,10 @@ public class InMemoryUserDataAccessObject implements LoginSessionDataAccessInter
 
     public boolean alreadyAttends(Event event){
         return currentUser.getMasterList().getEvents().contains(event);
+    }
+
+    @Override
+    public List<Event> getNotificationBasedOnData(LocalDate localDate) {
+        return currentUser.getMasterList().getAllEvents();
     }
 }
