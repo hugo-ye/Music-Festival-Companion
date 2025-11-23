@@ -1,6 +1,7 @@
 package view;
 
 import interface_adapter.ViewManagerModel;
+import interface_adapter.logout.LogoutController;
 import interface_adapter.search_event.SearchEventController;
 import interface_adapter.search_event.SearchEventState;
 import interface_adapter.search_event.SearchEventViewModel;
@@ -32,6 +33,7 @@ public class SearchView extends JPanel implements PropertyChangeListener {
     private final SearchEventController controller;
     private final ViewManagerModel viewManagerModel;
     private final SearchEventViewModel searchViewModel;
+    private final LogoutController logoutController;
 
     // UI components
     private final JLabel usernameLabel = new JLabel("Welcome, [User]");
@@ -64,11 +66,12 @@ public class SearchView extends JPanel implements PropertyChangeListener {
 
     public SearchView(SearchEventViewModel searchViewModel,
                       SearchEventController controller,
-                      ViewManagerModel viewManagerModel) {
+                      ViewManagerModel viewManagerModel, LogoutController logoutController) {
 
         this.searchViewModel = searchViewModel;
         this.controller = controller;
         this.viewManagerModel = viewManagerModel;
+        this.logoutController = logoutController;
 
         this.searchViewModel.addPropertyChangeListener(this);
 
@@ -265,13 +268,7 @@ public class SearchView extends JPanel implements PropertyChangeListener {
         });
 
         logoutButton.addActionListener(e -> {
-            SearchEventState emptyState = new SearchEventState();
-            searchViewModel.setState(emptyState);
-            // Fire property change so the View updates (clears fields)
-            searchViewModel.firePropertyChanged();
-
-            viewManagerModel.setState("login");
-            viewManagerModel.firePropertyChanged("view");
+            logoutController.execute();
         });
 
         listsButton.addActionListener(e -> {
