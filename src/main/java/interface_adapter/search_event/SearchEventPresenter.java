@@ -22,8 +22,7 @@ import use_case.search_event.SearchEventOutputData;
 
             System.out.println(outputData.getEvents());
 
-            viewModel.setState(new SearchEventState());
-
+            // viewModel.setState(new SearchEventState());
 
             DisplaySearchResultsState displayState = resultViewModel.getState();
             displayState.setEvents(outputData.getEvents());
