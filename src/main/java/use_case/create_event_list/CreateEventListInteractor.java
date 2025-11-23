@@ -40,7 +40,7 @@ public class CreateEventListInteractor implements CreateEventListInputBoundary {
         EventList newList = new EventList(id, name);
 
         // Save to data access layer
-        dataAccess.create(newList);
+        dataAccess.createEventList(newList);
 
         // Prepare output data for presenter
         CreateEventListOutputData outputData =

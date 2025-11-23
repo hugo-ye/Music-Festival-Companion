@@ -16,33 +16,30 @@ public class CreateEventListPresenter implements CreateEventListOutputBoundary {
 
     @Override
     public void prepareSuccessView(CreateEventListOutputData outputData) {
-        CreateEventListState oldState = viewModel.getState();
-        CreateEventListState newState = new CreateEventListState(oldState);
+        CreateEventListState state = viewModel.getState();
 
         // update latest created list info
-        newState.setListId(outputData.getListId());
-        newState.setListName(outputData.getListName());
-        newState.setErrorMessage("");
+        state.setListId(outputData.getListId());
+        state.setListName(outputData.getListName());
+        state.setErrorMessage("");
 
-        List<EventListSummary> updated = new ArrayList<>(oldState.getLists());
+        List<EventListSummary> updated = new ArrayList<>(state.getLists());
         updated.add(new EventListSummary(
                 outputData.getListId(),
                 outputData.getListName()
         ));
-        newState.setLists(updated);
+        state.setLists(updated);
 
-        viewModel.setState(newState);
+        viewModel.setState(state);
         viewModel.firePropertyChanged();
     }
 
     @Override
     public void prepareFailView(String errorMessage) {
-        CreateEventListState oldState = viewModel.getState();
-        CreateEventListState newState = new CreateEventListState(oldState);
+        CreateEventListState state = viewModel.getState();
 
-        newState.setErrorMessage(errorMessage);
-        // we keep listName as is, just show error
-        viewModel.setState(newState);
+        state.setErrorMessage(errorMessage);
+        viewModel.setState(state);
         viewModel.firePropertyChanged();
     }
 }

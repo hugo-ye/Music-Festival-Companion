@@ -10,13 +10,6 @@ public class CreateEventListState {
     // All user-created lists that the UI should show
     private List<EventListSummary> lists = new ArrayList<>();
 
-    // Copy constructor
-    public CreateEventListState(CreateEventListState copy) {
-        this.listId = copy.listId;
-        this.listName = copy.listName;
-        this.errorMessage = copy.errorMessage;
-        this.lists = new ArrayList<>(copy.lists);
-    }
 
     public CreateEventListState() {}
 

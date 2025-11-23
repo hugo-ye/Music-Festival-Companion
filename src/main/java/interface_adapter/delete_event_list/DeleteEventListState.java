@@ -4,11 +4,6 @@ public class DeleteEventListState {
     private String listId = "";
     private String errorMessage = "";
 
-    public DeleteEventListState(DeleteEventListState copy) {
-        this.listId = copy.listId;
-        this.errorMessage = copy.errorMessage;
-    }
-
     public DeleteEventListState() {
     }
 

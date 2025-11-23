@@ -89,7 +89,6 @@ public class FileListDataAccessObject implements CreateEventListDataAccessInterf
             users.add(user);
         }
         writeAllUsers(users);
-
     }
 
     public void writeAllUsers(List<User> users) {
@@ -105,7 +104,6 @@ public class FileListDataAccessObject implements CreateEventListDataAccessInterf
             if (user.getUsername().equals(username)) {
                 return user;
             }
-
         }
         return null;
     }
@@ -122,7 +120,6 @@ public class FileListDataAccessObject implements CreateEventListDataAccessInterf
                 break;
             }
         }
-
     }
 
     // For create-event-list
@@ -154,7 +151,7 @@ public class FileListDataAccessObject implements CreateEventListDataAccessInterf
     }
 
     @Override
-    public void create(EventList newList) {
+    public void createEventList(EventList newList) {
         User current = sessionDataAccess.getCurrentUser();
         if (current == null) { // Nothing to do if user is not logged in
             return;

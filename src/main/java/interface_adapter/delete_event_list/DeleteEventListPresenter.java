@@ -25,18 +25,16 @@ public class DeleteEventListPresenter implements DeleteEventListOutputBoundary {
         String deletedId = outputData.getListId();
 
         // Update the delete viewmodel
-        DeleteEventListState oldDelete = deleteViewModel.getState();
-        DeleteEventListState newDelete = new DeleteEventListState(oldDelete);
-        newDelete.setListId(deletedId);
-        newDelete.setErrorMessage("");
-        deleteViewModel.setState(newDelete);
+        DeleteEventListState deleteState = deleteViewModel.getState();
+        deleteState.setListId(deletedId);
+        deleteState.setErrorMessage("");
+        deleteViewModel.setState(deleteState);
         deleteViewModel.firePropertyChanged();
 
         // Update the create-list viewmodel so AllEventListsView refreshes rows
-        CreateEventListState oldState = createViewModel.getState();
-        CreateEventListState newState = new CreateEventListState(oldState);
+        CreateEventListState createState = createViewModel.getState();
 
-        List<EventListSummary> oldLists = oldState.getLists();
+        List<EventListSummary> oldLists = createState.getLists();
         List<EventListSummary> filtered = new ArrayList<>();
 
         for (EventListSummary summary : oldLists) {
@@ -44,19 +42,18 @@ public class DeleteEventListPresenter implements DeleteEventListOutputBoundary {
                 filtered.add(summary);
             }
         }
-        newState.setLists(filtered);
-        newState.setErrorMessage("");   // clear errors on success
+        createState.setLists(filtered);
+        createState.setErrorMessage("");   // clear errors on success
 
-        createViewModel.setState(newState);
+        createViewModel.setState(createState);
         createViewModel.firePropertyChanged(); // triggers AllEventListsView.propertyChange
     }
     @Override
     public void prepareFailView(String errorMessage) {
-        DeleteEventListState oldDelete = deleteViewModel.getState();
-        DeleteEventListState newDelete = new DeleteEventListState(oldDelete);
-        newDelete.setErrorMessage(errorMessage);
+        DeleteEventListState deleteState = deleteViewModel.getState();
+        deleteState.setErrorMessage(errorMessage);
 
-        deleteViewModel.setState(newDelete);
+        deleteViewModel.setState(deleteState);
         deleteViewModel.firePropertyChanged();
     }
 }
