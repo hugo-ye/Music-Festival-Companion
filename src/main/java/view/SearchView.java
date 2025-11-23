@@ -423,6 +423,9 @@ public class SearchView extends JPanel implements PropertyChangeListener {
         if (state.getEndDate().isEmpty()) {
             endDatePicker.getModel().setValue(null);
         }
+        if (state.getGenre().isEmpty()) {
+            genreField.clearSelection();
+        }
     }
     public String getViewName() {
         return viewName;
