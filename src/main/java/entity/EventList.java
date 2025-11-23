@@ -2,6 +2,7 @@ package entity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class EventList {
     // Fields
@@ -49,5 +50,17 @@ public class EventList {
     }
     public void removeEvent(Event event) {
         events.remove(event);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        EventList eventList = (EventList) o;
+        return Objects.equals(id, eventList.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }
