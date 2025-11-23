@@ -29,7 +29,7 @@ public class SearchEventInteractor implements SearchEventInputBoundary{
                 inputData.getGenre()
         );
         SearchEventOutputData outputData = new SearchEventOutputData(createEventsFromJson(events));
-        presenter.present(outputData);
+        presenter.prepareSuccessView(outputData);
     }
 
     public List<Event> createEventsFromJson(String dataJson) {
