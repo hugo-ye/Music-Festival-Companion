@@ -1,10 +1,14 @@
 package view;
 
+import interface_adapter.ViewManagerModel;
 import interface_adapter.create_event_list.CreateEventListController;
 import interface_adapter.create_event_list.CreateEventListState;
 import interface_adapter.create_event_list.CreateEventListViewModel;
 import interface_adapter.create_event_list.EventListSummary;
 import interface_adapter.delete_event_list.DeleteEventListController;
+import interface_adapter.display_event.DisplayEventController;
+import interface_adapter.display_event_list.DisplayEventListState;
+import interface_adapter.display_event_list.DisplayEventListViewModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,7 +23,11 @@ public class AllEventListsView extends JPanel implements PropertyChangeListener 
     // Implement View Models and Controllers here
     private final CreateEventListViewModel createEventListViewModel;
     private CreateEventListController createEventListController; // set later via setter
+
     private DeleteEventListController deleteEventListController;
+
+    private final DisplayEventListViewModel displayEventListViewModel;
+    private final ViewManagerModel viewManagerModel;
 
     // Swing components
     private final JButton createListButton;
@@ -28,9 +36,17 @@ public class AllEventListsView extends JPanel implements PropertyChangeListener 
     private final JButton backButton;
     private final JLabel errorLabel;
 
-    public AllEventListsView(CreateEventListViewModel createEventListViewModel) {
+    public AllEventListsView(CreateEventListViewModel createEventListViewModel,
+                             ViewManagerModel viewManagerModel,
+                             CreateEventListController eventListController,
+                             DisplayEventListViewModel displayEventListViewModel) {
+        this.viewManagerModel = viewManagerModel;
+
+        this.createEventListController = eventListController;
         this.createEventListViewModel = createEventListViewModel;
         this.createEventListViewModel.addPropertyChangeListener(this);
+
+        this.displayEventListViewModel = displayEventListViewModel;
         // Instantiate the View Models and Controllers here
         this.setLayout(new BorderLayout());
 
@@ -71,6 +87,11 @@ public class AllEventListsView extends JPanel implements PropertyChangeListener 
 
         add(bottomPanel, BorderLayout.SOUTH);
 
+        backButton.addActionListener(e -> {
+            viewManagerModel.setState("search event");
+            viewManagerModel.firePropertyChanged();
+        });
+
         createListButton.addActionListener(e -> {
             if (createEventListController == null) {
                 return;
@@ -110,6 +131,17 @@ public class AllEventListsView extends JPanel implements PropertyChangeListener 
         row.add(viewButton);
         row.add(deleteButton);
         row.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+
+        viewButton.addActionListener(e -> {
+            if (viewManagerModel == null) {
+                return;
+            }
+            DisplayEventListState state = displayEventListViewModel.getState();
+
+            viewManagerModel.setState("event list");
+            viewManagerModel.firePropertyChanged("refresh");
+
+        });
 
         // Wire delete button -> DeleteEventListController
         deleteButton.addActionListener(e -> {

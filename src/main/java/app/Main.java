@@ -1,9 +1,12 @@
 package app;
 
 import data_access.DBDataAccessObject;
-import data_access.InMemoryUserDataAccessObject;
 import data_access.FileListDataAccessObject;
+import data_access.InMemoryUserDataAccessObject;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.create_event_list.CreateEventListController;
+import interface_adapter.create_event_list.CreateEventListPresenter;
+import interface_adapter.create_event_list.CreateEventListViewModel;
 import interface_adapter.display_event.DisplayEventController;
 import interface_adapter.display_event.DisplayEventPresenter;
 import interface_adapter.display_event.DisplayEventViewModel;
@@ -21,6 +24,7 @@ import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
 import interface_adapter.sort_events.SortEventsController;
 import interface_adapter.sort_events.SortEventsPresenter;
+import use_case.create_event_list.CreateEventListInteractor;
 import use_case.display_event.DisplayEventInteractor;
 import use_case.login.LoginInputBoundary; // Imported
 import use_case.login.LoginInteractor;     // Imported
@@ -109,6 +113,11 @@ public class Main {
         DisplayEventInteractor eventInteractor = new DisplayEventInteractor(eventPresenter);
         DisplayEventController eventController = new DisplayEventController(eventInteractor);
 
+        // 7. Create Event List Use Case
+        CreateEventListViewModel createEventListViewModel = new CreateEventListViewModel();
+        CreateEventListPresenter createEventListPresenter = new CreateEventListPresenter(createEventListViewModel);
+        CreateEventListInteractor createEventListInteractor = new CreateEventListInteractor(fileUserDataAccessObject, createEventListPresenter);
+        CreateEventListController createEventListController = new CreateEventListController(createEventListInteractor);
 
         // --- VIEWS ---
 
@@ -128,6 +137,9 @@ public class Main {
         SearchResultView resultView = new SearchResultView(resultViewModel, sortEventsController, eventController, viewManagerModel);
         views.add(resultView, resultViewModel.getViewName());
 
+        // Create Event List View
+        AllEventListsView allEventListsView = new AllEventListsView(createEventListViewModel, viewManagerModel, createEventListController);
+        views.add(allEventListsView, allEventListsView.getViewName());
         // Popup View
         new EventView(application, eventViewModel);
 
