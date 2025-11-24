@@ -8,6 +8,7 @@ public class DisplayEventListInteractor {
 
     private final LoginSessionDataAccessInterface sessionDataAccess;
     private final DisplayEventListOutputBoundary presenter;
+    private final String MASTER_LIST_ID = "master_list";
 
     public DisplayEventListInteractor(LoginSessionDataAccessInterface sessionDataAccess, DisplayEventListOutputBoundary presenter) {
         this.sessionDataAccess = sessionDataAccess;
@@ -16,7 +17,6 @@ public class DisplayEventListInteractor {
 
     public void execute(DisplayEventListInputData inputData) {
         String listId = inputData.getListId();
-
         User currentUser = sessionDataAccess.getCurrentUser();
 
         if (currentUser == null) {
@@ -24,18 +24,24 @@ public class DisplayEventListInteractor {
             return;
         }
 
-        EventList eventList = currentUser.getListById(listId);
+        EventList targetList = null;
 
-        if (eventList == null) {
-            if (currentUser.getMasterList().getId().equals(listId)) {
-                eventList = currentUser.getMasterList();
-            } else {
-                presenter.prepareFailView("Event list not found for current user.");
-                return;
-            }
+        // Check if the requested ID matches the Master List
+        if (currentUser.getMasterList() != null &&
+                (currentUser.getMasterList().getId().equals(listId) || MASTER_LIST_ID.equals(listId))) {
+            targetList = currentUser.getMasterList();
+        }
+        // Check the user's custom lists
+        else {
+            targetList = currentUser.getListById(listId);
         }
 
-        DisplayEventListOutputData outputData = new DisplayEventListOutputData(eventList);
-        presenter.prepareSuccessView(outputData);
+        // Prepare View
+        if (targetList != null) {
+            DisplayEventListOutputData outputData = new DisplayEventListOutputData(targetList);
+            presenter.prepareSuccessView(outputData);
+        } else {
+            presenter.prepareFailView("Event list with ID '" + listId + "' not found.");
+        }
     }
 }
