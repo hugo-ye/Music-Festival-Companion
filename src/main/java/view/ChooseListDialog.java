@@ -29,7 +29,7 @@ public class ChooseListDialog extends JDialog {
         header.setBorder(new EmptyBorder(10, 10, 10, 10));
         add(header, BorderLayout.NORTH);
 
-        // List Panel (Where checkboxes go)
+        // List Panel
         JPanel listPanel = new JPanel();
         listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
         listPanel.setBackground(ViewStyle.WINDOW_BACKGROUND);

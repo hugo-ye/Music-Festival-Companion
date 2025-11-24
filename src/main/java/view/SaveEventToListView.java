@@ -18,9 +18,8 @@ public class SaveEventToListView extends JDialog implements PropertyChangeListen
     private final SaveEventToListController controller;
     private final SaveEventToListViewModel viewModel;
 
-    // We pass 'Frame owner' so the popup is centered over the main app
     public SaveEventToListView(Frame owner, SaveEventToListController controller, SaveEventToListViewModel viewModel) {
-        super(owner, "Save Event to List", true); // true = modal (blocks background)
+        super(owner, "Save Event to List", true);
         this.controller = controller;
         this.viewModel = viewModel;
         this.viewModel.addPropertyChangeListener(this);
@@ -29,12 +28,10 @@ public class SaveEventToListView extends JDialog implements PropertyChangeListen
     }
 
     public void createUI() {
-        // 1. FIX: Get data from STATE, not ViewModel directly
         SaveEventToListState state = viewModel.getState();
         EventList[] eventLists = state.getEventLists();
         Event event = state.getEvent();
 
-        // Safety check
         if (eventLists == null || event == null) {
             JOptionPane.showMessageDialog(this, "Error: Data missing.");
             return;
@@ -46,7 +43,7 @@ public class SaveEventToListView extends JDialog implements PropertyChangeListen
         // Header
         JLabel viewQuestion = new JLabel("Which list(s) do you want to save to?");
         viewQuestion.setBorder(new EmptyBorder(10, 10, 10, 10));
-        ViewStyle.applyHeaderStyle(viewQuestion); // Apply style if you have it
+        ViewStyle.applyHeaderStyle(viewQuestion);
         this.add(viewQuestion, BorderLayout.NORTH);
 
         // Checkbox Panel
@@ -60,10 +57,7 @@ public class SaveEventToListView extends JDialog implements PropertyChangeListen
             listPanel.add(new JLabel("No lists created yet."));
         } else {
             for (EventList list : eventLists) {
-                // 2. FIX: Access the name directly from the Entity object
                 JCheckBox checkBox = new JCheckBox(list.getName());
-
-                // Store the list object in the checkbox for easy retrieval later
                 checkBox.putClientProperty("listObject", list);
 
                 checkBoxes.add(checkBox);
@@ -82,10 +76,8 @@ public class SaveEventToListView extends JDialog implements PropertyChangeListen
         confirmButton.addActionListener(e -> {
             List<EventList> selectedEventsList = new ArrayList<>();
 
-            // Iterate over checkboxes to see which are selected
             for (JCheckBox box : checkBoxes) {
                 if (box.isSelected()) {
-                    // Retrieve the object we stored earlier
                     EventList list = (EventList) box.getClientProperty("listObject");
                     selectedEventsList.add(list);
                 }
@@ -97,14 +89,10 @@ public class SaveEventToListView extends JDialog implements PropertyChangeListen
             // Execute Controller
             controller.SaveEventToList(event, finalSelection);
 
-            // We don't close immediately; we wait for the PropertyChange listener
-            // to tell us it succeeded (see propertyChange below).
         });
 
         buttonPanel.add(confirmButton);
         this.add(buttonPanel, BorderLayout.SOUTH);
-
-        // Center relative to parent
         this.setLocationRelativeTo(getParent());
     }
 
@@ -112,11 +100,7 @@ public class SaveEventToListView extends JDialog implements PropertyChangeListen
     public void propertyChange(PropertyChangeEvent evt) {
         if ("message".equals(evt.getPropertyName())) {
             SaveEventToListState state = (SaveEventToListState) evt.getNewValue();
-
-            // Show the success/fail message
             JOptionPane.showMessageDialog(this, state.getMessage());
-
-            // Close the dialog after showing the message
             this.dispose();
         }
     }

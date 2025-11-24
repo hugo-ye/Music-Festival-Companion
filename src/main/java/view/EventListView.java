@@ -48,7 +48,7 @@ public class EventListView extends JPanel implements PropertyChangeListener {
         this.setLayout(new BorderLayout());
         this.setBackground(ViewStyle.WINDOW_BACKGROUND);
 
-        // --- Top Panel ---
+        // Top panel
         JPanel topPanel = ViewStyle.createSectionPanel(new BorderLayout());
 
         titleLabel = new JLabel("Event List");
@@ -57,7 +57,7 @@ public class EventListView extends JPanel implements PropertyChangeListener {
         topPanel.add(titleLabel, BorderLayout.WEST);
         add(topPanel, BorderLayout.NORTH);
 
-        // --- Center Panel (Scrollable Events) ---
+        // Center panel
         eventsPanel = new JPanel();
         eventsPanel.setLayout(new BoxLayout(eventsPanel, BoxLayout.Y_AXIS));
         eventsPanel.setBackground(ViewStyle.WINDOW_BACKGROUND);
@@ -67,7 +67,7 @@ public class EventListView extends JPanel implements PropertyChangeListener {
         ViewStyle.applyScrollPaneStyle(scrollPane);
         add(scrollPane, BorderLayout.CENTER);
 
-        // --- Bottom Panel ---
+        // Bottom panel
         JPanel bottomPanel = ViewStyle.createSectionPanel(new FlowLayout(FlowLayout.RIGHT));
         backButton = new JButton("Back to Lists");
         ViewStyle.applyButtonStyle(backButton);
@@ -75,7 +75,7 @@ public class EventListView extends JPanel implements PropertyChangeListener {
         bottomPanel.add(backButton);
         add(bottomPanel, BorderLayout.SOUTH);
 
-        // --- Listeners ---
+        // Listeners
         backButton.addActionListener(e -> {
             if (viewManagerModel != null) {
                 viewManagerModel.setState("event lists");
@@ -135,7 +135,7 @@ public class EventListView extends JPanel implements PropertyChangeListener {
         card.setLayout(new BorderLayout());
         card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 80));
 
-        // Left: Event Name and Date
+        // Event name and date
         JPanel infoPanel = new JPanel(new GridLayout(2, 1));
         infoPanel.setOpaque(false);
 
@@ -150,28 +150,28 @@ public class EventListView extends JPanel implements PropertyChangeListener {
 
         card.add(infoPanel, BorderLayout.WEST);
 
-        // Right: Buttons
+        // Buttons
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         buttonPanel.setOpaque(false);
 
-        // 1. View Button
+        // View Button
         JButton viewButton = new JButton("View");
         ViewStyle.applyButtonStyle(viewButton);
         viewButton.addActionListener(e -> displayEventController.execute(event));
         buttonPanel.add(viewButton);
 
-        // 2. Secondary Button (Remove OR Attended)
+        // Secondary Button
         boolean isMasterList = currentEventList != null &&
                 "master_list".equalsIgnoreCase(currentEventList.getId());
 
         if (isMasterList) {
-            // --- BLOCKED OUT ATTENDED BUTTON ---
+            // Attended blocked out button
             JButton attendedButton = new JButton("Attended");
             ViewStyle.applyButtonStyle(attendedButton);
             attendedButton.setEnabled(false); // This makes it unclickable and "grayed out"
             buttonPanel.add(attendedButton);
         } else {
-            // --- REMOVE BUTTON ---
+            // Remove button
             JButton removeButton = new JButton("Remove");
             ViewStyle.applyButtonStyle(removeButton);
             removeButton.setForeground(ViewStyle.ERROR_COLOR);

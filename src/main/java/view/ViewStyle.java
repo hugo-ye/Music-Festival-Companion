@@ -60,7 +60,7 @@ public final class ViewStyle {
 
     private ViewStyle() { }
 
-    // --- LABELS ---
+    // LABELS
 
     public static void applyTitleStyle(JLabel label) {
         label.setFont(TITLE_FONT);
@@ -87,7 +87,7 @@ public final class ViewStyle {
         label.setForeground(TEXT_SECONDARY);
     }
 
-    // --- TEXT AREAS (Read Only) ---
+    // READ-ONLY TEXT AREAS
 
     public static void applyValueStyle(JTextArea area) {
         area.setFont(BODY_FONT);
@@ -110,7 +110,7 @@ public final class ViewStyle {
         return area;
     }
 
-    // --- INPUTS ---
+    // INPUTS
 
     public static void applyTextFieldStyle(JTextField field) {
         field.setFont(BODY_FONT);
@@ -139,7 +139,7 @@ public final class ViewStyle {
         list.setBorder(new LineBorder(BORDER_SUBTLE, 1, false));
     }
 
-    // --- IMAGES ---
+    // IMAGES
 
     public static void applyImageContainerStyle(JLabel imageLabel) {
         imageLabel.setBorder(new LineBorder(BORDER_SUBTLE, 1, false));
@@ -147,7 +147,7 @@ public final class ViewStyle {
         imageLabel.setOpaque(true);
     }
 
-    // --- BUTTONS ---
+    // BUTTONS
 
     private static void applyCommonButtonSettings(JButton button) {
         button.setFont(BODY_FONT_BOLD);
@@ -174,7 +174,7 @@ public final class ViewStyle {
         button.setBorder(new EmptyBorder(10, 20, 10, 20));
     }
 
-    // --- PANELS ---
+    // PANELS
 
     public static JPanel createCardPanel() {
         JPanel panel = new JPanel(new BorderLayout());
@@ -193,7 +193,7 @@ public final class ViewStyle {
         return panel;
     }
 
-    // --- SCROLL PANE ---
+    // SCROLL PANE
 
     public static void applyScrollPaneStyle(JScrollPane scrollPane) {
         scrollPane.getViewport().setBackground(WINDOW_BACKGROUND);

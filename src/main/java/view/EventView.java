@@ -6,7 +6,7 @@ import interface_adapter.attend_event.AttendEventController;
 import interface_adapter.display_event.DisplayEventState;
 import interface_adapter.display_event.DisplayEventViewModel;
 import interface_adapter.save_event_to_list.SaveEventToListController;
-import interface_adapter.save_event_to_list.SaveEventToListState; // Import added
+import interface_adapter.save_event_to_list.SaveEventToListState;
 import interface_adapter.save_event_to_list.SaveEventToListViewModel;
 
 import javax.imageio.ImageIO;
@@ -32,14 +32,10 @@ public class EventView extends JDialog implements PropertyChangeListener {
 
     private String ticketUrl;
 
-    // Dependencies
     private final DisplayEventViewModel displayEventViewModel;
     private final SaveEventToListViewModel saveEventToListViewModel;
     private final AttendEventController attendEventController;
     private final SaveEventToListController saveEventToListController;
-
-    // State
-    private Event currentEvent;
 
     public EventView(Frame owner,
                      DisplayEventViewModel displayEventViewModel,
@@ -53,7 +49,6 @@ public class EventView extends JDialog implements PropertyChangeListener {
         this.attendEventController = attendEventController;
         this.saveEventToListController = saveEventToListController;
 
-        // Register as listener to BOTH view models
         this.displayEventViewModel.addPropertyChangeListener(this);
         this.saveEventToListViewModel.addPropertyChangeListener(this);
 
@@ -61,8 +56,6 @@ public class EventView extends JDialog implements PropertyChangeListener {
         this.setLayout(new BorderLayout());
         this.setResizable(false);
         this.getContentPane().setBackground(ViewStyle.WINDOW_BACKGROUND);
-
-        // --- UI CONSTRUCTION ---
 
         // Title
         titleLabel = new JLabel("Event Name");
@@ -124,7 +117,7 @@ public class EventView extends JDialog implements PropertyChangeListener {
         ViewStyle.applyScrollPaneStyle(scrollPane);
         add(scrollPane, BorderLayout.CENTER);
 
-        // --- BUTTONS ---
+        // Buttons
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
         buttonPanel.setBackground(ViewStyle.WINDOW_BACKGROUND);
@@ -149,7 +142,7 @@ public class EventView extends JDialog implements PropertyChangeListener {
         ViewStyle.applyButtonStyle(saveButton);
         ViewStyle.applyButtonStyle(closeButton);
 
-        // --- LISTENERS ---
+        // Listeners
         attendButton.addActionListener(evt -> handleAttendEvent());
         saveButton.addActionListener(evt -> handleSaveEvent());
         closeButton.addActionListener(evt -> this.setVisible(false));
@@ -167,18 +160,18 @@ public class EventView extends JDialog implements PropertyChangeListener {
         this.setLocationRelativeTo(owner);
     }
 
-    // --- LOGIC METHODS ---
-
     private void handleAttendEvent() {
-        if (currentEvent != null) {
-            attendEventController.execute(currentEvent);
+        Event event = displayEventViewModel.getState().getEvent();
+
+        if (event != null) {
+            attendEventController.execute(event);
         }
     }
 
     private void handleSaveEvent() {
-        if (currentEvent == null) return;
+        Event event = displayEventViewModel.getState().getEvent();
+        if (event == null) return;
 
-        // 1. Get available lists from the DisplayEventState
         DisplayEventState state = displayEventViewModel.getState();
         List<EventList> availableLists = state.getAvailableLists();
 
@@ -187,13 +180,9 @@ public class EventView extends JDialog implements PropertyChangeListener {
             return;
         }
 
-        // 2. Filter out the Master List
         List<EventList> userLists = new ArrayList<>();
         for (EventList list : availableLists) {
-            // Adjust to match your Master List logic
-            if (!list.getName().equalsIgnoreCase("Master List")) {
                 userLists.add(list);
-            }
         }
 
         if (userLists.isEmpty()) {
@@ -201,16 +190,14 @@ public class EventView extends JDialog implements PropertyChangeListener {
             return;
         }
 
-        // 3. Open the Dialog
         ChooseListDialog dialog = new ChooseListDialog((Frame) SwingUtilities.getWindowAncestor(this), userLists);
         dialog.setVisible(true);
 
-        // 4. If user clicked Save in the dialog
         if (dialog.isSaved()) {
             List<EventList> selectedLists = dialog.getSelectedLists();
             if (!selectedLists.isEmpty()) {
                 EventList[] listsArray = selectedLists.toArray(new EventList[0]);
-                saveEventToListController.SaveEventToList(currentEvent, listsArray);
+                saveEventToListController.SaveEventToList(event, listsArray);
             } else {
                 JOptionPane.showMessageDialog(this, "No lists selected.");
             }
@@ -297,11 +284,10 @@ public class EventView extends JDialog implements PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        // 1. UPDATE VIEW WITH EVENT DETAILS
+        // Update view with event details
         if ("refresh".equals(evt.getPropertyName())) {
             DisplayEventState state = (DisplayEventState) evt.getNewValue();
             if (state != null) {
-                this.currentEvent = state.getEvent(); // CAPTURE EVENT
 
                 titleLabel.setText(state.getEventName());
                 artistValue.setText(state.getArtists());
@@ -321,14 +307,11 @@ public class EventView extends JDialog implements PropertyChangeListener {
             }
         }
         else if ("message".equals(evt.getPropertyName())) {
-            // Retrieve state from the ViewModel
             SaveEventToListState state = saveEventToListViewModel.getState();
             JOptionPane.showMessageDialog(this, state.getMessage());
         }
         else if ("attend_message".equals(evt.getPropertyName())) {
-            // Get state from the DisplayViewModel
             DisplayEventState state = displayEventViewModel.getState();
-            // Show the message we set in the Presenter
             JOptionPane.showMessageDialog(this, state.getAttendMessage());
         }
     }
