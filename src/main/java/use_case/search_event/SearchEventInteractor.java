@@ -122,16 +122,18 @@ public class SearchEventInteractor implements SearchEventInputBoundary{
 
 
     public static List<Integer> extractPriceFromJson(JSONObject jsonEvent) {
-        int priceMin = 0;
-        int priceMax = 0;
+        int priceMin = -1;
+        int priceMax = -1;
 
         try {
             if (jsonEvent.has("priceRanges")) {
                 JSONArray prices = jsonEvent.getJSONArray("priceRanges");
                 if (!prices.isEmpty()) {
                     JSONObject priceRange = prices.getJSONObject(0);
-                    priceMin = priceRange.optInt("min", 0);
-                    priceMax = priceRange.optInt("max", 0);
+                    System.out.println("price range is: " + priceRange);
+                    priceMin = priceRange.optInt("min", -1);
+                    priceMax = priceRange.optInt("max", -1);
+                    System.out.println("prices is: " + priceMin + ", " + priceMax );
                 }
             }
         } catch (Exception e) {

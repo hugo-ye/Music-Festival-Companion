@@ -1,10 +1,18 @@
 package data_access;
 
-import data_formatters.LocalDateAdapter;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import data_formatters.LocalDateAdapter;
+import entity.EventList;
 import entity.User;
+import use_case.create_event_list.CreateEventListDataAccessInterface;
+import use_case.login.LoginSessionDataAccessInterface;
+import use_case.delete_event_list.DeleteEventListDataAccessInterface;
+import use_case.login.LoginUserDataAccessInterface;
+import use_case.logout.LogoutUserDataAccessInterface;
+import use_case.signup.SignupDataAccessInterface;
 
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -31,18 +39,22 @@ import java.util.List;
  */
 
 // hasnt been connected yet. just creating general functions
-public class FileListDataAccessObject {
+public class FileListDataAccessObject implements LoginUserDataAccessInterface, SignupDataAccessInterface,
+        LogoutUserDataAccessInterface {
+
     private final String filePath;
     private final Gson gson;
     private static final Type USER_LIST_TYPE = new TypeToken<List<User>>() {
     }.getType();
+    private final LoginSessionDataAccessInterface sessionDataAccess;
 
-    public FileListDataAccessObject(String filePath) {
+    public FileListDataAccessObject(String filePath, LoginSessionDataAccessInterface sessionDataAccess) {
         gson = new GsonBuilder()
                 .setPrettyPrinting()
                 .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
                 .create();
         this.filePath = filePath;
+        this.sessionDataAccess = sessionDataAccess;
     }
 
     public List<User> read() {
@@ -81,7 +93,6 @@ public class FileListDataAccessObject {
             users.add(user);
         }
         writeAllUsers(users);
-
     }
 
     public void writeAllUsers(List<User> users) {
@@ -97,7 +108,6 @@ public class FileListDataAccessObject {
             if (user.getUsername().equals(username)) {
                 return user;
             }
-
         }
         return null;
     }
@@ -114,8 +124,8 @@ public class FileListDataAccessObject {
                 break;
             }
         }
-
     }
+
 }
 
 

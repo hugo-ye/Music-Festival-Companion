@@ -20,8 +20,10 @@ public class ViewManager implements PropertyChangeListener {
     }
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
+        System.out.println("property changed with evt: " + evt.getPropertyName() + "\n property changed new value is: " + evt.getNewValue());
         if (evt.getPropertyName().equals("state")) {
             String viewModelName = (String) evt.getNewValue();
+            System.out.println(evt.getNewValue());
             cardLayout.show(views, viewModelName);
         }
     }

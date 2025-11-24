@@ -6,8 +6,10 @@ import interface_adapter.login.LoginState;
 import interface_adapter.login.LoginViewModel;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -19,125 +21,146 @@ public class LoginView extends JPanel implements PropertyChangeListener {
     private final LoginController loginController;
     private final ViewManagerModel viewManagerModel;
 
+    // UI Components
     private final JTextField usernameField = new JTextField(15);
     private final JPasswordField passwordField = new JPasswordField(15);
-
-    private final JButton login;
-    private final JButton signUp;
+    private final JButton loginButton = new JButton("Log in");
+    private final JButton signUpButton = new JButton("Create Account");
 
     public LoginView(LoginViewModel loginViewModel, LoginController loginController, ViewManagerModel viewManagerModel) {
         this.loginViewModel = loginViewModel;
         this.loginController = loginController;
         this.viewManagerModel = viewManagerModel;
-        loginViewModel.addPropertyChangeListener(this);
+        this.loginViewModel.addPropertyChangeListener(this);
 
-        JLabel title = new JLabel("Log in");
-        title.setAlignmentX(CENTER_ALIGNMENT);
+        this.setLayout(new GridBagLayout()); // Center the card
+        this.setBackground(ViewStyle.WINDOW_BACKGROUND);
 
-        JPanel usernamePanel = new JPanel();
-        usernamePanel.add(new JLabel("Username:"));
-        usernamePanel.add(usernameField);
+        JPanel cardPanel = ViewStyle.createCardPanel();
+        cardPanel.setLayout(new BoxLayout(cardPanel, BoxLayout.Y_AXIS));
+        cardPanel.setBorder(new EmptyBorder(40, 40, 40, 40));
 
-        JPanel passwordPanel = new JPanel();
-        passwordPanel.add(new JLabel("Password:"));
-        passwordPanel.add(passwordField);
+        JLabel titleLabel = new JLabel("Welcome");
+        ViewStyle.applyTitleStyle(titleLabel);
+        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+        JLabel subtitleLabel = new JLabel("Please log in to continue");
+        ViewStyle.applySecondaryLabelStyle(subtitleLabel);
+        subtitleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JPanel fieldsPanel = new JPanel(new GridBagLayout());
+        fieldsPanel.setBackground(ViewStyle.CARD_BACKGROUND);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(10, 0, 5, 0);
+        gbc.weightx = 1.0;
+        gbc.gridx = 0;
+
+        // Username
+        JLabel userLabel = new JLabel("Username");
+        ViewStyle.applyLabelStyle(userLabel);
+        ViewStyle.applyTextFieldStyle(usernameField);
+
+        gbc.gridy = 0; fieldsPanel.add(userLabel, gbc);
+        gbc.gridy = 1; fieldsPanel.add(usernameField, gbc);
+
+        // Password
+        JLabel passLabel = new JLabel("Password");
+        ViewStyle.applyLabelStyle(passLabel);
+        ViewStyle.applyTextFieldStyle(passwordField);
+
+        gbc.gridy = 2; gbc.insets = new Insets(15, 0, 5, 0); fieldsPanel.add(passLabel, gbc);
+        gbc.gridy = 3; gbc.insets = new Insets(5, 0, 5, 0); fieldsPanel.add(passwordField, gbc);
+
+        // Buttons
         JPanel buttonPanel = new JPanel();
-        login = new JButton("Log in");
-        buttonPanel.add(login);
-        signUp = new JButton("Sign up");
-        buttonPanel.add(signUp);
+        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
+        buttonPanel.setBackground(ViewStyle.CARD_BACKGROUND);
 
-        login.addActionListener(
-                new ActionListener() {
-                    public void actionPerformed(ActionEvent evt) {
-                        if (evt.getSource().equals(login)) {
-                            LoginState currentState = loginViewModel.getState();
+        ViewStyle.applyPrimaryButtonStyle(loginButton);
+        ViewStyle.applyButtonStyle(signUpButton); // Secondary style
 
-                            loginController.execute(
-                                    currentState.getUsername(),
-                                    currentState.getPassword()
-                            );
-                        }
-                    }
-                }
-        );
+        loginButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        signUpButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        signUp.addActionListener(
-                new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        viewManagerModel.setState("sign up");
-                        viewManagerModel.firePropertyChanged();
+        Dimension buttonSize = new Dimension(250, 40);
+        loginButton.setMaximumSize(buttonSize);
+        signUpButton.setMaximumSize(buttonSize);
 
-                    }
-                }
-        );
+        buttonPanel.add(loginButton);
+        buttonPanel.add(Box.createVerticalStrut(10));
+        buttonPanel.add(signUpButton);
+
+        // Add all to card
+        cardPanel.add(titleLabel);
+        cardPanel.add(Box.createVerticalStrut(5));
+        cardPanel.add(subtitleLabel);
+        cardPanel.add(Box.createVerticalStrut(30));
+        cardPanel.add(fieldsPanel);
+        cardPanel.add(Box.createVerticalStrut(30));
+        cardPanel.add(buttonPanel);
+
+        this.add(cardPanel);
+
+        // Add Listeners
+        setupListeners();
+    }
+
+    private void setupListeners() {
+        loginButton.addActionListener(evt -> {
+            if (evt.getSource().equals(loginButton)) {
+                LoginState currentState = loginViewModel.getState();
+                loginController.execute(
+                        currentState.getUsername(),
+                        currentState.getPassword()
+                );
+            }
+        });
+
+        signUpButton.addActionListener(evt -> {
+            viewManagerModel.setState("sign up");
+            viewManagerModel.firePropertyChanged();
+        });
 
         usernameField.getDocument().addDocumentListener(new DocumentListener() {
-            private void documentListenerHelper() {
+            private void update() {
                 LoginState currentState = loginViewModel.getState();
                 currentState.setUsername(usernameField.getText());
                 loginViewModel.setState(currentState);
             }
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                documentListenerHelper();
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                documentListenerHelper();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                documentListenerHelper();
-            }
+            @Override public void insertUpdate(DocumentEvent e) { update(); }
+            @Override public void removeUpdate(DocumentEvent e) { update(); }
+            @Override public void changedUpdate(DocumentEvent e) { update(); }
         });
 
         passwordField.getDocument().addDocumentListener(new DocumentListener() {
-            private void documentListenerHelper() {
+            private void update() {
                 LoginState currentState = loginViewModel.getState();
                 currentState.setPassword(new String(passwordField.getPassword()));
                 loginViewModel.setState(currentState);
             }
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                documentListenerHelper();
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                documentListenerHelper();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                documentListenerHelper();
-            }
+            @Override public void insertUpdate(DocumentEvent e) { update(); }
+            @Override public void removeUpdate(DocumentEvent e) { update(); }
+            @Override public void changedUpdate(DocumentEvent e) { update(); }
         });
-
-
-        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-
-        this.add(title);
-        this.add(usernamePanel);
-        this.add(passwordPanel);
-        this.add(buttonPanel);
     }
-
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         LoginState state = (LoginState) evt.getNewValue();
-        if (state.getErrorMessage() != null) {
+        if (state.getErrorMessage() != null && !state.getErrorMessage().isEmpty()) {
             JOptionPane.showMessageDialog(this, state.getErrorMessage());
+            state.setErrorMessage(null);
         }
+
+        if (state.getUsername() != null && !usernameField.getText().equals(state.getUsername())) {
+            usernameField.setText(state.getUsername());
+        }
+        passwordField.setText("");
+
     }
+
     public String getViewName() {
-        return this.viewName;
+        return viewName;
     }
 }
