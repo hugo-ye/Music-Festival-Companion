@@ -192,9 +192,7 @@ public class AllEventListsView extends JPanel implements PropertyChangeListener 
         if (state.getErrorMessage() != null && !state.getErrorMessage().isEmpty()) {
             JOptionPane.showMessageDialog(
                     this,
-                    state.getErrorMessage(),
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE
+                    state.getErrorMessage()
             );
         }
 
