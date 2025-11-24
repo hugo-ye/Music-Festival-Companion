@@ -38,7 +38,7 @@ import java.util.List;
  */
 
 // hasnt been connected yet. just creating general functions
-public class FileListDataAccessObject  {
+public class FileListDataAccessObject implements LoginUserDataAccessInterface, SignupDataAccessInterface {
 
     private final String filePath;
     private final Gson gson;

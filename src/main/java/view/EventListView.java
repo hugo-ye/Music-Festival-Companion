@@ -3,6 +3,7 @@ package view;
 import entity.Event;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.display_event.DisplayEventController;
+import interface_adapter.display_event_list.DisplayEventListController;
 import interface_adapter.display_event_list.DisplayEventListState;
 import interface_adapter.display_event_list.DisplayEventListViewModel;
 
@@ -17,7 +18,7 @@ public class EventListView extends JPanel implements PropertyChangeListener {
     private final String viewName = "event list";
     // Add controllers and viewmodels here
     private final DisplayEventListViewModel displayEventListViewModel;
-    private final DisplayEventController displayEventController;
+    private final DisplayEventListController displayEventListController;
     private final ViewManagerModel viewManagerModel;
 
     // Swing components
@@ -25,13 +26,13 @@ public class EventListView extends JPanel implements PropertyChangeListener {
     private final JButton backButton;
 
     public EventListView(DisplayEventListViewModel displayEventViewModel,
-                         DisplayEventController displayEventController,
+                         DisplayEventListController displayEventListController,
                          ViewManagerModel viewManagerModel) {
         // add controller, viewmodel here
         this.displayEventListViewModel = displayEventViewModel;
         this.displayEventListViewModel.addPropertyChangeListener(this);
 
-        this.displayEventController = displayEventController;
+        this.displayEventListController = displayEventListController;
 
         this.viewManagerModel = viewManagerModel;
 
@@ -125,7 +126,7 @@ public class EventListView extends JPanel implements PropertyChangeListener {
         eventRow.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                displayEventController.execute(event);
+                displayEventListController.execute(event.getId());
             }
 
             @Override

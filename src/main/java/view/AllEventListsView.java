@@ -94,8 +94,10 @@ public class AllEventListsView extends JPanel implements PropertyChangeListener 
         add(bottomPanel, BorderLayout.SOUTH);
 
         masterViewButton.addActionListener(e -> {
-            viewManagerModel.setState("event list");
-            viewManagerModel.firePropertyChanged();
+            if (displayEventListController == null) {
+                return;
+            }
+            displayEventListController.execute("master_list");
         });
 
 

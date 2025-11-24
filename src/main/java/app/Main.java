@@ -31,7 +31,9 @@ import interface_adapter.signup.SignupViewModel;
 import interface_adapter.sort_events.SortEventsController;
 import interface_adapter.sort_events.SortEventsPresenter;
 import use_case.create_event_list.CreateEventListInteractor;
+import use_case.delete_event_list.DeleteEventListInteractor;
 import use_case.display_event.DisplayEventInteractor;
+import use_case.display_event_list.DisplayEventListInteractor;
 import use_case.login.LoginInputBoundary; // Imported
 import use_case.login.LoginInteractor;     // Imported
 import use_case.login.LoginOutputBoundary; // Imported
@@ -122,8 +124,21 @@ public class Main {
         // 7. Create Event List Use Case
         CreateEventListViewModel createEventListViewModel = new CreateEventListViewModel();
         CreateEventListPresenter createEventListPresenter = new CreateEventListPresenter(createEventListViewModel);
-        CreateEventListInteractor createEventListInteractor = new CreateEventListInteractor(fileUserDataAccessObject, createEventListPresenter);
+        CreateEventListInteractor createEventListInteractor = new CreateEventListInteractor(sessionDao, createEventListPresenter);
         CreateEventListController createEventListController = new CreateEventListController(createEventListInteractor);
+
+        // 8. Display Event List Use Case
+        DisplayEventListViewModel displayEventListViewModel = new DisplayEventListViewModel();
+        DisplayEventListPresenter displayEventListPresenter = new DisplayEventListPresenter(displayEventListViewModel, viewManagerModel);
+        DisplayEventListInteractor displayEventListInteractor = new DisplayEventListInteractor(sessionDao, displayEventListPresenter);
+        DisplayEventListController displayEventListController = new DisplayEventListController(displayEventListInteractor);
+
+        // 9. Delete Event List Use Case
+        DeleteEventListViewModel deleteEventListViewModel = new DeleteEventListViewModel();
+        DeleteEventListPresenter deleteEventListPresenter = new DeleteEventListPresenter(deleteEventListViewModel, createEventListViewModel);
+        DeleteEventListInteractor deleteEventListInteractor = new DeleteEventListInteractor(sessionDao, deleteEventListPresenter);
+        DeleteEventListController deleteEventListController = new DeleteEventListController(deleteEventListInteractor);
+
 
         // --- VIEWS ---
 
@@ -144,21 +159,17 @@ public class Main {
         views.add(resultView, resultViewModel.getViewName());
 
         // Create Event List View
-        AllEventListsView allEventListsView = new AllEventListsView(createEventListViewModel, viewManagerModel, createEventListController);
-
-        DeleteEventListViewModel deleteEventListViewModel = new DeleteEventListViewModel();
-        DeleteEventListPresenter deleteEventListPresenter = new DeleteEventListPresenter(deleteEventListViewModel, createEventListViewModel);
-        DeleteEventListInteractor deleteEventListInteractor = new DeleteEventListInteractor(userDataAccessObject, deleteEventListPresenter);
-        DeleteEventListController deleteEventListController = new DeleteEventListController(deleteEventListInteractor);
-
-        DisplayEventListViewModel displayEventListViewModel = new DisplayEventListViewModel();
-        DisplayEventListPresenter displayEventListPresenter = new DisplayEventListPresenter(displayEventListViewModel, viewManagerModel);
-        DisplayEventListInteractor displayEventListInteractor = new DisplayEventListInteractor(userDataAccessObject, displayEventListPresenter);
-        DisplayEventListController displayEventListController = new DisplayEventListController(displayEventListInteractor);
-
-
-        AllEventListsView allEventListsView = new AllEventListsView(createEventListViewModel, viewManagerModel, createEventListController, deleteEventListController, displayEventListController);
+        AllEventListsView allEventListsView = new AllEventListsView(createEventListViewModel, viewManagerModel, createEventListController, deleteEventListController , displayEventListController);
         views.add(allEventListsView, allEventListsView.getViewName());
+
+        // Display Event List View
+        EventListView eventListView = new EventListView(displayEventListViewModel, displayEventListController, viewManagerModel);
+        views.add(eventListView, eventListView.getViewName());
+
+
+
+
+
         // Popup View
         new EventView(application, eventViewModel);
 
