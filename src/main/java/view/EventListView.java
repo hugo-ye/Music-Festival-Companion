@@ -142,7 +142,7 @@ public class EventListView extends JPanel implements PropertyChangeListener {
         JLabel nameLabel = new JLabel(event.getName());
         ViewStyle.applyHeaderStyle(nameLabel);
 
-        JLabel dateLabel = new JLabel(event.getDate() != null ? event.getDate().toString() : "No Date");
+        JLabel dateLabel = new JLabel(event.getDate() != null ? event.getDate().toString() : "TBD");
         ViewStyle.applyMetaLabelStyle(dateLabel);
 
         infoPanel.add(nameLabel);
