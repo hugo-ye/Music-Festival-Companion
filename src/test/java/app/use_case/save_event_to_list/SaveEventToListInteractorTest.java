@@ -18,7 +18,7 @@ class SaveEventToListInteractorTest {
         public ArrayList<String> savedToLists = new ArrayList<>();
 
         @Override
-        public void save(Event event, EventList eventList) {
+        public void saveEventToList(Event event, EventList eventList) {
             savedToLists.add(eventList.getName());
             eventList.addEvent(event);
         }

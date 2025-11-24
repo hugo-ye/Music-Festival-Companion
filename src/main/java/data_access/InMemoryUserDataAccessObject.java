@@ -32,22 +32,22 @@ public class InMemoryUserDataAccessObject implements LoginSessionDataAccessInter
     }
 
         @Override
-    public void save(Event event, EventList eventList) {
+    public void saveEventToList(Event event, EventList eventList) {
         currentUser = getCurrentUser();
-        int currentEventListIndex = currentUser.getEventLists().indexOf(eventList);
+        int currentEventListIndex = currentUser.getLists().indexOf(eventList);
         // for situation of non-exist: may not happen, since user cannot select eventList that is not created
         if(currentEventListIndex == -1){
             System.out.println("no eventList currently");
             return;
         }
-        EventList currentEventList = currentUser.getEventLists().get(currentEventListIndex);
+        EventList currentEventList = currentUser.getLists().get(currentEventListIndex);
         currentEventList.addEvent(event);
         // I omit the situation that eventList that will add the same event
 
         // for persistent storage, may need discuss later, currently I only deal with inMemory
     }
     
-    public void saveEvent(Event event) {
+    public void saveEventToMasterList(Event event) {
         currentUser.getMasterList().addEvent(event);
     }
 

@@ -22,7 +22,7 @@ public class SaveEventToListInteractor implements SaveEventToListInputBoundary{
         // since when an Event is added into an arrayList, adding process is omitted if arrayList already contain the
         // Event
         for (EventList eventList : eventLists) {
-            dataAccess.save(event, eventList);
+            dataAccess.saveEventToList(event, eventList);
             message.append("Event added into").append(eventList.getName()).append("\n");
         }
 

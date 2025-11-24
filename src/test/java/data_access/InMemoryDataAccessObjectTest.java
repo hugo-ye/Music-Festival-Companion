@@ -46,7 +46,7 @@ class InMemoryUserDataAccessObjectTest {
 
         Event event = createSampleEvent();
 
-        dao.save(event, list2);
+        dao.saveEventToList(event, list2);
 
         assertFalse(list2.getEvents().contains(event));
         assertFalse(list1.getEvents().contains(event));
