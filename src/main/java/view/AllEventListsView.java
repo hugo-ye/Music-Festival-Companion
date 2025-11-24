@@ -133,7 +133,7 @@ public class AllEventListsView extends JPanel implements PropertyChangeListener 
     private JPanel createListCard(String listName, String listId, boolean isDeleteable) {
         JPanel card = ViewStyle.createCardPanel();
         card.setLayout(new BorderLayout());
-        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 80)); // Fixed height for consistency
+        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 80));
 
         // Left: list name
         JLabel nameLabel = new JLabel(listName);
