@@ -172,7 +172,6 @@ public class EventView extends JDialog implements PropertyChangeListener {
     private void handleAttendEvent() {
         if (currentEvent != null) {
             attendEventController.execute(currentEvent);
-            JOptionPane.showMessageDialog(this, "Request to attend sent!");
         }
     }
 
@@ -325,6 +324,12 @@ public class EventView extends JDialog implements PropertyChangeListener {
             // Retrieve state from the ViewModel
             SaveEventToListState state = saveEventToListViewModel.getState();
             JOptionPane.showMessageDialog(this, state.getMessage());
+        }
+        else if ("attend_message".equals(evt.getPropertyName())) {
+            // Get state from the DisplayViewModel
+            DisplayEventState state = displayEventViewModel.getState();
+            // Show the message we set in the Presenter
+            JOptionPane.showMessageDialog(this, state.getAttendMessage());
         }
     }
 
