@@ -14,13 +14,13 @@ public class RemoveEventFromListInteractor implements RemoveEventFromListInputBo
 
 
     @Override
-    public void removeEventFromList(RemoveEventFromListInputData inputData) {
+    public void removeEventFromList(RemoveEventFromListInputData inputData) { // execute is the proper boundary method name
         Event removedEvent = inputData.getRemovedEvent();
-        EventList targetEvent = inputData.getTargetEventList();
+        EventList targetEventList = inputData.getTargetEventList();
 
-        dataAccess.removeEventFromList(removedEvent, targetEvent);
+        dataAccess.removeEventFromList(removedEvent, targetEventList);
 
-        RemoveEventFromListOutputData outputData = new RemoveEventFromListOutputData("Event removed");
+        RemoveEventFromListOutputData outputData = new RemoveEventFromListOutputData("Event removed from " + targetEventList.getName(), targetEventList.getId());
         presenter.present(outputData);
     }
 }
