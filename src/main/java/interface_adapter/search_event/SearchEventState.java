@@ -1,9 +1,6 @@
 package interface_adapter.search_event;
 
 import entity.Event;
-
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.util.List;
 
 public class SearchEventState {
@@ -14,23 +11,13 @@ public class SearchEventState {
     private String artist = "";
     private String startDate = "";
     private String endDate = "";
-    private final PropertyChangeSupport support = new PropertyChangeSupport(this);
     private List<Event> events;
     private String errorMessage;
+    private String username;
 
-    public SearchEventState(SearchEventState copy) {
-        search_keyword = copy.search_keyword;
-        country = copy.country;
-        city = copy.city;
-        genres = copy.genres;
-        artist = copy.artist;
-        startDate = copy.startDate;
-        endDate = copy.endDate;
+    public String getUsername() {
+        return username;
     }
-
-    public SearchEventState() {
-    }
-
     public String getSearch_keyword() {
         return search_keyword;
     }
@@ -74,7 +61,9 @@ public class SearchEventState {
     public void setGenre(List<String> genres) {
         this.genres = genres;
     }
-
+    public void setUsername(String username) {
+        this.username = username;
+    }
     public void setArtist(String artist) {
         this.artist = artist;
     }
@@ -103,7 +92,4 @@ public class SearchEventState {
         return errorMessage;
     }
 
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        support.addPropertyChangeListener(listener);
-    }
 }

@@ -8,6 +8,7 @@ public class CreateEventListInteractor implements CreateEventListInputBoundary {
 
     private final CreateEventListDataAccessInterface dataAccess;
     private final CreateEventListOutputBoundary presenter;
+    private final String MASTER_LIST_NAME = "Master List";
     // Another field for user at Logged In State
 
     public CreateEventListInteractor(CreateEventListDataAccessInterface dataAccess,
@@ -22,9 +23,13 @@ public class CreateEventListInteractor implements CreateEventListInputBoundary {
         String rawName = inputData.getListName(); // Cleaned according to Abdullah's suggestion
         String name = rawName.trim();
 
-        // List must not be empty
         if (name.isEmpty()) {
             presenter.prepareFailView("List name cannot be empty.");
+            return;
+        }
+
+        if (name.equalsIgnoreCase(MASTER_LIST_NAME)) {
+            presenter.prepareFailView("You cannot create a list named '" + MASTER_LIST_NAME + "'.");
             return;
         }
 
@@ -36,13 +41,10 @@ public class CreateEventListInteractor implements CreateEventListInputBoundary {
         // Generate ID for the new list
         String id = UUID.randomUUID().toString();
 
-        // Create entity
         EventList newList = new EventList(id, name);
 
-        // Save to data access layer
         dataAccess.createEventList(newList);
 
-        // Prepare output data for presenter
         CreateEventListOutputData outputData =
                 new CreateEventListOutputData(id, name);
 

@@ -8,5 +8,5 @@ public interface SaveEventToListDataAccessInterface {
     // 1 the event itself
     // 2 the existing eventList
 
-    void save(Event event, EventList eventList);
+    void saveEventToList(Event event, EventList eventList);
 }

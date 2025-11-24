@@ -17,6 +17,19 @@ public class User {
         this.lists = new ArrayList<>();
     }
 
+    @Override
+    public String toString() {
+        String listStr = "";
+        for (EventList list : lists) {
+            listStr += list.toString() + "\n";
+        }
+        return "User{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", lists=" + lists +
+                '}';
+    }
+
     // Getters
 
     public String getUsername() {
@@ -64,4 +77,7 @@ public class User {
         if (toRemove != null) {
             lists.remove(toRemove);
         }
+
+
     }}
+

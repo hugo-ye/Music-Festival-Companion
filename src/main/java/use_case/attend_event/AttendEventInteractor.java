@@ -20,7 +20,7 @@ public class AttendEventInteractor implements AttendEventInputBoundary{
 
         AttendEventOutputData outputData = new AttendEventOutputData(event);
         if(added){
-            attendEventDataAccessInterface.saveEvent(event);
+            attendEventDataAccessInterface.saveEventToMasterList(event);
             attendEventOutputBoundary.prepareSuccessView(outputData);
         }else {
             attendEventOutputBoundary.prepareFailView("Event already Attended");

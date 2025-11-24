@@ -1,5 +1,7 @@
 package interface_adapter.create_event_list;
 
+import entity.EventList;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,9 +25,6 @@ public class CreateEventListState {
     public String getErrorMessage() {
         return errorMessage;
     }
-    public List<EventListSummary> getLists() {
-        return new ArrayList<>(lists);
-    }
 
     public void setListName(String listName) {
         this.listName = listName;
@@ -40,6 +39,10 @@ public class CreateEventListState {
     }
 
     public void setLists(List<EventListSummary> lists) {
-        this.lists = new ArrayList<>(lists);
+        this.lists = lists;
+    }
+
+    public List<EventListSummary> getLists() {
+        return new ArrayList<>(lists);
     }
 }

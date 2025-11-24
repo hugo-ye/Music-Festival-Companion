@@ -1,5 +1,7 @@
 package use_case.create_event_list;
 
+import entity.EventList;
+
 public class CreateEventListOutputData {
 
     private final String listId;
@@ -18,5 +20,3 @@ public class CreateEventListOutputData {
         return listName;
     }
 }
-
-// listID used for deleting list and adding event to existing ListNames

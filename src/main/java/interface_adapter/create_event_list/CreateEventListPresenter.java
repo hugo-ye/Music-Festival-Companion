@@ -2,8 +2,6 @@ package interface_adapter.create_event_list;
 
 import use_case.create_event_list.CreateEventListOutputBoundary;
 import use_case.create_event_list.CreateEventListOutputData;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class CreateEventListPresenter implements CreateEventListOutputBoundary {
@@ -18,17 +16,16 @@ public class CreateEventListPresenter implements CreateEventListOutputBoundary {
     public void prepareSuccessView(CreateEventListOutputData outputData) {
         CreateEventListState state = viewModel.getState();
 
-        // update latest created list info
         state.setListId(outputData.getListId());
         state.setListName(outputData.getListName());
-        state.setErrorMessage("");
+        state.setErrorMessage(null);
 
-        List<EventListSummary> updated = new ArrayList<>(state.getLists());
-        updated.add(new EventListSummary(
+        List<EventListSummary> currentLists = state.getLists();
+        currentLists.add(new EventListSummary(
                 outputData.getListId(),
                 outputData.getListName()
         ));
-        state.setLists(updated);
+        state.setLists(currentLists);
 
         viewModel.setState(state);
         viewModel.firePropertyChanged();

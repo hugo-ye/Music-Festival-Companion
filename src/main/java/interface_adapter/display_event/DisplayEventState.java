@@ -1,10 +1,5 @@
 package interface_adapter.display_event;
 
-import entity.Event;
-
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-
 public class DisplayEventState {
     private  String eventName = "";
     private  String artists = "";

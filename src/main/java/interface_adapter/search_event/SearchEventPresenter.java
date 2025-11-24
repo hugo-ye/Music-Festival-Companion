@@ -18,8 +18,6 @@ import use_case.search_event.SearchEventOutputData;
         }
 
         public void prepareSuccessView(SearchEventOutputData outputData) {
-            //TODO Fill in the present function
-
             System.out.println(outputData.getEvents());
 
             // viewModel.setState(new SearchEventState());
