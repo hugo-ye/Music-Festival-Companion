@@ -1,5 +1,10 @@
 package interface_adapter.display_event;
 
+import entity.Event;
+import entity.EventList;
+
+import java.util.List;
+
 public class DisplayEventState {
     private  String eventName = "";
     private  String artists = "";
@@ -10,6 +15,8 @@ public class DisplayEventState {
     private  String price = "";
     private  String ticketUrl = "";
     private  String imageUrl = "";
+    private Event event = null;
+    private List<EventList> availableLists;
 
     //getters
     public String getEventName(){return eventName;}
@@ -21,6 +28,7 @@ public class DisplayEventState {
     public String getPrice(){return price;}
     public String getTicketUrl(){return ticketUrl;}
     public String getImageUrl(){return imageUrl;}
+    public List<EventList> getAvailableLists(){return availableLists;}
     //setters
     public void setEventName(String eventName){
         this.eventName = eventName;
@@ -57,8 +65,10 @@ public class DisplayEventState {
     public void setImageUrl(String imageUrl){
         this.imageUrl = imageUrl;
     }
-    // remove this
-    // public void addPropertyChangeListener(PropertyChangeListener listener){
-        // support.addPropertyChangeListener(listener);
-    // }
+
+    public Event getEvent(){return event;}
+
+    public void setEvent(Event event){this.event = event;}
+
+    public void setAvailableLists(List<EventList> availableLists){this.availableLists = availableLists;}
 }

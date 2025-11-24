@@ -3,99 +3,121 @@ package view;
 import entity.Event;
 import entity.EventList;
 import interface_adapter.save_event_to_list.SaveEventToListController;
+import interface_adapter.save_event_to_list.SaveEventToListState;
 import interface_adapter.save_event_to_list.SaveEventToListViewModel;
-import use_case.save_event_to_list.SaveEventToListInputBoundary;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
-// stuck, current issue:
-// in createUI, for loop of creating checkBox has problem, since I have not coded viewModel to get name of list
-
-public class SaveEventToListView extends JPanel{
+public class SaveEventToListView extends JDialog implements PropertyChangeListener {
     private final SaveEventToListController controller;
     private final SaveEventToListViewModel viewModel;
 
-//    public SaveEventToListView(){}
+    // We pass 'Frame owner' so the popup is centered over the main app
+    public SaveEventToListView(Frame owner, SaveEventToListController controller, SaveEventToListViewModel viewModel) {
+        super(owner, "Save Event to List", true); // true = modal (blocks background)
+        this.controller = controller;
+        this.viewModel = viewModel;
+        this.viewModel.addPropertyChangeListener(this);
 
-    // UI generate (based on number of eventList)
-    public void createUI(){
-        EventList[] eventLists = viewModel.getEventList();
-        Event event = viewModel.getEvent();
+        createUI();
+    }
 
-        List<Integer> selectedNumber = new ArrayList<>();
+    public void createUI() {
+        // 1. FIX: Get data from STATE, not ViewModel directly
+        SaveEventToListState state = viewModel.getState();
+        EventList[] eventLists = state.getEventLists();
+        Event event = state.getEvent();
 
-        // n is number of existing eventList
-        JFrame frame = new JFrame("Save Event to List View");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(300, 400);
-
-        // basic parameter of frame layout
-        frame.setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-
-        gbc.gridx = 0; gbc.gridy = 0;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.gridwidth = 1;
-        gbc.weightx = 1.0;
-
-        JLabel viewQuestion = new JLabel("Which list(s) you want to save your event in?");
-
-        frame.add(viewQuestion, gbc);
-
-        JCheckBox[] eventListCheckBoxes;
-
-        if(eventLists.length == 0){
-            // to be added, situation that
-            JOptionPane.showMessageDialog(frame, "no EventList is created");
+        // Safety check
+        if (eventLists == null || event == null) {
+            JOptionPane.showMessageDialog(this, "Error: Data missing.");
             return;
-        }else{
-            eventListCheckBoxes = new JCheckBox[eventLists.length];
-            for(int i = 0; i < eventLists.length; i++){
-                gbc.gridx = 0; gbc.gridy = 1 + i;
-                eventListCheckBoxes[i] = new JCheckBox(eventLists[i].getName());
-                frame.add(eventListCheckBoxes[i], gbc);
+        }
+
+        this.setSize(350, 450);
+        this.setLayout(new BorderLayout());
+
+        // Header
+        JLabel viewQuestion = new JLabel("Which list(s) do you want to save to?");
+        viewQuestion.setBorder(new EmptyBorder(10, 10, 10, 10));
+        ViewStyle.applyHeaderStyle(viewQuestion); // Apply style if you have it
+        this.add(viewQuestion, BorderLayout.NORTH);
+
+        // Checkbox Panel
+        JPanel listPanel = new JPanel();
+        listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
+        listPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+        List<JCheckBox> checkBoxes = new ArrayList<>();
+
+        if (eventLists.length == 0) {
+            listPanel.add(new JLabel("No lists created yet."));
+        } else {
+            for (EventList list : eventLists) {
+                // 2. FIX: Access the name directly from the Entity object
+                JCheckBox checkBox = new JCheckBox(list.getName());
+
+                // Store the list object in the checkbox for easy retrieval later
+                checkBox.putClientProperty("listObject", list);
+
+                checkBoxes.add(checkBox);
+                listPanel.add(checkBox);
+                listPanel.add(Box.createVerticalStrut(5));
             }
         }
 
-        gbc.gridx = 0; gbc.gridy = 1 + eventLists.length;
-        gbc.anchor = GridBagConstraints.EAST;
+        JScrollPane scrollPane = new JScrollPane(listPanel);
+        this.add(scrollPane, BorderLayout.CENTER);
 
+        // Button Panel
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JButton confirmButton = new JButton("Confirm Saving");
+
         confirmButton.addActionListener(e -> {
-            for(int i = 0; i < eventLists.length; i++){
-                if(eventListCheckBoxes[i].isSelected()){
-                    // if checkBox it selected, then the eventList is supposed to add an event inside
-                    selectedNumber.add(i);
+            List<EventList> selectedEventsList = new ArrayList<>();
+
+            // Iterate over checkboxes to see which are selected
+            for (JCheckBox box : checkBoxes) {
+                if (box.isSelected()) {
+                    // Retrieve the object we stored earlier
+                    EventList list = (EventList) box.getClientProperty("listObject");
+                    selectedEventsList.add(list);
                 }
             }
-            EventList[] selectedEvents = new EventList[selectedNumber.size()];
-            int i = 0;
-            for(int num: selectedNumber){
-                selectedEvents[i] = eventLists[num];
-                i++;
-            }
 
-            controller.SaveEventToList(event, selectedEvents);
-            JOptionPane.showMessageDialog(frame, viewModel.getMessage());
+            // Convert to Array for Controller
+            EventList[] finalSelection = selectedEventsList.toArray(new EventList[0]);
+
+            // Execute Controller
+            controller.SaveEventToList(event, finalSelection);
+
+            // We don't close immediately; we wait for the PropertyChange listener
+            // to tell us it succeeded (see propertyChange below).
         });
 
-        frame.add(confirmButton, gbc);
+        buttonPanel.add(confirmButton);
+        this.add(buttonPanel, BorderLayout.SOUTH);
 
-        frame.setVisible(true);
+        // Center relative to parent
+        this.setLocationRelativeTo(getParent());
     }
 
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if ("message".equals(evt.getPropertyName())) {
+            SaveEventToListState state = (SaveEventToListState) evt.getNewValue();
 
-    public SaveEventToListView(SaveEventToListController controller, SaveEventToListViewModel viewModel) {
-        this.controller = controller;
-        this.viewModel = viewModel;
-    }
+            // Show the success/fail message
+            JOptionPane.showMessageDialog(this, state.getMessage());
 
-
-    public static void main(String[] args) {
+            // Close the dialog after showing the message
+            this.dispose();
+        }
     }
 }

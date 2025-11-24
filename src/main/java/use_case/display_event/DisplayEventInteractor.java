@@ -1,6 +1,7 @@
 package use_case.display_event;
 
 import entity.Event;
+import entity.EventList;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -8,18 +9,16 @@ import java.util.List;
 
 public class DisplayEventInteractor implements DisplayEventInputBoundary{
     private final DisplayEventOutputBoundary presenter;
+    private final DisplayEventDataAccessInterface dataAccess;
 
-    public DisplayEventInteractor(DisplayEventOutputBoundary presenter) {
+    public DisplayEventInteractor(DisplayEventOutputBoundary presenter, DisplayEventDataAccessInterface dataAccess) {
         this.presenter = presenter;
+        this.dataAccess = dataAccess;
     }
     @Override
     public void execute(DisplayEventInputData input) {
 
         Event event = input.getEvent();
-
-        // String formattedDate = date != null ? date.toString() : "TBD";
-        // String priceRange = (priceMin > 0 || priceMax > 0) ?
-                // String.format("Min: %d, Max: %d", priceMin, priceMax) : "N/A";
         final boolean hasPrice;
         final int priceMin = event.getPriceMin();
         final int priceMax = event.getPriceMax();
@@ -32,12 +31,13 @@ public class DisplayEventInteractor implements DisplayEventInputBoundary{
         final List<String> genre = event.getGenres();
         final String ticket = event.getTicketUrl();
         final String image = event.getImageURL();
+        List<EventList> existingLists = dataAccess.getEventLists();
         hasPrice = priceMin > 0 || priceMax > 0;
 
 
 
         DisplayEventOutputData outputData = new DisplayEventOutputData(eventName, artist, venues, city, country, date,
-                priceMin, priceMax, ticket,genre, image, hasPrice);
+                priceMin, priceMax, ticket,genre, image, hasPrice, event, existingLists);
 
 
         presenter.prepareSuccessView(outputData);

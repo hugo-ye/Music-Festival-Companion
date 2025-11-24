@@ -4,6 +4,7 @@ import entity.Event;
 import entity.EventList;
 import entity.User;
 import use_case.attend_event.AttendEventDataAccessInterface;
+import use_case.display_event.DisplayEventDataAccessInterface;
 import use_case.display_notifications.DisplayNotificationsDataAccessInterface;
 import use_case.create_event_list.CreateEventListDataAccessInterface;
 import use_case.delete_event_list.DeleteEventListDataAccessInterface;
@@ -29,7 +30,8 @@ public class InMemoryUserDataAccessObject implements
         DisplayEventListsDataAccessInterface,
         SaveEventToListDataAccessInterface,
         RemoveEventFromListDataAccessInterface,
-        DisplayNotificationsDataAccessInterface {
+        DisplayNotificationsDataAccessInterface,
+        DisplayEventDataAccessInterface {
 
     private User currentUser;
 

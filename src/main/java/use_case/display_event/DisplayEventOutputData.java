@@ -1,12 +1,12 @@
 package use_case.display_event;
 
 import entity.Event;
+import entity.EventList;
 
 import java.time.LocalDate;
 import java.util.List;
 
 public class DisplayEventOutputData {
-    //private Event event;
     private final String eventName;
     private final List<String> artists;
     private final String venue;
@@ -19,10 +19,12 @@ public class DisplayEventOutputData {
     private final List<String> genres;
     private final String imageUrl;
     private boolean hasPrice;
+    private Event event;
+    private List<EventList> existingLists;
 
     public DisplayEventOutputData(String eventName, List<String> artists, String venue, String city,
                                   String country, LocalDate date, int priceMin, int priceMax, String ticketUrl,
-                                  List<String> genres, String imageUrl, boolean hasPrice ){
+                                  List<String> genres, String imageUrl, boolean hasPrice, Event event, List<EventList> existingLists ){
         this.eventName = eventName;
         this.artists = artists;
         this.venue = venue;
@@ -35,6 +37,8 @@ public class DisplayEventOutputData {
         this.genres = genres;
         this.imageUrl = imageUrl;
         this.hasPrice = hasPrice;
+        this.event = event;
+        this.existingLists = existingLists;
     }
 
     //getters
@@ -50,6 +54,8 @@ public class DisplayEventOutputData {
     public String getTicketUrl(){return ticketUrl;}
     public String getImageUrl(){return imageUrl;}
     public boolean getHasPrice(){return hasPrice;}
+    public Event getEvent(){return event;}
+    public List<EventList> getExistingLists(){return existingLists;}
 
 
 }
