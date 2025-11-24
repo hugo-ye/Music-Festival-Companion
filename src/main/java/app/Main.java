@@ -114,7 +114,7 @@ public class Main {
 
         // 4. Logout Use Case
         LogoutPresenter logoutPresenter = new LogoutPresenter(viewManagerModel, loginViewModel, searchViewModel);
-        LogoutInteractor logoutInteractor = new LogoutInteractor(sessionDao, logoutPresenter);
+        LogoutInteractor logoutInteractor = new LogoutInteractor(sessionDao, fileUserDataAccessObject , logoutPresenter);
         LogoutController logoutController = new LogoutController(logoutInteractor);
 
         // 5. Sort Use Case

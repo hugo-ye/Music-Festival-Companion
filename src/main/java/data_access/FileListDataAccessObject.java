@@ -11,6 +11,7 @@ import use_case.create_event_list.CreateEventListDataAccessInterface;
 import use_case.login.LoginSessionDataAccessInterface;
 import use_case.delete_event_list.DeleteEventListDataAccessInterface;
 import use_case.login.LoginUserDataAccessInterface;
+import use_case.logout.LogoutUserDataAccessInterface;
 import use_case.signup.SignupDataAccessInterface;
 
 import java.io.FileReader;
@@ -38,7 +39,8 @@ import java.util.List;
  */
 
 // hasnt been connected yet. just creating general functions
-public class FileListDataAccessObject implements LoginUserDataAccessInterface, SignupDataAccessInterface {
+public class FileListDataAccessObject implements LoginUserDataAccessInterface, SignupDataAccessInterface,
+        LogoutUserDataAccessInterface {
 
     private final String filePath;
     private final Gson gson;
