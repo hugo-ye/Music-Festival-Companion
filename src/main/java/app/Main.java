@@ -3,6 +3,7 @@ package app;
 import data_access.DBDataAccessObject;
 import data_access.FileListDataAccessObject;
 import data_access.InMemoryUserDataAccessObject;
+import entity.User;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.create_event_list.CreateEventListController;
 import interface_adapter.create_event_list.CreateEventListPresenter;
@@ -16,6 +17,8 @@ import interface_adapter.display_event.DisplayEventViewModel;
 import interface_adapter.display_event_list.DisplayEventListController;
 import interface_adapter.display_event_list.DisplayEventListPresenter;
 import interface_adapter.display_event_list.DisplayEventListViewModel;
+import interface_adapter.display_event_lists.DisplayEventListsController;
+import interface_adapter.display_event_lists.DisplayEventListsPresenter;
 import interface_adapter.display_search_results.DisplaySearchResultsViewModel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter; // Imported
@@ -34,6 +37,7 @@ import use_case.create_event_list.CreateEventListInteractor;
 import use_case.delete_event_list.DeleteEventListInteractor;
 import use_case.display_event.DisplayEventInteractor;
 import use_case.display_event_list.DisplayEventListInteractor;
+import use_case.display_event_lists.DisplayEventListsInteractor;
 import use_case.login.LoginInputBoundary; // Imported
 import use_case.login.LoginInteractor;     // Imported
 import use_case.login.LoginOutputBoundary; // Imported
@@ -46,13 +50,15 @@ import view.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class Main {
     public static void main(String[] args) {
 
         // Window setup
         JFrame application = new JFrame("Event Search Application");
-        application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        application.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         application.setPreferredSize(new Dimension(1000, 800));
 
         // ViewModels
@@ -108,7 +114,7 @@ public class Main {
 
         // 4. Logout Use Case
         LogoutPresenter logoutPresenter = new LogoutPresenter(viewManagerModel, loginViewModel, searchViewModel);
-        LogoutInteractor logoutInteractor = new LogoutInteractor(sessionDao, logoutPresenter);
+        LogoutInteractor logoutInteractor = new LogoutInteractor(sessionDao, fileUserDataAccessObject , logoutPresenter);
         LogoutController logoutController = new LogoutController(logoutInteractor);
 
         // 5. Sort Use Case
@@ -139,6 +145,11 @@ public class Main {
         DeleteEventListInteractor deleteEventListInteractor = new DeleteEventListInteractor(sessionDao, deleteEventListPresenter);
         DeleteEventListController deleteEventListController = new DeleteEventListController(deleteEventListInteractor);
 
+        // 10. Display Event Lists use Case
+        DisplayEventListsPresenter displayEventListsPresenter = new DisplayEventListsPresenter(viewManagerModel, createEventListViewModel);
+        DisplayEventListsInteractor displayEventListsInteractor = new DisplayEventListsInteractor(sessionDao, displayEventListsPresenter);
+        DisplayEventListsController displayEventListsController = new DisplayEventListsController(displayEventListsInteractor);
+
 
         // --- VIEWS ---
 
@@ -151,7 +162,7 @@ public class Main {
         views.add(signupView, signupView.getViewName());
 
         // Search View
-        SearchView searchView = new SearchView(searchViewModel, searchController, viewManagerModel, logoutController);
+        SearchView searchView = new SearchView(searchViewModel, searchController, viewManagerModel, logoutController, displayEventListsController);
         views.add(searchView, searchViewModel.getViewName());
 
         // Result View
@@ -181,7 +192,23 @@ public class Main {
         viewManagerModel.setState(loginView.getViewName());
         viewManagerModel.firePropertyChanged();
 
-        application.pack();
+        // Window listener
+        application.addWindowListener(new WindowAdapter() {
+                                          @Override
+                                          public void windowClosing(WindowEvent e) {
+                                              User currentUser = sessionDao.getCurrentUser();
+                                              if (currentUser != null) {
+                                                  fileUserDataAccessObject.save(currentUser);
+                                                  sessionDao.clearCurrentUser();
+                                                  System.out.println("correctly saved user data to persistent storage");
+                                              }
+                                              application.dispose();
+                                              System.exit(0);
+                                          }
+                                      }
+        );
+
+                application.pack();
         application.setVisible(true);
     }
 }

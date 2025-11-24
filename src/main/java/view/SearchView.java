@@ -1,6 +1,7 @@
 package view;
 
 import interface_adapter.ViewManagerModel;
+import interface_adapter.display_event_lists.DisplayEventListsController;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.search_event.SearchEventController;
 import interface_adapter.search_event.SearchEventState;
@@ -34,6 +35,7 @@ public class SearchView extends JPanel implements PropertyChangeListener {
     private final ViewManagerModel viewManagerModel;
     private final SearchEventViewModel searchViewModel;
     private final LogoutController logoutController;
+    private final DisplayEventListsController displayEventListsController;
 
     // UI components
     private final JLabel usernameLabel = new JLabel("Logged in as: [User]");
@@ -66,12 +68,15 @@ public class SearchView extends JPanel implements PropertyChangeListener {
 
     public SearchView(SearchEventViewModel searchViewModel,
                       SearchEventController controller,
-                      ViewManagerModel viewManagerModel, LogoutController logoutController) {
+                      ViewManagerModel viewManagerModel,
+                      LogoutController logoutController,
+                      DisplayEventListsController displayEventListsController) {
 
         this.searchViewModel = searchViewModel;
         this.controller = controller;
         this.viewManagerModel = viewManagerModel;
         this.logoutController = logoutController;
+        this.displayEventListsController = displayEventListsController;
 
         this.searchViewModel.addPropertyChangeListener(this);
 
@@ -273,9 +278,7 @@ public class SearchView extends JPanel implements PropertyChangeListener {
 
         listsButton.addActionListener(e -> {
             // Switch view to "Lists"
-            viewManagerModel.setState("event lists");
-            viewManagerModel.firePropertyChanged();
-            System.out.println("nav to lists");
+            displayEventListsController.execute();
         });
     }
 

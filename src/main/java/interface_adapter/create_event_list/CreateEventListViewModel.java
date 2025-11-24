@@ -9,7 +9,7 @@ import interface_adapter.ViewModel;
 
 public class CreateEventListViewModel extends ViewModel<CreateEventListState> {
 
-    public static final String VIEW_NAME = "event_list";
+    public static final String VIEW_NAME = "event lists";
     public CreateEventListViewModel() {
         super(VIEW_NAME);
         // initial empty state

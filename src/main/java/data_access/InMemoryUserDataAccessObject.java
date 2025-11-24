@@ -6,11 +6,15 @@ import entity.User;
 import use_case.attend_event.AttendEventDataAccessInterface;
 import use_case.create_event_list.CreateEventListDataAccessInterface;
 import use_case.delete_event_list.DeleteEventListDataAccessInterface;
+import use_case.display_event_lists.DisplayEventListsDataAccessInterface;
 import use_case.login.LoginSessionDataAccessInterface;
 import use_case.logout.LogoutSessionDataAccessInterface;
 
+import java.util.List;
+
 public class InMemoryUserDataAccessObject implements LoginSessionDataAccessInterface, LogoutSessionDataAccessInterface,
-        AttendEventDataAccessInterface, CreateEventListDataAccessInterface, DeleteEventListDataAccessInterface {
+        AttendEventDataAccessInterface, CreateEventListDataAccessInterface, DeleteEventListDataAccessInterface,
+        DisplayEventListsDataAccessInterface {
 
     private User currentUser;
 
@@ -55,6 +59,7 @@ public class InMemoryUserDataAccessObject implements LoginSessionDataAccessInter
             return;
         }
         user.getLists().add(eventList);
+        System.out.println("after createEventList, user is: \n" + user);
     }
 
     @Override
@@ -80,5 +85,13 @@ public class InMemoryUserDataAccessObject implements LoginSessionDataAccessInter
         User user = getCurrentUser();
         if (user == null) return;
         user.removeListById(listId);
+        System.out.println("after deleteById, user is: \n" + user);
+    }
+
+    @Override
+    public List<EventList> getEventLists() {
+        User user = getCurrentUser();
+        if (user == null) return null;
+        return user.getLists();
     }
 }
