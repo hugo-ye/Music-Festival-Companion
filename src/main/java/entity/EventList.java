@@ -19,6 +19,19 @@ public class EventList {
         this.events = new ArrayList<>();
     }
 
+    @Override
+    public String toString() {
+        String eventsStr = "";
+        for (Event event : events) {
+            eventsStr += event.toString() + "\n";
+        }
+        return "EventList{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", events=" + events +
+                '}';
+    }
+
     // Getters
     public String getId() {
         return id;

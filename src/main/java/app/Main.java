@@ -3,6 +3,7 @@ package app;
 import data_access.DBDataAccessObject;
 import data_access.FileListDataAccessObject;
 import data_access.InMemoryUserDataAccessObject;
+import entity.User;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.create_event_list.CreateEventListController;
 import interface_adapter.create_event_list.CreateEventListPresenter;
@@ -46,13 +47,15 @@ import view.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class Main {
     public static void main(String[] args) {
 
         // Window setup
         JFrame application = new JFrame("Event Search Application");
-        application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        application.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         application.setPreferredSize(new Dimension(1000, 800));
 
         // ViewModels
@@ -181,7 +184,23 @@ public class Main {
         viewManagerModel.setState(loginView.getViewName());
         viewManagerModel.firePropertyChanged();
 
-        application.pack();
+        // Window listener
+        application.addWindowListener(new WindowAdapter() {
+                                          @Override
+                                          public void windowClosing(WindowEvent e) {
+                                              User currentUser = sessionDao.getCurrentUser();
+                                              if (currentUser != null) {
+                                                  fileUserDataAccessObject.save(currentUser);
+                                                  sessionDao.clearCurrentUser();
+                                                  System.out.println("correctly saved user data to persistent storage");
+                                              }
+                                              application.dispose();
+                                              System.exit(0);
+                                          }
+                                      }
+        );
+
+                application.pack();
         application.setVisible(true);
     }
 }

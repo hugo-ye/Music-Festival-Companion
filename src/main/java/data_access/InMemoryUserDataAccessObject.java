@@ -55,6 +55,7 @@ public class InMemoryUserDataAccessObject implements LoginSessionDataAccessInter
             return;
         }
         user.getLists().add(eventList);
+        System.out.println("after createEventList, user is: \n" + user);
     }
 
     @Override
@@ -80,5 +81,6 @@ public class InMemoryUserDataAccessObject implements LoginSessionDataAccessInter
         User user = getCurrentUser();
         if (user == null) return;
         user.removeListById(listId);
+        System.out.println("after deleteById, user is: \n" + user);
     }
 }
