@@ -4,9 +4,6 @@ public class DeleteEventListState {
     private String listId = "";
     private String errorMessage = "";
 
-    public DeleteEventListState() {
-    }
-
     // Getter
     public String getListId() {
         return listId;
