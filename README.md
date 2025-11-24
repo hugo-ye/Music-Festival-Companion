@@ -2,13 +2,14 @@
 
 ## 1. Group Members
 
-| Name | GitHub username |
-| :--- |:----------------|
+| Name                   | GitHub username |
+|:-----------------------|:----------------|
 | **Abdullah Algothami** | `abudi511`      |
-| **Amir Diba** | `Amir8-5`       |
-| **Cheuk-Fung Lau** | `cflau316`      |
-| **Yifu Liang** | `JeffLia06`     |
-| **Hugo Ye** | `hugo-ye`       |
+| **Amir Diba**          | `Amir8-5`       |
+| **Cheuk-Fung Lau**     | `cflau316`      |
+| **Yifu Liang**         | `JeffLia06`     |
+| **Fan Peng**           | `pengfan200455` |
+| **Hugo Ye**            | `hugo-ye`       |
 
 ---
 
