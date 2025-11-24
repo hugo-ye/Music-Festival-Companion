@@ -197,7 +197,7 @@ public class EventView extends JDialog implements PropertyChangeListener {
             List<EventList> selectedLists = dialog.getSelectedLists();
             if (!selectedLists.isEmpty()) {
                 EventList[] listsArray = selectedLists.toArray(new EventList[0]);
-                saveEventToListController.SaveEventToList(event, listsArray);
+                saveEventToListController.execute(event, listsArray);
             } else {
                 JOptionPane.showMessageDialog(this, "No lists selected.");
             }

@@ -11,7 +11,7 @@ public class CreateEventListController {
         this.interactor = interactor;
     }
 
-    public void create(String name) {
+    public void execute(String name) {
         CreateEventListInputData inputData = new CreateEventListInputData(name);
         interactor.execute(inputData);
     }

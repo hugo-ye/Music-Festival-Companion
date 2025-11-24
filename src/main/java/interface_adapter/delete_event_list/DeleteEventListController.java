@@ -10,7 +10,7 @@ public class DeleteEventListController {
     public DeleteEventListController(DeleteEventListInputBoundary interactor) {
         this.interactor = interactor;
     }
-    public void delete(String listID) {
+    public void execute(String listID) {
         DeleteEventListInputData inputData = new DeleteEventListInputData(listID);
         interactor.execute(inputData);
     }

@@ -186,7 +186,7 @@ public class EventListView extends JPanel implements PropertyChangeListener {
                     );
 
                     if (confirm == JOptionPane.YES_OPTION) {
-                        removeEventFromListController.removeEventFromList(event, currentEventList);
+                        removeEventFromListController.execute(event, currentEventList);
                     }
                 }
             });

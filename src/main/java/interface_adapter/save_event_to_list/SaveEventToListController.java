@@ -12,7 +12,7 @@ public class SaveEventToListController{
         this.interactor = interactor;
     }
 
-    public void SaveEventToList(Event event, EventList[] eventLists){
+    public void execute(Event event, EventList[] eventLists){
         SaveEventToListInputData inputData = new SaveEventToListInputData(event, eventLists);
         interactor.execute(inputData);
     }

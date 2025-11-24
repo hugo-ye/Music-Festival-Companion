@@ -13,7 +13,7 @@ public class RemoveEventFromListController {
         this.interactor = interactor;
     }
 
-    public void removeEventFromList(Event event, EventList eventList){
+    public void execute(Event event, EventList eventList){
         RemoveEventFromListInputData inputData = new RemoveEventFromListInputData(event, eventList);
         interactor.removeEventFromList(inputData);
     }

@@ -87,7 +87,7 @@ public class SaveEventToListView extends JDialog implements PropertyChangeListen
             EventList[] finalSelection = selectedEventsList.toArray(new EventList[0]);
 
             // Execute Controller
-            controller.SaveEventToList(event, finalSelection);
+            controller.execute(event, finalSelection);
 
         });
 

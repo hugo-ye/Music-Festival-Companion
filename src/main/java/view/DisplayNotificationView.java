@@ -19,7 +19,7 @@ public class DisplayNotificationView extends JPanel {
     public void createUI(){
         JFrame frame = new JFrame("Notifications");
         LocalDate currDate = LocalDate.now();
-        controller.displayNotifications(currDate);
+        controller.execute(currDate);
         JOptionPane.showMessageDialog(frame, viewModel.getMessage());
     }
 }
