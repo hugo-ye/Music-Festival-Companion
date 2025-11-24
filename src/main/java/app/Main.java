@@ -21,6 +21,9 @@ import interface_adapter.display_event_list.DisplayEventListPresenter;
 import interface_adapter.display_event_list.DisplayEventListViewModel;
 import interface_adapter.display_event_lists.DisplayEventListsController;
 import interface_adapter.display_event_lists.DisplayEventListsPresenter;
+import interface_adapter.display_notifications.DisplayNotificationsController;
+import interface_adapter.display_notifications.DisplayNotificationsPresenter;
+import interface_adapter.display_notifications.DisplayNotificationsViewModel;
 import interface_adapter.display_search_results.DisplaySearchResultsViewModel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
@@ -47,6 +50,10 @@ import use_case.delete_event_list.DeleteEventListInteractor;
 import use_case.display_event.DisplayEventInteractor;
 import use_case.display_event_list.DisplayEventListInteractor;
 import use_case.display_event_lists.DisplayEventListsInteractor;
+import use_case.display_notifications.DisplayNotificationsInteractor;
+import use_case.login.LoginInputBoundary; // Imported
+import use_case.login.LoginInteractor;     // Imported
+import use_case.login.LoginOutputBoundary; // Imported
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
@@ -97,9 +104,21 @@ public class Main {
 
         // --- USE CASES ---
 
-        // 1. Login
-        LoginOutputBoundary loginPresenter = new LoginPresenter(viewManagerModel, loginViewModel, searchViewModel);
-        LoginInputBoundary loginInteractor = new LoginInteractor(fileUserDataAccessObject, loginPresenter, sessionDao);
+        // 0. Display notification use case
+        DisplayNotificationsViewModel displayNotificationsViewModel = new DisplayNotificationsViewModel();
+        DisplayNotificationsPresenter displayNotificationsPresenter = new DisplayNotificationsPresenter(displayNotificationsViewModel);
+        DisplayNotificationsInteractor displayNotificationsInteractor = new DisplayNotificationsInteractor(sessionDao, displayNotificationsPresenter);
+        DisplayNotificationsController displayNotificationsController = new DisplayNotificationsController(displayNotificationsInteractor);
+
+        // 1. Login Use Case
+        LoginOutputBoundary loginPresenter = new LoginPresenter(viewManagerModel, loginViewModel, searchViewModel, displayNotificationsController);
+
+        LoginInputBoundary loginInteractor = new LoginInteractor(
+                fileUserDataAccessObject, // To check if user exists in file
+                loginPresenter,           // To update the view
+                sessionDao                // To save the user to the session (memory)
+        );
+
         LoginController loginController = new LoginController(loginInteractor);
 
         // 2. Search
@@ -171,7 +190,7 @@ public class Main {
 
         // --- VIEWS ---
 
-        // Login View
+        // Login View (Now uses the valid loginController)
         LoginView loginView = new LoginView(loginViewModel, loginController, viewManagerModel);
         views.add(loginView, loginView.getViewName());
 
@@ -201,6 +220,10 @@ public class Main {
         );
         views.add(eventListView, eventListView.getViewName());
 
+        // Display Notif View
+        DisplayNotificationView displayNotificationView = new DisplayNotificationView(displayNotificationsViewModel, application);
+        views.add(displayNotificationView, displayNotificationView.getViewName());
+
         // Popup View (Instantiate it here so it starts listening, but it is a Dialog so it handles its own visibility)
         // CRITICAL FIX: Pass all required controllers and the correct ViewModel instance
         new EventView(
@@ -212,6 +235,7 @@ public class Main {
         );
 
         // --- INITIAL STATE ---
+        // Start at Login
         viewManagerModel.setState(loginView.getViewName());
         viewManagerModel.firePropertyChanged();
 
