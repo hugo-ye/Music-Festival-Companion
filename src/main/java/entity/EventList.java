@@ -56,11 +56,12 @@ public class EventList {
 
     // Mutators
     public void addEvent(Event event) {
-        if (!events.contains(event)){
+        if (!events.contains(event)) {
             events.add(event);
         }
 
     }
+
     public void removeEvent(Event event) {
         events.remove(event);
     }
@@ -75,9 +76,5 @@ public class EventList {
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
-    }
-
-    public List<Event> getAllEvents(){
-        return events;
     }
 }

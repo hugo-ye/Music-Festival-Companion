@@ -63,8 +63,8 @@ public class InMemoryUserDataAccessObject implements LoginSessionDataAccessInter
     }
 
     @Override
-    public List<Event> getNotificationBasedOnData(LocalDate localDate) {
-        return currentUser.getMasterList().getAllEvents();
+    public List<Event> getMasterListEvents() {
+        return currentUser.getMasterList().getEvents();
     }
 
     public boolean existsByName(String listName) {
