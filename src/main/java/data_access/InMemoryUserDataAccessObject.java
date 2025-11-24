@@ -20,12 +20,16 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InMemoryUserDataAccessObject implements LoginSessionDataAccessInterface, LogoutSessionDataAccessInterface,
-        AttendEventDataAccessInterface, CreateEventListDataAccessInterface, DeleteEventListDataAccessInterface,
-        DisplayEventListsDataAccessInterface, SaveEventToListDataAccessInterface, RemoveEventFromListDataAccessInterface {
-        AttendEventDataAccessInterface, DisplayNotificationsDataAccessInterface,
-        CreateEventListDataAccessInterface, DeleteEventListDataAccessInterface,
-        DisplayEventListsDataAccessInterface, SaveEventToListDataAccessInterface {
+public class InMemoryUserDataAccessObject implements
+        LoginSessionDataAccessInterface,
+        LogoutSessionDataAccessInterface,
+        AttendEventDataAccessInterface,
+        CreateEventListDataAccessInterface,
+        DeleteEventListDataAccessInterface,
+        DisplayEventListsDataAccessInterface,
+        SaveEventToListDataAccessInterface,
+        RemoveEventFromListDataAccessInterface,
+        DisplayNotificationsDataAccessInterface {
 
     private User currentUser;
 
@@ -131,7 +135,7 @@ public class InMemoryUserDataAccessObject implements LoginSessionDataAccessInter
         User user = getCurrentUser();
         int currentEventListIndex = currentUser.getLists().indexOf(targetEventList);
         // for situation of non-exist: may not happen, since user cannot select eventList that is not created
-        if(currentEventListIndex == -1){
+        if (currentEventListIndex == -1) {
             System.out.println("no eventList currently");
             return;
         }
