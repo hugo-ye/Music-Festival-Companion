@@ -66,6 +66,7 @@ public class User {
         this.password = password;
 
     }
+
     public void removeListById(String id) {
         EventList toRemove = null;
         for (EventList list : lists) {
@@ -79,5 +80,6 @@ public class User {
         }
 
 
-    }}
+    }
+}
 

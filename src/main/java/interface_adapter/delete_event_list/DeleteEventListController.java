@@ -11,10 +11,7 @@ public class DeleteEventListController {
         this.interactor = interactor;
     }
     public void delete(String listID) {
-        // Called by the UI when user clicks delete button for a given list
-        // @param listId the ID of the list to delete (as provided by the view)
         DeleteEventListInputData inputData = new DeleteEventListInputData(listID);
-
         interactor.execute(inputData);
     }
 }

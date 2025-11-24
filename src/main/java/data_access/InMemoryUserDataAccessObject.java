@@ -4,6 +4,7 @@ import entity.Event;
 import entity.EventList;
 import entity.User;
 import use_case.attend_event.AttendEventDataAccessInterface;
+import use_case.display_notifications.DisplayNotificationsDataAccessInterface;
 import use_case.create_event_list.CreateEventListDataAccessInterface;
 import use_case.delete_event_list.DeleteEventListDataAccessInterface;
 import use_case.display_event_lists.DisplayEventListsDataAccessInterface;
@@ -14,9 +15,17 @@ import use_case.save_event_to_list.SaveEventToListDataAccessInterface;
 
 import java.util.List;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
+
 public class InMemoryUserDataAccessObject implements LoginSessionDataAccessInterface, LogoutSessionDataAccessInterface,
         AttendEventDataAccessInterface, CreateEventListDataAccessInterface, DeleteEventListDataAccessInterface,
         DisplayEventListsDataAccessInterface, SaveEventToListDataAccessInterface, RemoveEventFromListDataAccessInterface {
+        AttendEventDataAccessInterface, DisplayNotificationsDataAccessInterface,
+        CreateEventListDataAccessInterface, DeleteEventListDataAccessInterface,
+        DisplayEventListsDataAccessInterface, SaveEventToListDataAccessInterface {
 
     private User currentUser;
 
@@ -32,12 +41,12 @@ public class InMemoryUserDataAccessObject implements LoginSessionDataAccessInter
         this.currentUser = null;
     }
 
-        @Override
+    @Override
     public void saveEventToList(Event event, EventList eventList) {
         currentUser = getCurrentUser();
         int currentEventListIndex = currentUser.getLists().indexOf(eventList);
         // for situation of non-exist: may not happen, since user cannot select eventList that is not created
-        if(currentEventListIndex == -1){
+        if (currentEventListIndex == -1) {
             System.out.println("no eventList currently");
             return;
         }
@@ -47,7 +56,7 @@ public class InMemoryUserDataAccessObject implements LoginSessionDataAccessInter
 
         // for persistent storage, may need discuss later, currently I only deal with inMemory
     }
-    
+
     public void saveEventToMasterList(Event event) {
         currentUser.getMasterList().addEvent(event);
     }
@@ -57,6 +66,10 @@ public class InMemoryUserDataAccessObject implements LoginSessionDataAccessInter
     }
 
     @Override
+    public List<Event> getMasterListEvents() {
+        return currentUser.getMasterList().getEvents();
+    }
+
     public boolean existsByName(String listName) {
         User user = getCurrentUser();
         if (user == null) return false;

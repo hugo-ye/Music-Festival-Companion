@@ -12,7 +12,7 @@ public class CreateEventListController {
     }
 
     public void create(String name) {
-        CreateEventListInputData inputData = new CreateEventListInputData(name); // Create input data object
-        interactor.execute(inputData); // Call the use case
+        CreateEventListInputData inputData = new CreateEventListInputData(name);
+        interactor.execute(inputData);
     }
 }
