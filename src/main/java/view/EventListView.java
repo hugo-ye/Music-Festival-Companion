@@ -1,13 +1,12 @@
 package view;
 
 import entity.Event;
-import entity.EventList;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.display_event.DisplayEventController;
 import interface_adapter.display_event_list.DisplayEventListController;
 import interface_adapter.display_event_list.DisplayEventListState;
 import interface_adapter.display_event_list.DisplayEventListViewModel;
-import interface_adapter.remove_event_from_list.RemoveEventFromListController; // NEW IMPORT
+import interface_adapter.remove_event_from_list.RemoveEventFromListController;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -16,7 +15,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Objects;
 
 public class EventListView extends JPanel implements PropertyChangeListener {
     private final String viewName = "event list";
@@ -25,17 +23,15 @@ public class EventListView extends JPanel implements PropertyChangeListener {
     private final DisplayEventListController displayEventListController;
     private final DisplayEventController displayEventController;
     private final ViewManagerModel viewManagerModel;
-    private final RemoveEventFromListController removeEventFromListController; // NEW FIELD
 
     private final JPanel eventsPanel;
     private final JButton backButton;
-    private final JLabel titleLabel;
+    private final JLabel titleLabel; // Added title label
 
     public EventListView(DisplayEventListViewModel displayEventViewModel,
                          DisplayEventListController displayEventListController,
                          DisplayEventController displayEventController,
-                         ViewManagerModel viewManagerModel,
-                         RemoveEventFromListController removeEventFromListController) { // NEW PARAMETER
+                         ViewManagerModel viewManagerModel, RemoveEventFromListController removeEventFromListController) {
 
         this.displayEventListViewModel = displayEventViewModel;
         this.displayEventListViewModel.addPropertyChangeListener(this);
@@ -43,26 +39,28 @@ public class EventListView extends JPanel implements PropertyChangeListener {
         this.displayEventListController = displayEventListController;
         this.displayEventController = displayEventController;
         this.viewManagerModel = viewManagerModel;
-        this.removeEventFromListController = removeEventFromListController; // ASSIGNMENT
 
         this.setLayout(new BorderLayout());
-        this.setBackground(ViewStyle.WINDOW_BACKGROUND);
+        this.setBackground(ViewStyle.WINDOW_BACKGROUND); // Ensure background matches
 
         // --- Top Panel ---
         JPanel topPanel = ViewStyle.createSectionPanel(new BorderLayout());
+
+        // Add a title so we know which view we are on
         titleLabel = new JLabel("Event List");
         ViewStyle.applyTitleStyle(titleLabel);
         topPanel.add(titleLabel, BorderLayout.WEST);
+
         add(topPanel, BorderLayout.NORTH);
 
         // --- Center Panel (Scrollable Events) ---
         eventsPanel = new JPanel();
         eventsPanel.setLayout(new BoxLayout(eventsPanel, BoxLayout.Y_AXIS));
         eventsPanel.setBackground(ViewStyle.WINDOW_BACKGROUND);
-        eventsPanel.setBorder(new EmptyBorder(10, 20, 10, 20));
+        eventsPanel.setBorder(new EmptyBorder(10, 20, 10, 20)); // Padding
 
         JScrollPane scrollPane = new JScrollPane(eventsPanel);
-        ViewStyle.applyScrollPaneStyle(scrollPane);
+        ViewStyle.applyScrollPaneStyle(scrollPane); // Apply style if you have it
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
         add(scrollPane, BorderLayout.CENTER);
 
@@ -73,7 +71,7 @@ public class EventListView extends JPanel implements PropertyChangeListener {
 
         backButton.addActionListener(e -> {
             if (viewManagerModel != null) {
-                viewManagerModel.setState("event lists");
+                viewManagerModel.setState("event lists"); // Make sure this matches AllEventListsView viewName
                 viewManagerModel.firePropertyChanged();
             }
         });
@@ -86,22 +84,19 @@ public class EventListView extends JPanel implements PropertyChangeListener {
         if (evt.getPropertyName().equals("refresh")) {
             DisplayEventListState state = (DisplayEventListState) evt.getNewValue();
 
+            // Update title if the list has a name
             if (state.getEventList() != null) {
-                // Update title
                 titleLabel.setText(state.getEventList().getName());
 
                 eventsPanel.removeAll();
 
-                EventList currentList = state.getEventList();
-
-                if (currentList.getEvents().isEmpty()) {
+                if (state.getEventList().getEvents().isEmpty()) {
                     JLabel noEvents = new JLabel("No events in this list.");
                     ViewStyle.applyLabelStyle(noEvents);
                     eventsPanel.add(noEvents);
                 } else {
-                    for (Event event : currentList.getEvents()) {
-                        // Pass the current list context to the row creation method
-                        JPanel eventRow = createEventRow(event, currentList);
+                    for (Event event : state.getEventList().getEvents()) {
+                        JPanel eventRow = createEventRow(event);
                         eventsPanel.add(eventRow);
                         eventsPanel.add(Box.createVerticalStrut(10));
                     }
@@ -113,89 +108,36 @@ public class EventListView extends JPanel implements PropertyChangeListener {
         }
     }
 
-    /**
-     * Creates a card panel for a single event, including name, date, and buttons.
-     * @param event The Event entity to display.
-     * @param listContext The EventList entity this event belongs to (for deletion context).
-     * @return A JPanel representing the event row.
-     */
-    private JPanel createEventRow(Event event, EventList listContext) {
-        // 1. Main Card Panel
+    private JPanel createEventRow(Event event) {
+        // 1. Create the card
         JPanel eventRow = ViewStyle.createCardPanel();
         eventRow.setLayout(new BorderLayout());
-        eventRow.setMaximumSize(new Dimension(Integer.MAX_VALUE, 80));
+        eventRow.setMaximumSize(new Dimension(Integer.MAX_VALUE, 80)); // Prevent it from stretching infinitely
         eventRow.setBorder(new EmptyBorder(10, 10, 10, 10));
-        eventRow.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
-        // 2. Left Panel (Name and Date)
-        JPanel textInfoPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 0));
-        textInfoPanel.setOpaque(false);
-
+        // 2. Add Content (This was missing!)
         JLabel nameLabel = new JLabel(event.getName());
-        ViewStyle.applyHeaderStyle(nameLabel);
+        ViewStyle.applyHeaderStyle(nameLabel); // Use a visible font style
+        eventRow.add(nameLabel, BorderLayout.CENTER);
 
-        JLabel dateLabel = new JLabel("Date: " + (event.getDate() != null ? event.getDate().toString() : "TBD"));
+        JLabel dateLabel = new JLabel(event.getDate() != null ? event.getDate().toString() : "No Date");
         ViewStyle.applyLabelStyle(dateLabel);
+        eventRow.add(dateLabel, BorderLayout.EAST);
 
-        textInfoPanel.add(nameLabel);
-        textInfoPanel.add(dateLabel);
-
-        eventRow.add(textInfoPanel, BorderLayout.WEST);
-
-        // 3. Right Panel (Buttons)
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
-        buttonPanel.setOpaque(false);
-
-        // --- View Details Button ---
-        JButton detailsButton = new JButton("Details");
-        ViewStyle.applyButtonStyle(detailsButton);
-
-        detailsButton.addActionListener(e -> {
-            displayEventController.execute(event); // View Event Details Use Case
-        });
-        buttonPanel.add(detailsButton);
-
-
-        // --- DELETE Button ---
-        JButton deleteButton = new JButton("Delete");
-        ViewStyle.applyButtonStyle(deleteButton);
-        deleteButton.setForeground(ViewStyle.ERROR_COLOR);
-
-        // Disable delete if the list is the Master List (Master List ID is hardcoded to "master_list")
-        if (Objects.equals(listContext.getId(), "master_list")) {
-            deleteButton.setEnabled(false);
-            deleteButton.setText("Attended"); // Optional visual change
-        } else {
-            deleteButton.addActionListener(e -> {
-                int confirm = JOptionPane.showConfirmDialog(
-                        eventRow, // Parent component for centering dialog
-                        "Remove '" + event.getName() + "' from " + listContext.getName() + "?",
-                        "Confirm Removal",
-                        JOptionPane.YES_NO_OPTION
-                );
-
-                if (confirm == JOptionPane.YES_OPTION && removeEventFromListController != null) {
-                    // Trigger the remove event Use Case
-                    removeEventFromListController.removeEventFromList(event, listContext);
-                    // The presenter for this Use Case should handle refreshing the EventListView afterward.
-                }
-            });
-        }
-        buttonPanel.add(deleteButton);
-
-        eventRow.add(buttonPanel, BorderLayout.EAST);
-
-        // Add click listener to the whole card for quick details view
+        // 3. Add Interaction
         eventRow.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                // If the click wasn't on a button, show details
-                if (e.getSource().equals(eventRow)) {
-                    displayEventController.execute(event);
-                }
+                displayEventController.execute(event);
+            }
+
+            // Optional: Visual feedback on hover
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                eventRow.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                // You could change background color slightly here if desired
             }
         });
-
 
         return eventRow;
     }
