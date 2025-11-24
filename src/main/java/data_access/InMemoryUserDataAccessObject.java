@@ -9,13 +9,14 @@ import use_case.delete_event_list.DeleteEventListDataAccessInterface;
 import use_case.display_event_lists.DisplayEventListsDataAccessInterface;
 import use_case.login.LoginSessionDataAccessInterface;
 import use_case.logout.LogoutSessionDataAccessInterface;
+import use_case.remove_event_from_list.RemoveEventFromListDataAccessInterface;
 import use_case.save_event_to_list.SaveEventToListDataAccessInterface;
 
 import java.util.List;
 
 public class InMemoryUserDataAccessObject implements LoginSessionDataAccessInterface, LogoutSessionDataAccessInterface,
         AttendEventDataAccessInterface, CreateEventListDataAccessInterface, DeleteEventListDataAccessInterface,
-        DisplayEventListsDataAccessInterface, SaveEventToListDataAccessInterface {
+        DisplayEventListsDataAccessInterface, SaveEventToListDataAccessInterface, RemoveEventFromListDataAccessInterface {
 
     private User currentUser;
 
@@ -110,5 +111,18 @@ public class InMemoryUserDataAccessObject implements LoginSessionDataAccessInter
         User user = getCurrentUser();
         if (user == null) return null;
         return user.getLists();
+    }
+
+    @Override
+    public void removeEventFromList(Event removedEvent, EventList targetEventList) {
+        User user = getCurrentUser();
+        int currentEventListIndex = currentUser.getLists().indexOf(targetEventList);
+        // for situation of non-exist: may not happen, since user cannot select eventList that is not created
+        if(currentEventListIndex == -1){
+            System.out.println("no eventList currently");
+            return;
+        }
+        EventList currentEventList = currentUser.getLists().get(currentEventListIndex);
+        currentEventList.removeEvent(removedEvent);
     }
 }
