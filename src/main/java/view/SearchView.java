@@ -36,7 +36,7 @@ public class SearchView extends JPanel implements PropertyChangeListener {
     private final LogoutController logoutController;
 
     // UI components
-    private final JLabel usernameLabel = new JLabel("Welcome, [User]");
+    private final JLabel usernameLabel = new JLabel("Logged in as: [User]");
     private final JButton logoutButton = new JButton("Logout");
     private final JButton listsButton = new JButton("My Lists");
 
@@ -412,7 +412,7 @@ public class SearchView extends JPanel implements PropertyChangeListener {
         SearchEventState state = (SearchEventState) evt.getNewValue();
 
         if (state.getUsername() != null) {
-            usernameLabel.setText("Welcome, " + state.getUsername());
+            usernameLabel.setText("Logged in as: " + state.getUsername());
         }
 
         if (!searchField.getText().equals(state.getSearch_keyword())) {
