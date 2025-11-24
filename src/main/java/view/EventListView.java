@@ -1,6 +1,7 @@
 package view;
 
 import entity.Event;
+import interface_adapter.ViewManagerModel;
 import interface_adapter.display_event.DisplayEventController;
 import interface_adapter.display_event_list.DisplayEventListState;
 import interface_adapter.display_event_list.DisplayEventListViewModel;
@@ -17,18 +18,22 @@ public class EventListView extends JPanel implements PropertyChangeListener {
     // Add controllers and viewmodels here
     private final DisplayEventListViewModel displayEventListViewModel;
     private final DisplayEventController displayEventController;
+    private final ViewManagerModel viewManagerModel;
 
     // Swing components
     private final JPanel eventsPanel;
     private final JButton backButton;
 
     public EventListView(DisplayEventListViewModel displayEventViewModel,
-                         DisplayEventController displayEventController) {
+                         DisplayEventController displayEventController,
+                         ViewManagerModel viewManagerModel) {
         // add controller, viewmodel here
         this.displayEventListViewModel = displayEventViewModel;
         this.displayEventListViewModel.addPropertyChangeListener(this);
 
         this.displayEventController = displayEventController;
+
+        this.viewManagerModel = viewManagerModel;
 
         this.setLayout(new BorderLayout());
         JPanel topPanel = new JPanel();
@@ -42,6 +47,14 @@ public class EventListView extends JPanel implements PropertyChangeListener {
 
         JPanel bottomPanel = new JPanel();
         backButton = new JButton("Back");
+
+        backButton.addActionListener(e -> {
+            if (viewManagerModel == null) {
+                return;
+            }
+            viewManagerModel.setState("event lists");
+            viewManagerModel.firePropertyChanged();
+        });
         bottomPanel.add(backButton);
         add(bottomPanel, BorderLayout.SOUTH);
     }
@@ -49,6 +62,7 @@ public class EventListView extends JPanel implements PropertyChangeListener {
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals("refresh")) {
+            System.out.println("refresh called in EventListView");
             DisplayEventListState state = (DisplayEventListState) evt.getNewValue();
             if (state.getEventList() != null) {
                 eventsPanel.removeAll();
@@ -129,6 +143,7 @@ public class EventListView extends JPanel implements PropertyChangeListener {
         eventRow.setMaximumSize(new Dimension(500, 150));
         return eventRow;
     }
+
     public String getViewName() {
         return this.viewName;
     }

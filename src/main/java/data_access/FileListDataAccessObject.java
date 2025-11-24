@@ -38,7 +38,7 @@ import java.util.List;
  */
 
 // hasnt been connected yet. just creating general functions
-public class FileListDataAccessObject implements CreateEventListDataAccessInterface, DeleteEventListDataAccessInterface, SignupDataAccessInterface, LoginUserDataAccessInterface {
+public class FileListDataAccessObject  {
 
     private final String filePath;
     private final Gson gson;
@@ -122,100 +122,6 @@ public class FileListDataAccessObject implements CreateEventListDataAccessInterf
                 break;
             }
         }
-    }
-
-    // For create-event-list
-    @Override
-    public boolean existsByName(String listName) {
-
-        if (listName == null) return false;
-
-        String target = listName;
-
-        // get the logged in user
-        User current = sessionDataAccess.getCurrentUser();
-        if (current == null) {
-            return false;
-        }
-
-        String username = current.getUsername();
-        User userFromFile = getByUsername(username);
-        if (userFromFile == null) {
-            return false;
-        }
-
-        for (EventList list : userFromFile.getLists()) {
-            if (list.getName().equals(target)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public void createEventList(EventList newList) {
-        User current = sessionDataAccess.getCurrentUser();
-        if (current == null) { // Nothing to do if user is not logged in
-            return;
-        }
-
-        String username = current.getUsername();
-        List<User> users = read();
-
-        User foundUser = null;
-        for (User u : users) {
-            if (u.getUsername().equals(username)) {
-                foundUser = u;
-                break;
-            }
-        }
-        foundUser.getLists().add(newList);
-        save(foundUser);
-    }
-
-    // for delete-event-list
-    @Override
-    public boolean isMasterList(String listId) {
-        return "master_list".equals(listId); // Since id for master list is "master_list"
-    }
-
-    @Override
-    public void deleteById(String listId) {
-        User current = sessionDataAccess.getCurrentUser();
-        if (current == null) return;
-
-        String username = current.getUsername();
-        User userFromFile = getByUsername(username);
-        if (userFromFile == null) return;
-
-        // Remove from user's lists (never affects master list)
-        userFromFile.removeListById(listId);
-        // Save updated user to file
-        save(userFromFile);
-    }
-
-    @Override
-    public boolean existsById(String listId) {
-        if (listId == null) return false;
-
-        User current = sessionDataAccess.getCurrentUser();
-        if (current == null) return false;
-
-        String username = current.getUsername();
-        User userFromFile = getByUsername(username);
-        if (userFromFile == null) return false;
-
-        // Master list cannot be deleted
-        if (userFromFile.getMasterList().getId().equals(listId)) {
-            return true;
-        }
-        // Check user created lists
-        for (EventList list : userFromFile.getLists()) {
-            if (list.getId().equals(listId)) {
-                return true;
-            }
-        }
-        return false;
     }
 
 }

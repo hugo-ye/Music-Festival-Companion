@@ -1,5 +1,7 @@
 package interface_adapter.create_event_list;
 
+import entity.EventList;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +10,7 @@ public class CreateEventListState {
     private String listName = "";
     private String errorMessage = "";
     // All user-created lists that the UI should show
-    private List<EventListSummary> lists = new ArrayList<>();
+    private List<EventList> lists = new ArrayList<>();
 
 
     public CreateEventListState() {}
@@ -23,8 +25,8 @@ public class CreateEventListState {
     public String getErrorMessage() {
         return errorMessage;
     }
-    public List<EventListSummary> getLists() {
-        return new ArrayList<>(lists);
+    public List<EventList> getLists() {
+        return lists;
     }
 
     public void setListName(String listName) {
@@ -39,7 +41,16 @@ public class CreateEventListState {
         this.errorMessage = errorMessage;
     }
 
-    public void setLists(List<EventListSummary> lists) {
-        this.lists = new ArrayList<>(lists);
+    public void setLists(List<EventList> lists) {
+        this.lists = lists;
+    }
+
+    public EventList getListById(String id) {
+        for (EventList list : lists) {
+            if (list.getId().equals(id)) {
+                return list;
+            }
+        }
+        return null;
     }
 }

@@ -44,7 +44,8 @@ public class CreateEventListInteractor implements CreateEventListInputBoundary {
 
         // Prepare output data for presenter
         CreateEventListOutputData outputData =
-                new CreateEventListOutputData(id, name);
+                // FIX: Pass the entire new list entity
+                new CreateEventListOutputData(id, name, newList);
 
         presenter.prepareSuccessView(outputData);
     }

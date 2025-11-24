@@ -1,5 +1,6 @@
 package interface_adapter.delete_event_list;
 
+import entity.EventList;
 import interface_adapter.create_event_list.CreateEventListState;
 import interface_adapter.create_event_list.CreateEventListViewModel;
 import interface_adapter.create_event_list.EventListSummary;
@@ -34,12 +35,12 @@ public class DeleteEventListPresenter implements DeleteEventListOutputBoundary {
         // Update the create-list viewmodel so AllEventListsView refreshes rows
         CreateEventListState createState = createViewModel.getState();
 
-        List<EventListSummary> oldLists = createState.getLists();
-        List<EventListSummary> filtered = new ArrayList<>();
+        List<EventList> oldLists = createState.getLists();
+        List<EventList> filtered = new ArrayList<>();
 
-        for (EventListSummary summary : oldLists) {
-            if (!summary.getId().equals(deletedId)) {
-                filtered.add(summary);
+        for (EventList list : oldLists) {
+            if (!list.getId().equals(deletedId)) {
+                filtered.add(list);
             }
         }
         createState.setLists(filtered);
