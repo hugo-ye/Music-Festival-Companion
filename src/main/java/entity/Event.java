@@ -60,6 +60,7 @@ public class Event {
     public String getCountry() {
         return country;
     }
+
     public LocalDate getDate() {
         return date;
     }
@@ -79,10 +80,10 @@ public class Event {
     public List<String> getGenres() {
         return genres;
     }
+
     public String getImageURL() {
         return imageURL;
     }
-
 
 
     @Override
