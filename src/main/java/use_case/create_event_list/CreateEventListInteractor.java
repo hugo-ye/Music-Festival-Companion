@@ -22,7 +22,6 @@ public class CreateEventListInteractor implements CreateEventListInputBoundary {
         String rawName = inputData.getListName(); // Cleaned according to Abdullah's suggestion
         String name = rawName.trim();
 
-        // List must not be empty
         if (name.isEmpty()) {
             presenter.prepareFailView("List name cannot be empty.");
             return;
@@ -36,16 +35,12 @@ public class CreateEventListInteractor implements CreateEventListInputBoundary {
         // Generate ID for the new list
         String id = UUID.randomUUID().toString();
 
-        // Create entity
         EventList newList = new EventList(id, name);
 
-        // Save to data access layer
         dataAccess.createEventList(newList);
 
-        // Prepare output data for presenter
         CreateEventListOutputData outputData =
-                // FIX: Pass the entire new list entity
-                new CreateEventListOutputData(id, name, newList);
+                new CreateEventListOutputData(id, name);
 
         presenter.prepareSuccessView(outputData);
     }

@@ -165,8 +165,8 @@ public class AllEventListsView extends JPanel implements PropertyChangeListener 
         eventsPanel.add(masterListPanel);
 
         // Add one row per user-created list
-        for (EventList list : state.getLists()) {
-            addEventListRow(list.getId(), list.getName());
+        for (EventListSummary summary : state.getLists()) {
+            addEventListRow(summary.getId(), summary.getName());
         }
 
         eventsPanel.revalidate();

@@ -10,7 +10,7 @@ public class CreateEventListState {
     private String listName = "";
     private String errorMessage = "";
     // All user-created lists that the UI should show
-    private List<EventList> lists = new ArrayList<>();
+    private List<EventListSummary> lists = new ArrayList<>();
 
 
     public CreateEventListState() {}
@@ -25,9 +25,6 @@ public class CreateEventListState {
     public String getErrorMessage() {
         return errorMessage;
     }
-    public List<EventList> getLists() {
-        return lists;
-    }
 
     public void setListName(String listName) {
         this.listName = listName;
@@ -41,16 +38,11 @@ public class CreateEventListState {
         this.errorMessage = errorMessage;
     }
 
-    public void setLists(List<EventList> lists) {
+    public void setLists(List<EventListSummary> lists) {
         this.lists = lists;
     }
 
-    public EventList getListById(String id) {
-        for (EventList list : lists) {
-            if (list.getId().equals(id)) {
-                return list;
-            }
-        }
-        return null;
+    public List<EventListSummary> getLists() {
+        return new ArrayList<>(lists);
     }
 }

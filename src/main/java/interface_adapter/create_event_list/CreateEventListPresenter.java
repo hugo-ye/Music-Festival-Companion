@@ -20,16 +20,16 @@ public class CreateEventListPresenter implements CreateEventListOutputBoundary {
     public void prepareSuccessView(CreateEventListOutputData outputData) {
         CreateEventListState state = viewModel.getState();
 
-        EventList newList = outputData.getNewList();
-
-        state.setListId(newList.getId());
-        state.setListName(newList.getName());
+        // update latest created list info
+        state.setListId(outputData.getListId());
+        state.setListName(outputData.getListName());
         state.setErrorMessage("");
 
-        List<EventList> updated = new ArrayList<>(state.getLists());
-
-        updated.add(newList);
-
+        List<EventListSummary> updated = new ArrayList<>(state.getLists());
+        updated.add(new EventListSummary(
+                outputData.getListId(),
+                outputData.getListName()
+        ));
         state.setLists(updated);
 
         viewModel.setState(state);
