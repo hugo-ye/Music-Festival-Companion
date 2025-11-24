@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InMemoryUserDataAccessObject implements LoginSessionDataAccessInterface, LogoutSessionDataAccessInterface,
-        AttendEventDataAccessInterface, DisplayNotificationsDataAccessInterface {
-        AttendEventDataAccessInterface, CreateEventListDataAccessInterface, DeleteEventListDataAccessInterface,
+        AttendEventDataAccessInterface, DisplayNotificationsDataAccessInterface,
+        CreateEventListDataAccessInterface, DeleteEventListDataAccessInterface,
         DisplayEventListsDataAccessInterface, SaveEventToListDataAccessInterface {
 
     private User currentUser;
@@ -38,12 +38,12 @@ public class InMemoryUserDataAccessObject implements LoginSessionDataAccessInter
         this.currentUser = null;
     }
 
-        @Override
+    @Override
     public void saveEventToList(Event event, EventList eventList) {
         currentUser = getCurrentUser();
         int currentEventListIndex = currentUser.getLists().indexOf(eventList);
         // for situation of non-exist: may not happen, since user cannot select eventList that is not created
-        if(currentEventListIndex == -1){
+        if (currentEventListIndex == -1) {
             System.out.println("no eventList currently");
             return;
         }
@@ -53,7 +53,7 @@ public class InMemoryUserDataAccessObject implements LoginSessionDataAccessInter
 
         // for persistent storage, may need discuss later, currently I only deal with inMemory
     }
-    
+
     public void saveEventToMasterList(Event event) {
         currentUser.getMasterList().addEvent(event);
     }
@@ -65,6 +65,8 @@ public class InMemoryUserDataAccessObject implements LoginSessionDataAccessInter
     @Override
     public List<Event> getNotificationBasedOnData(LocalDate localDate) {
         return currentUser.getMasterList().getAllEvents();
+    }
+
     public boolean existsByName(String listName) {
         User user = getCurrentUser();
         if (user == null) return false;
