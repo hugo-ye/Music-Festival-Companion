@@ -9,12 +9,13 @@ import use_case.delete_event_list.DeleteEventListDataAccessInterface;
 import use_case.display_event_lists.DisplayEventListsDataAccessInterface;
 import use_case.login.LoginSessionDataAccessInterface;
 import use_case.logout.LogoutSessionDataAccessInterface;
+import use_case.save_event_to_list.SaveEventToListDataAccessInterface;
 
 import java.util.List;
 
 public class InMemoryUserDataAccessObject implements LoginSessionDataAccessInterface, LogoutSessionDataAccessInterface,
         AttendEventDataAccessInterface, CreateEventListDataAccessInterface, DeleteEventListDataAccessInterface,
-        DisplayEventListsDataAccessInterface {
+        DisplayEventListsDataAccessInterface, SaveEventToListDataAccessInterface {
 
     private User currentUser;
 
@@ -30,6 +31,22 @@ public class InMemoryUserDataAccessObject implements LoginSessionDataAccessInter
         this.currentUser = null;
     }
 
+        @Override
+    public void save(Event event, EventList eventList) {
+        currentUser = getCurrentUser();
+        int currentEventListIndex = currentUser.getEventLists().indexOf(eventList);
+        // for situation of non-exist: may not happen, since user cannot select eventList that is not created
+        if(currentEventListIndex == -1){
+            System.out.println("no eventList currently");
+            return;
+        }
+        EventList currentEventList = currentUser.getEventLists().get(currentEventListIndex);
+        currentEventList.addEvent(event);
+        // I omit the situation that eventList that will add the same event
+
+        // for persistent storage, may need discuss later, currently I only deal with inMemory
+    }
+    
     public void saveEvent(Event event) {
         currentUser.getMasterList().addEvent(event);
     }
