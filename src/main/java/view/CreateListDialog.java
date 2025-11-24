@@ -23,6 +23,11 @@ public class CreateListDialog extends JDialog {
         namePanel.add(nameField);
         panel.add(namePanel);
 
+        createButton.addActionListener(e -> {
+            setVisible(false);
+            dispose();
+        });
+
         // Create button
         panel.add(createButton);
         setContentPane(panel); // Places the UI inside the window

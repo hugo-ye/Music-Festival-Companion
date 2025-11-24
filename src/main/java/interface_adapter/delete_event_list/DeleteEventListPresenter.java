@@ -1,5 +1,6 @@
 package interface_adapter.delete_event_list;
 
+import entity.EventList;
 import interface_adapter.create_event_list.CreateEventListState;
 import interface_adapter.create_event_list.CreateEventListViewModel;
 import interface_adapter.create_event_list.EventListSummary;
@@ -43,7 +44,7 @@ public class DeleteEventListPresenter implements DeleteEventListOutputBoundary {
             }
         }
         createState.setLists(filtered);
-        createState.setErrorMessage("");   // clear errors on success
+        createState.setErrorMessage("");
 
         createViewModel.setState(createState);
         createViewModel.firePropertyChanged(); // triggers AllEventListsView.propertyChange

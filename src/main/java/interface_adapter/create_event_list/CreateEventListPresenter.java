@@ -1,5 +1,7 @@
 package interface_adapter.create_event_list;
 
+import entity.Event;
+import entity.EventList;
 import use_case.create_event_list.CreateEventListOutputBoundary;
 import use_case.create_event_list.CreateEventListOutputData;
 

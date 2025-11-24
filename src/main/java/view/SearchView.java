@@ -273,8 +273,8 @@ public class SearchView extends JPanel implements PropertyChangeListener {
 
         listsButton.addActionListener(e -> {
             // Switch view to "Lists"
-            viewManagerModel.setState("Lists");
-            viewManagerModel.firePropertyChanged("view");
+            viewManagerModel.setState("event lists");
+            viewManagerModel.firePropertyChanged();
             System.out.println("nav to lists");
         });
     }
