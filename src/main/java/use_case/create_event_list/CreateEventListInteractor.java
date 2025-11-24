@@ -8,6 +8,7 @@ public class CreateEventListInteractor implements CreateEventListInputBoundary {
 
     private final CreateEventListDataAccessInterface dataAccess;
     private final CreateEventListOutputBoundary presenter;
+    private final String MASTER_LIST_NAME = "Master List";
     // Another field for user at Logged In State
 
     public CreateEventListInteractor(CreateEventListDataAccessInterface dataAccess,
@@ -24,6 +25,11 @@ public class CreateEventListInteractor implements CreateEventListInputBoundary {
 
         if (name.isEmpty()) {
             presenter.prepareFailView("List name cannot be empty.");
+            return;
+        }
+
+        if (name.equalsIgnoreCase(MASTER_LIST_NAME)) {
+            presenter.prepareFailView("You cannot create a list named '" + MASTER_LIST_NAME + "'.");
             return;
         }
 

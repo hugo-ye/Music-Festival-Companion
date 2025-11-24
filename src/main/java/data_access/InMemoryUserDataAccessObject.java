@@ -39,7 +39,7 @@ public class InMemoryUserDataAccessObject implements LoginSessionDataAccessInter
         User user = getCurrentUser();
         if (user == null) return false;
         for (EventList list : user.getLists()) {
-            if (list.getName().equals(listName)) {
+            if (list.getName().equalsIgnoreCase(listName)) {
                 return true;
             }
         }

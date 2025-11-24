@@ -163,10 +163,13 @@ public class Main {
         views.add(allEventListsView, allEventListsView.getViewName());
 
         // Display Event List View
-        EventListView eventListView = new EventListView(displayEventListViewModel, displayEventListController, viewManagerModel);
+        EventListView eventListView = new EventListView(
+                displayEventListViewModel,
+                displayEventListController,
+                eventController,
+                viewManagerModel
+        );
         views.add(eventListView, eventListView.getViewName());
-
-
 
 
 
