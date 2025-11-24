@@ -27,6 +27,9 @@ import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.logout.LogoutPresenter;
+import interface_adapter.remove_event_from_list.RemoveEventFromListController;
+import interface_adapter.remove_event_from_list.RemoveEventFromListPresenter;
+import interface_adapter.remove_event_from_list.RemoveEventFromListViewModel;
 import interface_adapter.save_event_to_list.SaveEventToListController;
 import interface_adapter.save_event_to_list.SaveEventToListPresenter;
 import interface_adapter.save_event_to_list.SaveEventToListViewModel;
@@ -48,6 +51,7 @@ import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
 import use_case.logout.LogoutInteractor;
+import use_case.remove_event_from_list.RemoveEventFromListInteractor;
 import use_case.save_event_to_list.SaveEventToListInteractor;
 import use_case.search_event.SearchEventDataAccessInterface;
 import use_case.search_event.SearchEventInteractor;
@@ -157,6 +161,13 @@ public class Main {
         AttendEventInteractor attendInteractor = new AttendEventInteractor(sessionDao, attendPresenter);
         AttendEventController attendEventController = new AttendEventController(attendInteractor);
 
+        // 13. delete event from list
+        RemoveEventFromListViewModel removeEventFromListViewModel = new RemoveEventFromListViewModel();
+        RemoveEventFromListPresenter removePresenter = new RemoveEventFromListPresenter(removeEventFromListViewModel, displayEventListController);
+        RemoveEventFromListInteractor removeInteractor = new RemoveEventFromListInteractor(sessionDao, removePresenter);
+        RemoveEventFromListController removeEventFromListController = new RemoveEventFromListController(removeInteractor);
+
+
 
         // --- VIEWS ---
 
@@ -185,7 +196,8 @@ public class Main {
                 displayEventListViewModel,
                 displayEventListController,
                 eventController,
-                viewManagerModel
+                viewManagerModel,
+                removeEventFromListController
         );
         views.add(eventListView, eventListView.getViewName());
 
