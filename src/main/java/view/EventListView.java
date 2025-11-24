@@ -61,7 +61,6 @@ public class EventListView extends JPanel implements PropertyChangeListener {
         eventsPanel = new JPanel();
         eventsPanel.setLayout(new BoxLayout(eventsPanel, BoxLayout.Y_AXIS));
         eventsPanel.setBackground(ViewStyle.WINDOW_BACKGROUND);
-        // Match padding from AllEventListsView
         eventsPanel.setBorder(new EmptyBorder(0, 20, 0, 20));
 
         JScrollPane scrollPane = new JScrollPane(eventsPanel);
@@ -108,14 +107,12 @@ public class EventListView extends JPanel implements PropertyChangeListener {
     private void rebuildEventRows() {
         eventsPanel.removeAll();
 
-        // Add top spacing (Consistent with AllEventListsView)
         eventsPanel.add(Box.createVerticalStrut(10));
 
         if (this.currentEventList.getEvents().isEmpty()) {
             JLabel noEvents = new JLabel("No events in this list.");
             ViewStyle.applyLabelStyle(noEvents);
             noEvents.setAlignmentX(Component.LEFT_ALIGNMENT);
-            // Add a small container for the label so it aligns nicely
             JPanel msgPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
             msgPanel.setOpaque(false);
             msgPanel.add(noEvents);
@@ -124,7 +121,6 @@ public class EventListView extends JPanel implements PropertyChangeListener {
             for (Event event : this.currentEventList.getEvents()) {
                 JPanel eventRow = createEventCard(event);
                 eventsPanel.add(eventRow);
-                // Match spacing from AllEventListsView
                 eventsPanel.add(Box.createVerticalStrut(15));
             }
         }
@@ -154,36 +150,48 @@ public class EventListView extends JPanel implements PropertyChangeListener {
 
         card.add(infoPanel, BorderLayout.WEST);
 
-        // Right: Buttons (View and Remove)
+        // Right: Buttons
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         buttonPanel.setOpaque(false);
 
-        // 1. View Button (Consistent with AllEventListsView)
+        // 1. View Button
         JButton viewButton = new JButton("View");
         ViewStyle.applyButtonStyle(viewButton);
         viewButton.addActionListener(e -> displayEventController.execute(event));
         buttonPanel.add(viewButton);
 
-        // 2. Remove Button
-        JButton removeButton = new JButton("Remove");
-        ViewStyle.applyButtonStyle(removeButton);
-        removeButton.setForeground(ViewStyle.ERROR_COLOR); // Red text for destructive action
+        // 2. Secondary Button (Remove OR Attended)
+        boolean isMasterList = currentEventList != null &&
+                "master_list".equalsIgnoreCase(currentEventList.getId());
 
-        removeButton.addActionListener(e -> {
-            if (currentEventList != null && removeEventFromListController != null) {
-                int confirm = JOptionPane.showConfirmDialog(
-                        this,
-                        "Remove '" + event.getName() + "' from this list?",
-                        "Remove Event",
-                        JOptionPane.YES_NO_OPTION
-                );
+        if (isMasterList) {
+            // --- BLOCKED OUT ATTENDED BUTTON ---
+            JButton attendedButton = new JButton("Attended");
+            ViewStyle.applyButtonStyle(attendedButton);
+            attendedButton.setEnabled(false); // This makes it unclickable and "grayed out"
+            buttonPanel.add(attendedButton);
+        } else {
+            // --- REMOVE BUTTON ---
+            JButton removeButton = new JButton("Remove");
+            ViewStyle.applyButtonStyle(removeButton);
+            removeButton.setForeground(ViewStyle.ERROR_COLOR);
 
-                if (confirm == JOptionPane.YES_OPTION) {
-                    removeEventFromListController.removeEventFromList(event, currentEventList);
+            removeButton.addActionListener(e -> {
+                if (currentEventList != null && removeEventFromListController != null) {
+                    int confirm = JOptionPane.showConfirmDialog(
+                            this,
+                            "Remove '" + event.getName() + "' from this list?",
+                            "Remove Event",
+                            JOptionPane.YES_NO_OPTION
+                    );
+
+                    if (confirm == JOptionPane.YES_OPTION) {
+                        removeEventFromListController.removeEventFromList(event, currentEventList);
+                    }
                 }
-            }
-        });
-        buttonPanel.add(removeButton);
+            });
+            buttonPanel.add(removeButton);
+        }
 
         card.add(buttonPanel, BorderLayout.EAST);
 
