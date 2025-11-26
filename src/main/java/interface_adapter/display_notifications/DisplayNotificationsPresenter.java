@@ -4,15 +4,17 @@ import use_case.display_notifications.DisplayNotificationsOutputBoundary;
 import use_case.display_notifications.DisplayNotificationsOutputData;
 
 public class DisplayNotificationsPresenter implements DisplayNotificationsOutputBoundary {
-    private final DisplayNotificationsViewModel viewModel;
+    private final DisplayNotificationsViewModel displayNotificationsViewModel;
 
     public DisplayNotificationsPresenter(DisplayNotificationsViewModel viewModel) {
-        this.viewModel = viewModel;
+        this.displayNotificationsViewModel = viewModel;
     }
 
     @Override
-    public void present(DisplayNotificationsOutputData outputData) {
-        viewModel.setMessage(outputData.getMessage());
-        viewModel.firePropertyChanged("message");
+    public void prepareSuccessView(DisplayNotificationsOutputData outputData) {
+        DisplayNotificationsState state = displayNotificationsViewModel.getState();
+        state.setMessage(outputData.getMessage());
+        displayNotificationsViewModel.setState(state);
+        displayNotificationsViewModel.firePropertyChanged("message");
     }
 }

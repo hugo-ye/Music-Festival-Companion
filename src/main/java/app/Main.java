@@ -212,7 +212,7 @@ public class Main {
         views.add(eventListView, eventListView.getViewName());
 
         // Display Notification View
-        DisplayNotificationView displayNotificationView = new DisplayNotificationView(displayNotificationsViewModel, application);
+        DisplayNotificationView displayNotificationView = new DisplayNotificationView(displayNotificationsViewModel);
         views.add(displayNotificationView, displayNotificationView.getViewName());
 
         // Popup View (Instantiate it here so it starts listening, but it is a Dialog so it handles its own visibility)

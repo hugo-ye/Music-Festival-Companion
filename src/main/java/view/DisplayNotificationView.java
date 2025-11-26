@@ -9,24 +9,46 @@ import java.beans.PropertyChangeListener;
 
 public class DisplayNotificationView extends JPanel implements PropertyChangeListener {
     private final DisplayNotificationsViewModel viewModel;
-    private final Component parentComponent;
     private final String viewName = "notifications";
 
-
-    public DisplayNotificationView(DisplayNotificationsViewModel viewModel, Component parentComponent) {
+    public DisplayNotificationView(DisplayNotificationsViewModel viewModel) {
         this.viewModel = viewModel;
         this.viewModel.addPropertyChangeListener(this);
-        this.parentComponent = parentComponent;
+        this.setOpaque(false);
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if ("message".equals(evt.getPropertyName())) {
-            String message = (String) viewModel.getMessage();
-            if (message != null && !message.trim().isEmpty() && !message.equals("recent events:\n")) {
-                JOptionPane.showMessageDialog(parentComponent, message, "Upcoming Events", JOptionPane.INFORMATION_MESSAGE);
+            String message = viewModel.getState().getMessage();
+            viewModel.getState().setMessage("");
+
+            if (message != null && !message.trim().isEmpty()) {
+                showNotification(message);
             }
         }
+    }
+
+    private void showNotification(String message) {
+        SwingUtilities.invokeLater(() -> {
+            Window owner = SwingUtilities.getWindowAncestor(this);
+
+            if (owner == null) {
+                Frame[] frames = Frame.getFrames();
+                for (Frame f : frames) {
+                    if (f.isVisible() && f.isActive()) {
+                        owner = f;
+                        break;
+                    }
+                }
+                if (owner == null && frames.length > 0) {
+                    owner = frames[0];
+                }
+            }
+
+            NotificationDialog dialog = new NotificationDialog(owner, message);
+            dialog.setVisible(true);
+        });
     }
 
     public String getViewName() {

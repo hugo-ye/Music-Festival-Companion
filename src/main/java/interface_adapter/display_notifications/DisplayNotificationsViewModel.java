@@ -4,28 +4,12 @@ import interface_adapter.ViewModel;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
-public class DisplayNotificationsViewModel extends ViewModel<String> {
-
-    private String message = "";
+public class DisplayNotificationsViewModel extends ViewModel<DisplayNotificationsState> {
 
     public DisplayNotificationsViewModel() {
         super("notifications");
+        setState(new DisplayNotificationsState());
     }
 
-    public String getMessage() {
-        return message;
-    }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    @Override
-    public void firePropertyChanged() {
-        super.firePropertyChanged("message");
-    }
-
-    public void firePropertyChanged(String propertyName) {
-        super.firePropertyChanged(propertyName);
-    }
 }
