@@ -53,7 +53,6 @@ public class InMemoryUserDataAccessObject implements
         int currentEventListIndex = currentUser.getLists().indexOf(eventList);
         // for situation of non-exist: may not happen, since user cannot select eventList that is not created
         if (currentEventListIndex == -1) {
-            System.out.println("no eventList currently");
             return;
         }
         EventList currentEventList = currentUser.getLists().get(currentEventListIndex);
@@ -96,7 +95,6 @@ public class InMemoryUserDataAccessObject implements
             return;
         }
         user.getLists().add(eventList);
-        System.out.println("after createEventList, user is: \n" + user);
     }
 
     @Override
@@ -122,7 +120,6 @@ public class InMemoryUserDataAccessObject implements
         User user = getCurrentUser();
         if (user == null) return;
         user.removeListById(listId);
-        System.out.println("after deleteById, user is: \n" + user);
     }
 
     @Override

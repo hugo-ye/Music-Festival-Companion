@@ -95,7 +95,6 @@ public class SearchResultView extends JPanel implements PropertyChangeListener {
         backButton = new JButton("Back");
         ViewStyle.applyButtonStyle(backButton);
         backButton.addActionListener(evt -> {
-            System.out.println("Back button pressed");
             viewManagerModel.setState("search event");
             viewManagerModel.firePropertyChanged();
         });

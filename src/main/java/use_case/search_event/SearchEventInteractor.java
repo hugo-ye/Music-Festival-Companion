@@ -6,7 +6,9 @@ import org.json.JSONObject;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 public class SearchEventInteractor implements SearchEventInputBoundary{
     private final SearchEventDataAccessInterface dataAccess;
@@ -189,22 +191,27 @@ public class SearchEventInteractor implements SearchEventInputBoundary{
     }
 
     public static List<String> extractGenres(JSONObject jsonEvent) {
-        List<String> genres = new ArrayList<>();
+        Set<String> genres = new LinkedHashSet<>();
 
         if (jsonEvent.has("classifications")) {
             JSONArray classifications = jsonEvent.getJSONArray("classifications");
 
             for (int i = 0; i < classifications.length(); i++) {
                 JSONObject classification = classifications.getJSONObject(i);
+
                 if (classification.has("genre")) {
-                    genres.add(classification.getJSONObject("genre").optString("name"));
+                    String genreName = classification.getJSONObject("genre").optString("name");
+                    genres.add(genreName.trim());
                 }
+
                 if (classification.has("subGenre")) {
-                    genres.add(classification.getJSONObject("subGenre").optString("name"));
+                    String subGenreName = classification.getJSONObject("subGenre").optString("name");
+                    genres.add(subGenreName.trim());
                 }
             }
         }
-        return genres;
+        return new ArrayList<>(genres);
+
     }
 
     public static String extractImageUrl(JSONObject jsonEvent) {
