@@ -24,7 +24,8 @@ public class EventView extends JDialog implements PropertyChangeListener {
     public final String viewName = "event details";
 
     private final JLabel imageLabel;
-    private final JLabel titleLabel;
+
+    private final JTextArea titleArea;
 
     // Components
     private final JTextArea artistValue, venueValue, locationValue, dateValue, genresValue, priceRangeValue;
@@ -57,10 +58,8 @@ public class EventView extends JDialog implements PropertyChangeListener {
         this.setResizable(false);
         this.getContentPane().setBackground(ViewStyle.WINDOW_BACKGROUND);
 
-        // Title
-        titleLabel = new JLabel("Event Name");
-        ViewStyle.applyTitleStyle(titleLabel);
-        titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        titleArea = new JTextArea("Event Name");
+        ViewStyle.applyTitleAreaStyle(titleArea);
 
         // Text areas
         artistValue = new JTextArea();
@@ -96,9 +95,13 @@ public class EventView extends JDialog implements PropertyChangeListener {
         gbc.anchor = GridBagConstraints.CENTER;
         mainPanel.add(imageLabel, gbc);
 
-        // Title
+        // Title Layout
         gbc.gridy = 1;
-        mainPanel.add(titleLabel, gbc);
+        gbc.gridwidth = 2;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 1.0;
+        gbc.insets = new Insets(0, 0, 15, 0);
+        mainPanel.add(titleArea, gbc);
 
         // Details
         gbc.gridwidth = 1;
@@ -182,7 +185,7 @@ public class EventView extends JDialog implements PropertyChangeListener {
 
         List<EventList> userLists = new ArrayList<>();
         for (EventList list : availableLists) {
-                userLists.add(list);
+            userLists.add(list);
         }
 
         if (userLists.isEmpty()) {
@@ -284,12 +287,11 @@ public class EventView extends JDialog implements PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        // Update view with event details
         if ("refresh".equals(evt.getPropertyName())) {
             DisplayEventState state = (DisplayEventState) evt.getNewValue();
             if (state != null) {
 
-                titleLabel.setText(state.getEventName());
+                titleArea.setText(state.getEventName());
                 artistValue.setText(state.getArtists());
                 venueValue.setText(state.getVenue());
                 locationValue.setText(state.getLocation());

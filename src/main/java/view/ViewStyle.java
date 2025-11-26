@@ -67,6 +67,18 @@ public final class ViewStyle {
         label.setForeground(TEXT_PRIMARY);
     }
 
+    public static void applyTitleAreaStyle(JTextArea area) {
+        area.setFont(TITLE_FONT);
+        area.setForeground(TEXT_PRIMARY);
+        area.setLineWrap(true);
+        area.setWrapStyleWord(true);
+        area.setEditable(false);
+        area.setFocusable(false);
+        area.setOpaque(false);
+        area.setBorder(null);
+        area.setHighlighter(null);
+    }
+
     public static void applyHeaderStyle(JLabel label) {
         label.setFont(HEADER_FONT);
         label.setForeground(TEXT_PRIMARY);
