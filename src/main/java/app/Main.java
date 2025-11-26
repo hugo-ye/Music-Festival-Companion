@@ -21,6 +21,9 @@ import interface_adapter.display_event_list.DisplayEventListPresenter;
 import interface_adapter.display_event_list.DisplayEventListViewModel;
 import interface_adapter.display_event_lists.DisplayEventListsController;
 import interface_adapter.display_event_lists.DisplayEventListsPresenter;
+import interface_adapter.display_notifications.DisplayNotificationsController;
+import interface_adapter.display_notifications.DisplayNotificationsPresenter;
+import interface_adapter.display_notifications.DisplayNotificationsViewModel;
 import interface_adapter.display_search_results.DisplaySearchResultsViewModel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
@@ -47,6 +50,7 @@ import use_case.delete_event_list.DeleteEventListInteractor;
 import use_case.display_event.DisplayEventInteractor;
 import use_case.display_event_list.DisplayEventListInteractor;
 import use_case.display_event_lists.DisplayEventListsInteractor;
+import use_case.display_notifications.DisplayNotificationsInteractor;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
@@ -97,8 +101,14 @@ public class Main {
 
         // --- USE CASES ---
 
+        // 0. Display Notifications
+        DisplayNotificationsViewModel displayNotificationsViewModel = new DisplayNotificationsViewModel();
+        DisplayNotificationsPresenter displayNotificationsPresenter = new DisplayNotificationsPresenter(displayNotificationsViewModel);
+        DisplayNotificationsInteractor displayNotificationsInteractor = new DisplayNotificationsInteractor(sessionDao, displayNotificationsPresenter);
+        DisplayNotificationsController displayNotificationsController = new DisplayNotificationsController(displayNotificationsInteractor);
+
         // 1. Login
-        LoginOutputBoundary loginPresenter = new LoginPresenter(viewManagerModel, loginViewModel, searchViewModel);
+        LoginOutputBoundary loginPresenter = new LoginPresenter(viewManagerModel, loginViewModel, searchViewModel, displayNotificationsController);
         LoginInputBoundary loginInteractor = new LoginInteractor(fileUserDataAccessObject, loginPresenter, sessionDao);
         LoginController loginController = new LoginController(loginInteractor);
 
@@ -200,6 +210,10 @@ public class Main {
                 removeEventFromListController
         );
         views.add(eventListView, eventListView.getViewName());
+
+        // Display Notification View
+        DisplayNotificationView displayNotificationView = new DisplayNotificationView(displayNotificationsViewModel, application);
+        views.add(displayNotificationView, displayNotificationView.getViewName());
 
         // Popup View (Instantiate it here so it starts listening, but it is a Dialog so it handles its own visibility)
         // CRITICAL FIX: Pass all required controllers and the correct ViewModel instance
