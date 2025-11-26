@@ -13,5 +13,6 @@ public class DisplayNotificationsPresenter implements DisplayNotificationsOutput
     @Override
     public void present(DisplayNotificationsOutputData outputData) {
         viewModel.setMessage(outputData.getMessage());
+        viewModel.firePropertyChanged("message");
     }
 }
