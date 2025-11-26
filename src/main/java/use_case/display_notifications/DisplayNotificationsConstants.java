@@ -1,5 +1,5 @@
 package use_case.display_notifications;
 
 public class DisplayNotificationsConstants {
-    public final static int remindDeadline = 7;
+    public final static int REMIND_DEADLINE = 7;
 }
