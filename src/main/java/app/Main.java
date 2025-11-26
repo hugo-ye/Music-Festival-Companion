@@ -1,7 +1,7 @@
 package app;
 
 import data_access.DBDataAccessObject;
-import data_access.FileListDataAccessObject;
+import data_access.FileUserDataAccessObject;
 import data_access.InMemoryUserDataAccessObject;
 import entity.User;
 import interface_adapter.ViewManagerModel;
@@ -96,7 +96,7 @@ public class Main {
         // --- DATA ACCESS OBJECTS ---
         SearchEventDataAccessInterface searchDao = new DBDataAccessObject();
         InMemoryUserDataAccessObject sessionDao = new InMemoryUserDataAccessObject();
-        FileListDataAccessObject fileUserDataAccessObject = new FileListDataAccessObject("./users.json", sessionDao);
+        FileUserDataAccessObject fileUserDataAccessObject = new FileUserDataAccessObject("./users.json", sessionDao);
 
 
         // --- USE CASES ---
@@ -225,9 +225,7 @@ public class Main {
                 saveEventToListController
         );
 
-        // --- INITIAL STATE ---
-        viewManagerModel.setState(loginView.getViewName());
-        viewManagerModel.firePropertyChanged();
+
 
         // Window listener
         application.addWindowListener(new WindowAdapter() {
