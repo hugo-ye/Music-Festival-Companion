@@ -7,6 +7,7 @@ import java.util.List;
 
 /**
  * Interactor for rhe DisplayEvent use case.
+ *
  */
 public class DisplayEventInteractor implements DisplayEventInputBoundary{
     private final DisplayEventOutputBoundary presenter;
