@@ -16,7 +16,7 @@ public class AttendEventController {
 
     /**
      * Executes the AttendEvent by passing the provided event to the interactor.
-     * @param event the event the user wished to attend
+     * @param event the event the user wants to attend
      */
     public void execute(Event event){
         AttendEventInputData attendEventInputData = new AttendEventInputData(event);

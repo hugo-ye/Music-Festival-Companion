@@ -7,7 +7,7 @@ import use_case.attend_event.AttendEventOutputBoundary;
 import use_case.attend_event.AttendEventOutputData;
 
 /**
- * present for the AttendEvent use case.
+ * Presenter for the AttendEvent use case.
  */
 public class AttendEventPresenter implements AttendEventOutputBoundary {
     private final DisplayEventViewModel attendEventViewModel;
