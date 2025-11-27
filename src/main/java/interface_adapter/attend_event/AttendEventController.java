@@ -4,6 +4,9 @@ import use_case.attend_event.AttendEventInputBoundary;
 import entity.Event;
 import use_case.attend_event.AttendEventInputData;
 
+/**
+ * Controller for the AttendEvent use case.
+ */
 public class AttendEventController {
     private final AttendEventInputBoundary attendEventInteractor;
 
@@ -11,6 +14,10 @@ public class AttendEventController {
         this.attendEventInteractor = attendEventInputInteractor;
     }
 
+    /**
+     * Executes the AttendEvent by passing the provided event to the interactor.
+     * @param event the event the user wished to attend
+     */
     public void execute(Event event){
         AttendEventInputData attendEventInputData = new AttendEventInputData(event);
         attendEventInteractor.execute(attendEventInputData);

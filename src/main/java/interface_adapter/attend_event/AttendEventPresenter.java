@@ -6,6 +6,9 @@ import interface_adapter.display_event.DisplayEventViewModel;
 import use_case.attend_event.AttendEventOutputBoundary;
 import use_case.attend_event.AttendEventOutputData;
 
+/**
+ * present for the AttendEvent use case.
+ */
 public class AttendEventPresenter implements AttendEventOutputBoundary {
     private final DisplayEventViewModel attendEventViewModel;
     private final ViewManagerModel viewManagerModel;
@@ -16,6 +19,10 @@ public class AttendEventPresenter implements AttendEventOutputBoundary {
         this.viewManagerModel = viewManagerModel;
     }
 
+    /**
+     * Prepares the UI if the Event is successfully added to the MasterList.
+     * @param attendEventOutputData the output data containing the attend event's info
+     */
     @Override
     public void prepareSuccessView(AttendEventOutputData attendEventOutputData){
         DisplayEventState attendEventState = attendEventViewModel.getState();
@@ -26,6 +33,11 @@ public class AttendEventPresenter implements AttendEventOutputBoundary {
         attendEventViewModel.setState(attendEventState);
         attendEventViewModel.firePropertyChanged();
     }
+
+    /**
+     * Prepares the UI if the Event was not added successfully.
+     * @param error_message the failure message explaining why the event wasn't added
+     */
     @Override
     public void prepareFailView(String error_message ){
         DisplayEventState attendEventState = attendEventViewModel.getState();
