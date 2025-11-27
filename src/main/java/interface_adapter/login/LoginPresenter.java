@@ -19,15 +19,12 @@ public class LoginPresenter implements LoginOutputBoundary {
     private final LoginViewModel loginViewModel;
     private final ViewManagerModel viewManagerModel;
     private final SearchEventViewModel searchEventViewModel;
-    private final DisplayNotificationsController displayNotificationsController;
 
     public LoginPresenter(ViewManagerModel viewManagerModel, LoginViewModel loginViewModel ,
-                          SearchEventViewModel searchEventViewModel,
-                          DisplayNotificationsController displayNotificationsController) {
+                          SearchEventViewModel searchEventViewModel) {
         this.loginViewModel = loginViewModel;
         this.viewManagerModel = viewManagerModel;
         this.searchEventViewModel = searchEventViewModel;
-        this.displayNotificationsController = displayNotificationsController;
     }
 
     /**
@@ -48,9 +45,6 @@ public class LoginPresenter implements LoginOutputBoundary {
 
         viewManagerModel.setState(searchEventViewModel.getViewName());
         viewManagerModel.firePropertyChanged();
-
-        // calling notification view
-        displayNotificationsController.execute(LocalDate.now());
 
     }
 

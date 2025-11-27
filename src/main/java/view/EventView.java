@@ -35,20 +35,16 @@ public class EventView extends JDialog implements PropertyChangeListener {
 
     private final DisplayEventViewModel displayEventViewModel;
     private final SaveEventToListViewModel saveEventToListViewModel;
-    private final AttendEventController attendEventController;
-    private final SaveEventToListController saveEventToListController;
+    private AttendEventController attendEventController;
+    private SaveEventToListController saveEventToListController;
 
     public EventView(Frame owner,
                      DisplayEventViewModel displayEventViewModel,
-                     SaveEventToListViewModel saveEventToListViewModel,
-                     AttendEventController attendEventController,
-                     SaveEventToListController saveEventToListController) {
+                     SaveEventToListViewModel saveEventToListViewModel) {
         super(owner, "Event Details", true);
 
         this.displayEventViewModel = displayEventViewModel;
         this.saveEventToListViewModel = saveEventToListViewModel;
-        this.attendEventController = attendEventController;
-        this.saveEventToListController = saveEventToListController;
 
         this.displayEventViewModel.addPropertyChangeListener(this);
         this.saveEventToListViewModel.addPropertyChangeListener(this);
@@ -161,6 +157,14 @@ public class EventView extends JDialog implements PropertyChangeListener {
         add(buttonPanel, BorderLayout.SOUTH);
         this.pack();
         this.setLocationRelativeTo(owner);
+    }
+
+    public void setAttendEventController(AttendEventController attendEventController) {
+        this.attendEventController = attendEventController;
+    }
+
+    public void setSaveEventToListController(SaveEventToListController saveEventToListController) {
+        this.saveEventToListController = saveEventToListController;
     }
 
     private void handleAttendEvent() {

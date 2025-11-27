@@ -1,6 +1,7 @@
 package view;
 
 import interface_adapter.ViewManagerModel;
+import interface_adapter.display_notifications.DisplayNotificationsController;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginState;
 import interface_adapter.login.LoginViewModel;
@@ -14,12 +15,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.time.LocalDate;
 
 public class LoginView extends JPanel implements PropertyChangeListener {
     private final String viewName = "log in";
     private final LoginViewModel loginViewModel;
-    private final LoginController loginController;
+    private LoginController loginController;
     private final ViewManagerModel viewManagerModel;
+    private DisplayNotificationsController displayNotificationsController;
 
     // UI Components
     private final JTextField usernameField = new JTextField(15);
@@ -27,9 +30,8 @@ public class LoginView extends JPanel implements PropertyChangeListener {
     private final JButton loginButton = new JButton("Log in");
     private final JButton signUpButton = new JButton("Create Account");
 
-    public LoginView(LoginViewModel loginViewModel, LoginController loginController, ViewManagerModel viewManagerModel) {
+    public LoginView(LoginViewModel loginViewModel, ViewManagerModel viewManagerModel) {
         this.loginViewModel = loginViewModel;
-        this.loginController = loginController;
         this.viewManagerModel = viewManagerModel;
         this.loginViewModel.addPropertyChangeListener(this);
 
@@ -106,6 +108,14 @@ public class LoginView extends JPanel implements PropertyChangeListener {
         setupListeners();
     }
 
+    public void setLoginController(LoginController loginController) {
+        this.loginController = loginController;
+    }
+
+    public void setDisplayNotificationsController(DisplayNotificationsController displayNotificationsController) {
+        this.displayNotificationsController = displayNotificationsController;
+    }
+
     private void setupListeners() {
         loginButton.addActionListener(evt -> {
             if (evt.getSource().equals(loginButton)) {
@@ -114,6 +124,7 @@ public class LoginView extends JPanel implements PropertyChangeListener {
                         currentState.getUsername(),
                         currentState.getPassword()
                 );
+                displayNotificationsController.execute(LocalDate.now());
             }
         });
 

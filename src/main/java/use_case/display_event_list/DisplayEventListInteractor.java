@@ -10,7 +10,7 @@ import use_case.login.LoginSessionDataAccessInterface;
  * gets the eventList given the id of the list and pass the result to the output boundary. If the user is not logged
  * in or the event list can not be found then the Interactor calls the preparefailview method
  */
-public class DisplayEventListInteractor {
+public class DisplayEventListInteractor implements DisplayEventListInputBoundary {
 
     private final LoginSessionDataAccessInterface sessionDataAccess;
     private final DisplayEventListOutputBoundary presenter;
