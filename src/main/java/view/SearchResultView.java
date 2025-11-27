@@ -21,8 +21,8 @@ public class SearchResultView extends JPanel implements PropertyChangeListener {
     public final String viewName = "search results";
 
     private final DisplaySearchResultsViewModel displaySearchResultsViewModel;
-    private final SortEventsController sortEventsController;
-    private final DisplayEventController displayEventController;
+    private SortEventsController sortEventsController;
+    private DisplayEventController displayEventController;
     private final ViewManagerModel viewManagerModel;
 
     private final JComboBox<SortEventsCriteria> sortCriteriaComboBox;
@@ -32,13 +32,9 @@ public class SearchResultView extends JPanel implements PropertyChangeListener {
     private final JButton backButton;
 
     public SearchResultView(DisplaySearchResultsViewModel displaySearchResultsViewModel,
-                            SortEventsController sortEventsController,
-                            DisplayEventController displayEventController,
                             ViewManagerModel viewManagerModel) {
 
         this.displaySearchResultsViewModel = displaySearchResultsViewModel;
-        this.sortEventsController = sortEventsController;
-        this.displayEventController = displayEventController;
         this.viewManagerModel = viewManagerModel;
         this.displaySearchResultsViewModel.addPropertyChangeListener(this);
 
@@ -100,6 +96,14 @@ public class SearchResultView extends JPanel implements PropertyChangeListener {
         });
         bottomPanel.add(backButton);
         add(bottomPanel, BorderLayout.SOUTH);
+    }
+
+    public void setSortEventsController(SortEventsController sortEventsController) {
+        this.sortEventsController = sortEventsController;
+    }
+
+    public void setDisplayEventController(DisplayEventController displayEventController) {
+        this.displayEventController = displayEventController;
     }
 
     @Override

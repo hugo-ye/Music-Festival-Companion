@@ -19,10 +19,10 @@ public class EventListView extends JPanel implements PropertyChangeListener {
     private final String viewName = "event list";
 
     private final DisplayEventListViewModel displayEventListViewModel;
-    private final DisplayEventListController displayEventListController;
-    private final DisplayEventController displayEventController;
+    private DisplayEventListController displayEventListController;
+    private DisplayEventController displayEventController;
     private final ViewManagerModel viewManagerModel;
-    private final RemoveEventFromListController removeEventFromListController;
+    private RemoveEventFromListController removeEventFromListController;
 
     // Swing Components
     private final JPanel eventsPanel;
@@ -32,16 +32,10 @@ public class EventListView extends JPanel implements PropertyChangeListener {
     private EventList currentEventList;
 
     public EventListView(DisplayEventListViewModel displayEventViewModel,
-                         DisplayEventListController displayEventListController,
-                         DisplayEventController displayEventController,
-                         ViewManagerModel viewManagerModel,
-                         RemoveEventFromListController removeEventFromListController) {
+                         ViewManagerModel viewManagerModel) {
 
         this.displayEventListViewModel = displayEventViewModel;
-        this.displayEventListController = displayEventListController;
-        this.displayEventController = displayEventController;
         this.viewManagerModel = viewManagerModel;
-        this.removeEventFromListController = removeEventFromListController;
 
         this.displayEventListViewModel.addPropertyChangeListener(this);
 
@@ -82,6 +76,18 @@ public class EventListView extends JPanel implements PropertyChangeListener {
                 viewManagerModel.firePropertyChanged();
             }
         });
+    }
+
+    public void setDisplayEventListController(DisplayEventListController displayEventListController) {
+        this.displayEventListController = displayEventListController;
+    }
+
+    public void setDisplayEventController(DisplayEventController displayEventController) {
+        this.displayEventController = displayEventController;
+    }
+
+    public void setRemoveEventFromListController(RemoveEventFromListController removeEventFromListController) {
+        this.removeEventFromListController = removeEventFromListController;
     }
 
     @Override
@@ -187,6 +193,7 @@ public class EventListView extends JPanel implements PropertyChangeListener {
 
                     if (confirm == JOptionPane.YES_OPTION) {
                         removeEventFromListController.execute(event, currentEventList);
+                        displayEventListController.execute(currentEventList.getId());
                     }
                 }
             });

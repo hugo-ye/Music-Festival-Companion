@@ -21,7 +21,7 @@ public class SignupView extends JPanel implements PropertyChangeListener {
     private final String viewName = "sign up";
 
     private final SignupViewModel signupViewModel;
-    private final SignupController signupController;
+    private SignupController signupController;
     private final LoginViewModel loginViewModel;
     private final ViewManagerModel viewManagerModel;
 
@@ -33,9 +33,8 @@ public class SignupView extends JPanel implements PropertyChangeListener {
     private final JButton signUpButton = new JButton("Sign up");
     private final JButton cancelButton = new JButton("Cancel");
 
-    public SignupView(SignupViewModel signupViewModel, SignupController signupController, LoginViewModel loginViewModel, ViewManagerModel viewManagerModel) {
+    public SignupView(SignupViewModel signupViewModel, LoginViewModel loginViewModel, ViewManagerModel viewManagerModel) {
         this.signupViewModel = signupViewModel;
-        this.signupController = signupController;
         this.viewManagerModel = viewManagerModel;
         this.loginViewModel = loginViewModel;
         signupViewModel.addPropertyChangeListener(this);
@@ -118,10 +117,14 @@ public class SignupView extends JPanel implements PropertyChangeListener {
         // Listeners
         setupListeners();
     }
+    
+    public void setSignupController(SignupController controller) {
+        this.signupController = controller;
+    }
 
     private void setupListeners() {
         signUpButton.addActionListener(evt -> {
-            if (evt.getSource().equals(signUpButton)) {
+            if (evt.getSource().equals(signUpButton) && signupController != null) {
                 SignupState currentState = signupViewModel.getState();
                 signupController.execute(
                         currentState.getUsername(),

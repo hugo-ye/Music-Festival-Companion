@@ -21,6 +21,9 @@ public class DisplayNotificationsInteractor implements DisplayNotificationsInput
     public void execute(DisplayNotificationsInputData inputData) {
         LocalDate currDate = inputData.getLocalDate();
         List<Event> allEvents = dataAccess.getMasterListEvents();
+        if (allEvents == null) {
+            return;
+        }
 
         SortEventsByDate dateSorter = new SortEventsByDate();
         allEvents.sort(SortEventsOrder.ASCENDING.apply(dateSorter));

@@ -72,6 +72,7 @@ public class InMemoryUserDataAccessObject implements
 
     @Override
     public List<Event> getMasterListEvents() {
+        if (currentUser == null) return null;
         return currentUser.getMasterList().getEvents();
     }
 

@@ -22,9 +22,9 @@ public class AllEventListsView extends JPanel implements PropertyChangeListener 
     private final ViewManagerModel viewManagerModel;
 
     // Controllers
-    private final CreateEventListController createEventListController;
-    private final DeleteEventListController deleteEventListController;
-    private final DisplayEventListController displayEventListController;
+    private CreateEventListController createEventListController;
+    private DeleteEventListController deleteEventListController;
+    private DisplayEventListController displayEventListController;
 
     // Swing components
     private final JButton createListButton;
@@ -32,16 +32,10 @@ public class AllEventListsView extends JPanel implements PropertyChangeListener 
     private final JButton backButton;
 
     public AllEventListsView(CreateEventListViewModel createEventListViewModel,
-                             ViewManagerModel viewManagerModel,
-                             CreateEventListController eventListController,
-                             DeleteEventListController deleteEventListController,
-                             DisplayEventListController displayEventListController) {
+                             ViewManagerModel viewManagerModel) {
 
         this.createEventListViewModel = createEventListViewModel;
         this.viewManagerModel = viewManagerModel;
-        this.createEventListController = eventListController;
-        this.deleteEventListController = deleteEventListController;
-        this.displayEventListController = displayEventListController;
 
         this.createEventListViewModel.addPropertyChangeListener(this);
 
@@ -103,6 +97,18 @@ public class AllEventListsView extends JPanel implements PropertyChangeListener 
         });
 
         rebuildListRows(createEventListViewModel.getState());
+    }
+
+    public void setCreateEventListController(CreateEventListController createEventListController) {
+        this.createEventListController = createEventListController;
+    }
+
+    public void setDeleteEventListController(DeleteEventListController deleteEventListController) {
+        this.deleteEventListController = deleteEventListController;
+    }
+
+    public void setDisplayEventListController(DisplayEventListController displayEventListController) {
+        this.displayEventListController = displayEventListController;
     }
 
     private void rebuildListRows(CreateEventListState state) {
