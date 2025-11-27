@@ -108,7 +108,7 @@ public class Main {
         DisplayNotificationsController displayNotificationsController = new DisplayNotificationsController(displayNotificationsInteractor);
 
         // 1. Login
-        LoginOutputBoundary loginPresenter = new LoginPresenter(viewManagerModel, loginViewModel, searchViewModel, displayNotificationsController);
+        LoginOutputBoundary loginPresenter = new LoginPresenter(viewManagerModel, loginViewModel, searchViewModel);
         LoginInputBoundary loginInteractor = new LoginInteractor(fileUserDataAccessObject, loginPresenter, sessionDao);
         LoginController loginController = new LoginController(loginInteractor);
 
@@ -182,7 +182,7 @@ public class Main {
         // --- VIEWS ---
 
         // Login View
-        LoginView loginView = new LoginView(loginViewModel, loginController, viewManagerModel);
+        LoginView loginView = new LoginView(loginViewModel, loginController, viewManagerModel, displayNotificationsController);
         views.add(loginView, loginView.getViewName());
 
         // Signup View

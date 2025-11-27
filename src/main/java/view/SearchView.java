@@ -31,11 +31,11 @@ public class SearchView extends JPanel implements PropertyChangeListener {
             "metal", "new age", "other", "pop", "r&b", "reggae", "religious"
     };
 
-    private final SearchEventController controller;
+    private SearchEventController controller;
     private final ViewManagerModel viewManagerModel;
     private final SearchEventViewModel searchViewModel;
-    private final LogoutController logoutController;
-    private final DisplayEventListsController displayEventListsController;
+    private LogoutController logoutController;
+    private DisplayEventListsController displayEventListsController;
 
     // UI components
     private final JLabel usernameLabel = new JLabel("Logged in as: [User]");
@@ -67,16 +67,10 @@ public class SearchView extends JPanel implements PropertyChangeListener {
     private final JLabel systemInfoLabel = new JLabel();
 
     public SearchView(SearchEventViewModel searchViewModel,
-                      SearchEventController controller,
-                      ViewManagerModel viewManagerModel,
-                      LogoutController logoutController,
-                      DisplayEventListsController displayEventListsController) {
+                      ViewManagerModel viewManagerModel) {
 
         this.searchViewModel = searchViewModel;
-        this.controller = controller;
         this.viewManagerModel = viewManagerModel;
-        this.logoutController = logoutController;
-        this.displayEventListsController = displayEventListsController;
 
         this.searchViewModel.addPropertyChangeListener(this);
 
@@ -228,6 +222,18 @@ public class SearchView extends JPanel implements PropertyChangeListener {
         setupListeners();
     }
 
+    public void setDisplayEventListsController(DisplayEventListsController displayEventListsController) {
+        this.displayEventListsController = displayEventListsController;
+    }
+
+    public void setLogoutController(LogoutController logoutController) {
+        this.logoutController = logoutController;
+    }
+
+    public void setController(SearchEventController controller) {
+        this.controller = controller;
+    }
+
     private void styleComponents() {
         ViewStyle.applyLabelStyle(searchLabel);
         ViewStyle.applyLabelStyle(countriesLabel);
@@ -351,11 +357,19 @@ public class SearchView extends JPanel implements PropertyChangeListener {
             }
 
             @Override
-            public void insertUpdate(DocumentEvent e) { update(); }
+            public void insertUpdate(DocumentEvent e) {
+                update();
+            }
+
             @Override
-            public void removeUpdate(DocumentEvent e) { update(); }
+            public void removeUpdate(DocumentEvent e) {
+                update();
+            }
+
             @Override
-            public void changedUpdate(DocumentEvent e) { update(); }
+            public void changedUpdate(DocumentEvent e) {
+                update();
+            }
         });
     }
 
@@ -368,11 +382,19 @@ public class SearchView extends JPanel implements PropertyChangeListener {
             }
 
             @Override
-            public void insertUpdate(DocumentEvent e) { update(); }
+            public void insertUpdate(DocumentEvent e) {
+                update();
+            }
+
             @Override
-            public void removeUpdate(DocumentEvent e) { update(); }
+            public void removeUpdate(DocumentEvent e) {
+                update();
+            }
+
             @Override
-            public void changedUpdate(DocumentEvent e) { update(); }
+            public void changedUpdate(DocumentEvent e) {
+                update();
+            }
         });
     }
 
@@ -385,11 +407,19 @@ public class SearchView extends JPanel implements PropertyChangeListener {
             }
 
             @Override
-            public void insertUpdate(DocumentEvent e) { update(); }
+            public void insertUpdate(DocumentEvent e) {
+                update();
+            }
+
             @Override
-            public void removeUpdate(DocumentEvent e) { update(); }
+            public void removeUpdate(DocumentEvent e) {
+                update();
+            }
+
             @Override
-            public void changedUpdate(DocumentEvent e) { update(); }
+            public void changedUpdate(DocumentEvent e) {
+                update();
+            }
         });
     }
 
@@ -402,11 +432,19 @@ public class SearchView extends JPanel implements PropertyChangeListener {
             }
 
             @Override
-            public void insertUpdate(DocumentEvent e) { update(); }
+            public void insertUpdate(DocumentEvent e) {
+                update();
+            }
+
             @Override
-            public void removeUpdate(DocumentEvent e) { update(); }
+            public void removeUpdate(DocumentEvent e) {
+                update();
+            }
+
             @Override
-            public void changedUpdate(DocumentEvent e) { update(); }
+            public void changedUpdate(DocumentEvent e) {
+                update();
+            }
         });
     }
 

@@ -15,12 +15,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SaveEventToListView extends JDialog implements PropertyChangeListener {
-    private final SaveEventToListController controller;
+    private SaveEventToListController controller;
     private final SaveEventToListViewModel viewModel;
 
-    public SaveEventToListView(Frame owner, SaveEventToListController controller, SaveEventToListViewModel viewModel) {
+    public SaveEventToListView(Frame owner,  SaveEventToListViewModel viewModel) {
         super(owner, "Save Event to List", true);
-        this.controller = controller;
         this.viewModel = viewModel;
         this.viewModel.addPropertyChangeListener(this);
 
@@ -94,6 +93,10 @@ public class SaveEventToListView extends JDialog implements PropertyChangeListen
         buttonPanel.add(confirmButton);
         this.add(buttonPanel, BorderLayout.SOUTH);
         this.setLocationRelativeTo(getParent());
+    }
+
+    public void setController(SaveEventToListController controller) {
+        this.controller = controller;
     }
 
     @Override

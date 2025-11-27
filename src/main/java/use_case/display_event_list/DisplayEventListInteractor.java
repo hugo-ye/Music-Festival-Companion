@@ -4,7 +4,7 @@ import entity.User;
 import entity.EventList;
 import use_case.login.LoginSessionDataAccessInterface;
 
-public class DisplayEventListInteractor {
+public class DisplayEventListInteractor implements DisplayEventListInputBoundary {
 
     private final LoginSessionDataAccessInterface sessionDataAccess;
     private final DisplayEventListOutputBoundary presenter;
