@@ -228,6 +228,7 @@ public class AppBuilder {
         DisplayEventListInputBoundary displayEventListInteractor = new DisplayEventListInteractor(sessionDao, displayEventListPresenter);
         DisplayEventListController displayEventListController = new DisplayEventListController(displayEventListInteractor);
         eventListView.setDisplayEventListController(displayEventListController);
+        displayAllEventListsView.setDisplayEventListController(displayEventListController);
         return this;
     }
 
@@ -273,7 +274,7 @@ public class AppBuilder {
     }
 
     public AppBuilder addRemoveEventFromListUseCase() {
-        RemoveEventFromListPresenter removePresenter = new RemoveEventFromListPresenter(removeEventFromListViewModel, displayEventListController);
+        RemoveEventFromListPresenter removePresenter = new RemoveEventFromListPresenter(removeEventFromListViewModel);
         RemoveEventFromListInteractor removeInteractor = new RemoveEventFromListInteractor(sessionDao, removePresenter);
         RemoveEventFromListController removeEventFromListController = new RemoveEventFromListController(removeInteractor);
         eventListView.setRemoveEventFromListController(removeEventFromListController);
@@ -308,8 +309,6 @@ public class AppBuilder {
         viewManagerModel.setState(loginView.getViewName());
         viewManagerModel.firePropertyChanged();
 
-        application.pack();
-        application.setVisible(true);
         return application;
     }
 }

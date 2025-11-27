@@ -7,17 +7,14 @@ import use_case.remove_event_from_list.RemoveEventFromListOutputData;
 public class RemoveEventFromListPresenter implements RemoveEventFromListOutputBoundary {
 
     private final RemoveEventFromListViewModel viewModel;
-    private final DisplayEventListController controller;
 
 
-    public RemoveEventFromListPresenter(RemoveEventFromListViewModel viewModel, DisplayEventListController controller) {
+    public RemoveEventFromListPresenter(RemoveEventFromListViewModel viewModel) {
         this.viewModel = viewModel;
-        this.controller = controller;
     }
 
     @Override
     public void present(RemoveEventFromListOutputData outputData) {
         viewModel.setRemoveEventMessage(outputData.getMessage());
-        controller.execute(outputData.getTargetListId());
     }
 }
