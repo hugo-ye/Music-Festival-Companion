@@ -5,8 +5,10 @@ import interface_adapter.display_search_results.DisplaySearchResultsViewModel;
 import use_case.search_event.SearchEventOutputBoundary;
 import use_case.search_event.SearchEventOutputData;
 
-
-    public class SearchEventPresenter implements SearchEventOutputBoundary {
+    /**
+     * Presenter for the SearchEvent use case
+    */
+     public class SearchEventPresenter implements SearchEventOutputBoundary {
         private final SearchEventViewModel viewModel;
         private final DisplaySearchResultsViewModel resultViewModel;
         private ViewManagerModel viewManagerModel;
