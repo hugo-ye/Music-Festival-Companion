@@ -8,5 +8,10 @@ public interface SaveEventToListDataAccessInterface {
     // 1 the event itself
     // 2 the existing eventList
 
+    /**
+     * Adds an event to a list.
+     * @param event the event to be added.
+     * @param eventList the list where we add the event.
+     */
     void saveEventToList(Event event, EventList eventList);
 }
