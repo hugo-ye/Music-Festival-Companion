@@ -4,6 +4,9 @@ import interface_adapter.ViewManagerModel;
 import use_case.display_event_list.DisplayEventListOutputBoundary;
 import use_case.display_event_list.DisplayEventListOutputData;
 
+/**
+ * Presenter for the DisplayEventList use case.
+ */
 public class DisplayEventListPresenter implements DisplayEventListOutputBoundary {
 
     private final DisplayEventListViewModel viewModel;
@@ -14,6 +17,14 @@ public class DisplayEventListPresenter implements DisplayEventListOutputBoundary
         this.viewManagerModel = viewManagerModel;
     }
 
+    /**
+     * Prepares the success view when an event list is successfully retrieved.
+     * <p>
+     *     The method does the following: updates the view model with the new event list, Fires a property change, and
+     *     Updates the view manager to switch to the event list screen
+     * </p>
+     * @param outputData the output data the contains the EventList.
+     */
     @Override
     public void prepareSuccessView(DisplayEventListOutputData outputData) {
         DisplayEventListState state = viewModel.getState();
@@ -26,6 +37,10 @@ public class DisplayEventListPresenter implements DisplayEventListOutputBoundary
         viewManagerModel.firePropertyChanged();
     }
 
+    /**
+     * Prepares the failure view when an error occurs while retrieving the event list.
+     * @param errorMessage a message that describes why the error occurred.
+     */
     @Override
     public void prepareFailView(String errorMessage) {
         System.err.println("Error displaying event list: " + errorMessage);
