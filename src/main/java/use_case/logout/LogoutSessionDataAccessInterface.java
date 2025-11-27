@@ -3,7 +3,7 @@ package use_case.logout;
 import entity.User;
 
 /**
- * DAO for the Logout use case
+ * DAO for the LogoutSession
  */
 public interface LogoutSessionDataAccessInterface {
     /**
