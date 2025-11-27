@@ -5,13 +5,20 @@ import entity.Event;
 import java.time.LocalDate;
 import java.util.List;
 
-
+/**
+ * Interactor for rhe DisplayEvent use case.
+ */
 public class DisplayEventInteractor implements DisplayEventInputBoundary{
     private final DisplayEventOutputBoundary presenter;
 
     public DisplayEventInteractor(DisplayEventOutputBoundary presenter) {
         this.presenter = presenter;
     }
+
+    /**
+     * Extracts relevant data from an event and creates an outputData
+     * @param input the input data containing the event to display.
+     */
     @Override
     public void execute(DisplayEventInputData input) {
 

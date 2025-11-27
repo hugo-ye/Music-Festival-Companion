@@ -4,6 +4,9 @@ import interface_adapter.ViewManagerModel;
 import use_case.display_event.DisplayEventOutputBoundary;
 import use_case.display_event.DisplayEventOutputData;
 
+/**
+ * Presenter for the DisplayEvent use case.
+ */
 public class DisplayEventPresenter implements DisplayEventOutputBoundary {
     private final DisplayEventViewModel viewModel;
     private final ViewManagerModel viewManagerModel;
@@ -13,6 +16,10 @@ public class DisplayEventPresenter implements DisplayEventOutputBoundary {
         this.viewManagerModel = viewManagerModel;
     }
 
+    /**
+     * Prepares the UI when the event is successfully displayed.
+     * @param outputData the event details produced by the interactor.
+     */
     @Override
     public void prepareSuccessView(DisplayEventOutputData outputData) {
         String date = outputData.getDate() != null ? outputData.getDate().toString() : "TBD";
