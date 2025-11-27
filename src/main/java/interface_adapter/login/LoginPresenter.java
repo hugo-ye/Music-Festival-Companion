@@ -1,6 +1,7 @@
 package interface_adapter.login;
 
 import interface_adapter.ViewManagerModel;
+import interface_adapter.display_notifications.DisplayNotificationsController;
 import interface_adapter.search_event.SearchEventState;
 import interface_adapter.search_event.SearchEventViewModel;
 import use_case.login.LoginOutputBoundary;
@@ -12,15 +13,21 @@ import use_case.login.LoginOutputData;
  *     The {@link LoginPresenter} translates the output data to updates the appropriate view models.
  * </p>
  */
+import java.time.LocalDate;
+
 public class LoginPresenter implements LoginOutputBoundary {
     private final LoginViewModel loginViewModel;
     private final ViewManagerModel viewManagerModel;
     private final SearchEventViewModel searchEventViewModel;
+    private final DisplayNotificationsController displayNotificationsController;
 
-    public LoginPresenter(ViewManagerModel viewManagerModel, LoginViewModel loginViewModel , SearchEventViewModel searchEventViewModel) {
+    public LoginPresenter(ViewManagerModel viewManagerModel, LoginViewModel loginViewModel ,
+                          SearchEventViewModel searchEventViewModel,
+                          DisplayNotificationsController displayNotificationsController) {
         this.loginViewModel = loginViewModel;
         this.viewManagerModel = viewManagerModel;
         this.searchEventViewModel = searchEventViewModel;
+        this.displayNotificationsController = displayNotificationsController;
     }
 
     /**
@@ -42,6 +49,8 @@ public class LoginPresenter implements LoginOutputBoundary {
         viewManagerModel.setState(searchEventViewModel.getViewName());
         viewManagerModel.firePropertyChanged();
 
+        // calling notification view
+        displayNotificationsController.execute(LocalDate.now());
 
     }
 

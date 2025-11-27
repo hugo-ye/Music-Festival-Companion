@@ -48,7 +48,7 @@ class SaveEventToListControllerTest {
         EventList list = new EventList("1", "My List");
         EventList[] lists = {list};
 
-        controller.SaveEventToList(event, lists);
+        controller.execute(event, lists);
 
         assertNotNull(interactor.lastInput);
         assertEquals(event, interactor.lastInput.getEvent());

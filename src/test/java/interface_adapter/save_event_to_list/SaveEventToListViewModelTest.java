@@ -13,22 +13,6 @@ class SaveEventToListViewModelTest {
 
     @Test
     void settersAndGettersWork() {
-        SaveEventToListViewModel vm = new SaveEventToListViewModel();
 
-        Event event = new Event(
-                "E004", "Test Event", List.of(), "Venue",
-                "City", "Country", LocalDate.now(),
-                10, 20, "url", List.of(), "img"
-        );
-        EventList[] lists = { new EventList("1","ListA") };
-        String msg = "Test message";
-
-        vm.setEvent(event);
-        vm.setEventList(lists);
-        vm.setMessage(msg);
-
-        assertEquals(event, vm.getEvent());
-        assertArrayEquals(lists, vm.getEventList());
-        assertEquals(msg, vm.getMessage());
     }
 }

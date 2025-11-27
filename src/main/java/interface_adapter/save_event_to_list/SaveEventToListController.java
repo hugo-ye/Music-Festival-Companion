@@ -14,7 +14,6 @@ public class SaveEventToListController{
     public SaveEventToListController(SaveEventToListInputBoundary interactor) {
         this.interactor = interactor;
     }
-
     /**
      * Saves an {@link Event} to on or more {@link EventList}.
      * <p>
@@ -24,7 +23,7 @@ public class SaveEventToListController{
      * @param event the event to add to a list/s.
      * @param eventLists a list of {@link EventList} to which the event should be added.
      */
-    public void SaveEventToList(Event event, EventList[] eventLists){
+    public void execute(Event event, EventList[] eventLists){
         SaveEventToListInputData inputData = new SaveEventToListInputData(event, eventLists);
         interactor.execute(inputData);
     }

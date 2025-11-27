@@ -98,7 +98,7 @@ public class AllEventListsView extends JPanel implements PropertyChangeListener 
 
             String name = dialog.getEnteredName();
             if (name != null && !name.isBlank()) {
-                createEventListController.create(name);
+                createEventListController.execute(name);
             }
         });
 
@@ -170,7 +170,7 @@ public class AllEventListsView extends JPanel implements PropertyChangeListener 
                             JOptionPane.YES_NO_OPTION
                     );
                     if (confirm == JOptionPane.YES_OPTION) {
-                        deleteEventListController.delete(listId);
+                        deleteEventListController.execute(listId);
                     }
                 });
             }

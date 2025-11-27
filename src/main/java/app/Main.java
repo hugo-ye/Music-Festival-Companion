@@ -5,6 +5,8 @@ import data_access.FileListDataAccessObject;
 import data_access.InMemoryUserDataAccessObject;
 import entity.User;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.attend_event.AttendEventController;
+import interface_adapter.attend_event.AttendEventPresenter;
 import interface_adapter.create_event_list.CreateEventListController;
 import interface_adapter.create_event_list.CreateEventListPresenter;
 import interface_adapter.create_event_list.CreateEventListViewModel;
@@ -19,12 +21,21 @@ import interface_adapter.display_event_list.DisplayEventListPresenter;
 import interface_adapter.display_event_list.DisplayEventListViewModel;
 import interface_adapter.display_event_lists.DisplayEventListsController;
 import interface_adapter.display_event_lists.DisplayEventListsPresenter;
+import interface_adapter.display_notifications.DisplayNotificationsController;
+import interface_adapter.display_notifications.DisplayNotificationsPresenter;
+import interface_adapter.display_notifications.DisplayNotificationsViewModel;
 import interface_adapter.display_search_results.DisplaySearchResultsViewModel;
 import interface_adapter.login.LoginController;
-import interface_adapter.login.LoginPresenter; // Imported
+import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.logout.LogoutPresenter;
+import interface_adapter.remove_event_from_list.RemoveEventFromListController;
+import interface_adapter.remove_event_from_list.RemoveEventFromListPresenter;
+import interface_adapter.remove_event_from_list.RemoveEventFromListViewModel;
+import interface_adapter.save_event_to_list.SaveEventToListController;
+import interface_adapter.save_event_to_list.SaveEventToListPresenter;
+import interface_adapter.save_event_to_list.SaveEventToListViewModel;
 import interface_adapter.search_event.SearchEventController;
 import interface_adapter.search_event.SearchEventPresenter;
 import interface_adapter.search_event.SearchEventViewModel;
@@ -33,15 +44,19 @@ import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
 import interface_adapter.sort_events.SortEventsController;
 import interface_adapter.sort_events.SortEventsPresenter;
+import use_case.attend_event.AttendEventInteractor;
 import use_case.create_event_list.CreateEventListInteractor;
 import use_case.delete_event_list.DeleteEventListInteractor;
 import use_case.display_event.DisplayEventInteractor;
 import use_case.display_event_list.DisplayEventListInteractor;
 import use_case.display_event_lists.DisplayEventListsInteractor;
-import use_case.login.LoginInputBoundary; // Imported
-import use_case.login.LoginInteractor;     // Imported
-import use_case.login.LoginOutputBoundary; // Imported
+import use_case.display_notifications.DisplayNotificationsInteractor;
+import use_case.login.LoginInputBoundary;
+import use_case.login.LoginInteractor;
+import use_case.login.LoginOutputBoundary;
 import use_case.logout.LogoutInteractor;
+import use_case.remove_event_from_list.RemoveEventFromListInteractor;
+import use_case.save_event_to_list.SaveEventToListInteractor;
 import use_case.search_event.SearchEventDataAccessInterface;
 import use_case.search_event.SearchEventInteractor;
 import use_case.signup.SignupInteractor;
@@ -69,6 +84,9 @@ public class Main {
         LoginViewModel loginViewModel = new LoginViewModel();
         SignupViewModel signupViewModel = new SignupViewModel();
 
+        // ADDED: Save Event To List ViewModel
+        SaveEventToListViewModel saveEventToListViewModel = new SaveEventToListViewModel();
+
         // ViewManager and Layout
         CardLayout layout = new CardLayout();
         JPanel views = new JPanel(layout);
@@ -77,83 +95,93 @@ public class Main {
 
         // --- DATA ACCESS OBJECTS ---
         SearchEventDataAccessInterface searchDao = new DBDataAccessObject();
-
-        // This manages the "Who is currently logged in" in memory
         InMemoryUserDataAccessObject sessionDao = new InMemoryUserDataAccessObject();
-
-        // This manages saving users to the JSON file
-        // We pass sessionDao because the FileDAO constructor asks for it
         FileListDataAccessObject fileUserDataAccessObject = new FileListDataAccessObject("./users.json", sessionDao);
 
 
         // --- USE CASES ---
 
-        // 1. Login Use Case (FIXED) ------------------------------------------------
-        // We inject SearchViewModel so the Presenter can switch to it upon success
-        LoginOutputBoundary loginPresenter = new LoginPresenter(viewManagerModel, loginViewModel, searchViewModel);
+        // 0. Display Notifications
+        DisplayNotificationsViewModel displayNotificationsViewModel = new DisplayNotificationsViewModel();
+        DisplayNotificationsPresenter displayNotificationsPresenter = new DisplayNotificationsPresenter(displayNotificationsViewModel);
+        DisplayNotificationsInteractor displayNotificationsInteractor = new DisplayNotificationsInteractor(sessionDao, displayNotificationsPresenter);
+        DisplayNotificationsController displayNotificationsController = new DisplayNotificationsController(displayNotificationsInteractor);
 
-        LoginInputBoundary loginInteractor = new LoginInteractor(
-                fileUserDataAccessObject, // To check if user exists in file
-                loginPresenter,           // To update the view
-                sessionDao                // To save the user to the session (memory)
-        );
-
+        // 1. Login
+        LoginOutputBoundary loginPresenter = new LoginPresenter(viewManagerModel, loginViewModel, searchViewModel, displayNotificationsController);
+        LoginInputBoundary loginInteractor = new LoginInteractor(fileUserDataAccessObject, loginPresenter, sessionDao);
         LoginController loginController = new LoginController(loginInteractor);
-        // --------------------------------------------------------------------------
 
-
-        // 2. Search Use Case
+        // 2. Search
         SearchEventPresenter searchPresenter = new SearchEventPresenter(searchViewModel, viewManagerModel, resultViewModel);
         SearchEventInteractor searchInteractor = new SearchEventInteractor(searchDao, searchPresenter);
         SearchEventController searchController = new SearchEventController(searchInteractor);
 
-        // 3. Signup Use Case
+        // 3. Signup
         SignupPresenter signupPresenter = new SignupPresenter(viewManagerModel, signupViewModel, loginViewModel);
         SignupInteractor signupInteractor = new SignupInteractor(fileUserDataAccessObject, signupPresenter);
         SignupController signupController = new SignupController(signupInteractor);
 
-        // 4. Logout Use Case
+        // 4. Logout
         LogoutPresenter logoutPresenter = new LogoutPresenter(viewManagerModel, loginViewModel, searchViewModel);
         LogoutInteractor logoutInteractor = new LogoutInteractor(sessionDao, fileUserDataAccessObject , logoutPresenter);
         LogoutController logoutController = new LogoutController(logoutInteractor);
 
-        // 5. Sort Use Case
+        // 5. Sort
         SortEventsPresenter sortPresenter = new SortEventsPresenter(resultViewModel);
         SortEventsInteractor sortInteractor = new SortEventsInteractor(sortPresenter);
         SortEventsController sortEventsController = new SortEventsController(sortInteractor);
 
-        // 6. Display Event Use Case
+        // 6. Display Event
         DisplayEventPresenter eventPresenter = new DisplayEventPresenter(eventViewModel, viewManagerModel);
-        DisplayEventInteractor eventInteractor = new DisplayEventInteractor(eventPresenter);
+        DisplayEventInteractor eventInteractor = new DisplayEventInteractor(eventPresenter, sessionDao);
         DisplayEventController eventController = new DisplayEventController(eventInteractor);
 
-        // 7. Create Event List Use Case
+        // 7. Create Event List
         CreateEventListViewModel createEventListViewModel = new CreateEventListViewModel();
         CreateEventListPresenter createEventListPresenter = new CreateEventListPresenter(createEventListViewModel);
         CreateEventListInteractor createEventListInteractor = new CreateEventListInteractor(sessionDao, createEventListPresenter);
         CreateEventListController createEventListController = new CreateEventListController(createEventListInteractor);
 
-        // 8. Display Event List Use Case
+        // 8. Display Event List
         DisplayEventListViewModel displayEventListViewModel = new DisplayEventListViewModel();
         DisplayEventListPresenter displayEventListPresenter = new DisplayEventListPresenter(displayEventListViewModel, viewManagerModel);
         DisplayEventListInteractor displayEventListInteractor = new DisplayEventListInteractor(sessionDao, displayEventListPresenter);
         DisplayEventListController displayEventListController = new DisplayEventListController(displayEventListInteractor);
 
-        // 9. Delete Event List Use Case
+        // 9. Delete Event List
         DeleteEventListViewModel deleteEventListViewModel = new DeleteEventListViewModel();
         DeleteEventListPresenter deleteEventListPresenter = new DeleteEventListPresenter(deleteEventListViewModel, createEventListViewModel);
         DeleteEventListInteractor deleteEventListInteractor = new DeleteEventListInteractor(sessionDao, deleteEventListPresenter);
         DeleteEventListController deleteEventListController = new DeleteEventListController(deleteEventListInteractor);
 
-        // 10. Display Event Lists use Case
+        // 10. Display Event Lists
         DisplayEventListsPresenter displayEventListsPresenter = new DisplayEventListsPresenter(viewManagerModel, createEventListViewModel);
         DisplayEventListsInteractor displayEventListsInteractor = new DisplayEventListsInteractor(sessionDao, displayEventListsPresenter);
         DisplayEventListsController displayEventListsController = new DisplayEventListsController(displayEventListsInteractor);
 
+        // 11. ADDED: Save Event To List
+        SaveEventToListPresenter savePresenter = new SaveEventToListPresenter(saveEventToListViewModel);
+        SaveEventToListInteractor saveInteractor = new SaveEventToListInteractor(sessionDao, savePresenter);
+        SaveEventToListController saveEventToListController = new SaveEventToListController(saveInteractor);
+
+        // 12. ADDED: Attend Event (Assumes you have a ViewModel or ViewManager logic, but here's the base)
+        // Since AttendEventPresenter wasn't fully detailed in the snippet, we assume a simple one or pass the displayViewModel
+        AttendEventPresenter attendPresenter = new AttendEventPresenter(eventViewModel, viewManagerModel);
+        AttendEventInteractor attendInteractor = new AttendEventInteractor(sessionDao, attendPresenter);
+        AttendEventController attendEventController = new AttendEventController(attendInteractor);
+
+        // 13. delete event from list
+        RemoveEventFromListViewModel removeEventFromListViewModel = new RemoveEventFromListViewModel();
+        RemoveEventFromListPresenter removePresenter = new RemoveEventFromListPresenter(removeEventFromListViewModel, displayEventListController);
+        RemoveEventFromListInteractor removeInteractor = new RemoveEventFromListInteractor(sessionDao, removePresenter);
+        RemoveEventFromListController removeEventFromListController = new RemoveEventFromListController(removeInteractor);
+
+
 
         // --- VIEWS ---
 
-        // Login View (Now uses the valid loginController)
+        // Login View
         LoginView loginView = new LoginView(loginViewModel, loginController, viewManagerModel);
         views.add(loginView, loginView.getViewName());
 
@@ -178,37 +206,45 @@ public class Main {
                 displayEventListViewModel,
                 displayEventListController,
                 eventController,
-                viewManagerModel
+                viewManagerModel,
+                removeEventFromListController
         );
         views.add(eventListView, eventListView.getViewName());
 
+        // Display Notification View
+        DisplayNotificationView displayNotificationView = new DisplayNotificationView(displayNotificationsViewModel);
+        views.add(displayNotificationView, displayNotificationView.getViewName());
 
-
-        // Popup View
-        new EventView(application, eventViewModel);
+        // Popup View (Instantiate it here so it starts listening, but it is a Dialog so it handles its own visibility)
+        // CRITICAL FIX: Pass all required controllers and the correct ViewModel instance
+        new EventView(
+                application,
+                eventViewModel,
+                saveEventToListViewModel,
+                attendEventController,
+                saveEventToListController
+        );
 
         // --- INITIAL STATE ---
-        // Start at Login
         viewManagerModel.setState(loginView.getViewName());
         viewManagerModel.firePropertyChanged();
 
         // Window listener
         application.addWindowListener(new WindowAdapter() {
-                                          @Override
-                                          public void windowClosing(WindowEvent e) {
-                                              User currentUser = sessionDao.getCurrentUser();
-                                              if (currentUser != null) {
-                                                  fileUserDataAccessObject.save(currentUser);
-                                                  sessionDao.clearCurrentUser();
-                                                  System.out.println("correctly saved user data to persistent storage");
-                                              }
-                                              application.dispose();
-                                              System.exit(0);
-                                          }
-                                      }
-        );
+            @Override
+            public void windowClosing(WindowEvent e) {
+                User currentUser = sessionDao.getCurrentUser();
+                if (currentUser != null) {
+                    fileUserDataAccessObject.save(currentUser);
+                    sessionDao.clearCurrentUser();
+                    System.out.println("correctly saved user data to persistent storage");
+                }
+                application.dispose();
+                System.exit(0);
+            }
+        });
 
-                application.pack();
+        application.pack();
         application.setVisible(true);
     }
 }
