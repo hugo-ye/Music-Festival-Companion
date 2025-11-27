@@ -1,6 +1,9 @@
 package use_case.display_notifications;
 
 import entity.Event;
+import use_case.sort_events.SortEventsOrder;
+import use_case.sort_events.strategies.SortEventsByDate;
+
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -19,6 +22,9 @@ public class DisplayNotificationsInteractor implements DisplayNotificationsInput
         LocalDate currDate = inputData.getLocalDate();
         List<Event> allEvents = dataAccess.getMasterListEvents();
 
+        SortEventsByDate dateSorter = new SortEventsByDate();
+        allEvents.sort(SortEventsOrder.ASCENDING.apply(dateSorter));
+
         StringBuilder messageBuilder = new StringBuilder();
         boolean hasNotifications = false;
 
@@ -30,7 +36,7 @@ public class DisplayNotificationsInteractor implements DisplayNotificationsInput
                         .append(e.getName())
                         .append(" starts in ")
                         .append(dateDifference)
-                        .append(dateDifference == 1 ? " day.\n" : " days.\n"); // Grammar fix
+                        .append(dateDifference == 1 ? " day.\n" : " days.\n");
                 hasNotifications = true;
             }
         }

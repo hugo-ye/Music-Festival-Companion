@@ -32,6 +32,7 @@ public class NotificationDialog extends JDialog {
         // Message area
         JTextArea messageArea = ViewStyle.createReadOnlyTextArea();
         messageArea.setText(message);
+        messageArea.setCaretPosition(0);
         messageArea.setColumns(30);
         messageArea.setRows(5);
         messageArea.setFocusable(false);
