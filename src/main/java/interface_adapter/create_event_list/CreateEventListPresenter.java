@@ -1,8 +1,15 @@
 package interface_adapter.create_event_list;
 
+import java.util.List;
+
 import use_case.create_event_list.CreateEventListOutputBoundary;
 import use_case.create_event_list.CreateEventListOutputData;
-import java.util.List;
+
+/**
+ * Presenter for the Create Event List use case.
+ * Converts the output data from the interactor into an object that the
+ * CreateEventListViewModel can use to update the UI.
+ */
 
 public class CreateEventListPresenter implements CreateEventListOutputBoundary {
 
@@ -14,13 +21,13 @@ public class CreateEventListPresenter implements CreateEventListOutputBoundary {
 
     @Override
     public void prepareSuccessView(CreateEventListOutputData outputData) {
-        CreateEventListState state = viewModel.getState();
+        final CreateEventListState state = viewModel.getState();
 
         state.setListId(outputData.getListId());
         state.setListName(outputData.getListName());
         state.setErrorMessage(null);
 
-        List<EventListSummary> currentLists = state.getLists();
+        final List<EventListSummary> currentLists = state.getLists();
         currentLists.add(new EventListSummary(
                 outputData.getListId(),
                 outputData.getListName()
@@ -33,7 +40,7 @@ public class CreateEventListPresenter implements CreateEventListOutputBoundary {
 
     @Override
     public void prepareFailView(String errorMessage) {
-        CreateEventListState state = viewModel.getState();
+        final CreateEventListState state = viewModel.getState();
 
         state.setErrorMessage(errorMessage);
         viewModel.setState(state);
