@@ -7,7 +7,7 @@ import use_case.create_event_list.CreateEventListInputData;
  * Controller responsible for create_event_list use case
  *
  * <p>
- * This class recieves input from the UI, and packages it into a {@link CreateEventListInputData} object before
+ * This class recieves input from the UI, and packages it into a {CreateEventListInputData} object before
  *  * handing it off to the use-case interactor.
  */
 public class CreateEventListController {
