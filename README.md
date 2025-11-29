@@ -1,14 +1,15 @@
 # Music Festival Companion
 
-# Music Festival Companion
-
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/c07c23e4-daf1-447e-8c31-6527c004d254" height="300">
-  <img src="https://github.com/user-attachments/assets/b4fc3d68-c33e-472e-b613-849e38263c4f" height="300">
-  <img src="https://github.com/user-attachments/assets/6985f167-a3b7-4ffb-aef1-ad711f06bc00" height="300">
+  <img src="https://github.com/user-attachments/assets/c07c23e4-daf1-447e-8c31-6527c004d254" height="260" style="max-width:30%;">
+
+  <img src="https://github.com/user-attachments/assets/b4fc3d68-c33e-472e-b613-849e38263c4f" height="260" style="max-width:30%;">
+
+  <img src="https://github.com/user-attachments/assets/6985f167-a3b7-4ffb-aef1-ad711f06bc00" height="260" style="max-width:15%;">
 </p>
 
 ---
+
 
 ## 1. Group Members
 
