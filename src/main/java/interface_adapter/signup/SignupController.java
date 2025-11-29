@@ -15,9 +15,7 @@ public class SignupController {
 
     /**
      * Executes the signup process with the provided username and password.
-     * <p>
-     *     This method creates a {@link SignupInputData} object and calls the interactor with it.
-     * </p>
+     * This method creates a {@link SignupInputData} object and calls the interactor with it.
      * @param username the username entered by the user.
      * @param password the password entered by the user.
      * @param repeatPassword the repeated password entered by the user for confirmation.
