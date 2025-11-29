@@ -1,16 +1,29 @@
 package view;
 
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import java.awt.*;
+import java.awt.Frame;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Insets;
 
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
+
+/**
+ * The View for the Create List Use Case.
+ */
 public class CreateListDialog extends JDialog {
+    private final String viewName = "create list";
 
     private final JTextField nameField = new JTextField(20);
     private final JButton createButton = new JButton("Create List");
     private final JButton cancelButton = new JButton("Cancel");
-
-    private boolean isConfirmed = false;
+    private boolean isConfirmed;
 
     public CreateListDialog(Frame parent) {
         super(parent, "Create List", true);
@@ -19,17 +32,17 @@ public class CreateListDialog extends JDialog {
         this.getContentPane().setBackground(ViewStyle.WINDOW_BACKGROUND);
 
         // Main Container
-        JPanel mainPanel = new JPanel(new GridBagLayout());
+        final JPanel mainPanel = new JPanel(new GridBagLayout());
         mainPanel.setBackground(ViewStyle.WINDOW_BACKGROUND);
         mainPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
 
-        GridBagConstraints gbc = new GridBagConstraints();
+        final GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(5, 0, 5, 0);
         gbc.gridx = 0;
 
         // Title
-        JLabel titleLabel = new JLabel("New Event List");
+        final JLabel titleLabel = new JLabel("New Event List");
         ViewStyle.applyHeaderStyle(titleLabel);
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
@@ -38,7 +51,7 @@ public class CreateListDialog extends JDialog {
         mainPanel.add(titleLabel, gbc);
 
         // Label
-        JLabel instructionLabel = new JLabel("Enter a name for your list:");
+        final JLabel instructionLabel = new JLabel("Enter a name for your list:");
         ViewStyle.applyLabelStyle(instructionLabel);
 
         gbc.gridy = 1;
@@ -53,7 +66,7 @@ public class CreateListDialog extends JDialog {
         mainPanel.add(nameField, gbc);
 
         // Buttons Panel
-        JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 10, 0));
+        final JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 10, 0));
         buttonPanel.setOpaque(false);
 
         ViewStyle.applyPrimaryButtonStyle(createButton);
@@ -79,7 +92,6 @@ public class CreateListDialog extends JDialog {
             dispose();
         });
 
-        // Pressing enter to submit
         getRootPane().setDefaultButton(createButton);
 
         setContentPane(mainPanel);
@@ -93,5 +105,9 @@ public class CreateListDialog extends JDialog {
             return nameField.getText().trim();
         }
         return null;
+    }
+
+    public String getViewName() {
+        return viewName;
     }
 }
