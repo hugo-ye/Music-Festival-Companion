@@ -1,16 +1,16 @@
 package use_case.display_notifications;
 
 import entity.Event;
+import use_case.sort_events.SortEventsOrder;
+import use_case.sort_events.strategies.SortEventsByDate;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
 
-public class DisplayNotificationsInteractor implements DisplayNotificationsInputBoundary{
+public class DisplayNotificationsInteractor implements DisplayNotificationsInputBoundary {
     private final DisplayNotificationsDataAccessInterface dataAccess;
     private final DisplayNotificationsOutputBoundary presenter;
-
 
     public DisplayNotificationsInteractor(DisplayNotificationsDataAccessInterface dataAccess, DisplayNotificationsOutputBoundary presenter) {
         this.dataAccess = dataAccess;
@@ -19,29 +19,40 @@ public class DisplayNotificationsInteractor implements DisplayNotificationsInput
 
     @Override
     public void execute(DisplayNotificationsInputData inputData) {
-        LocalDate currData = inputData.getLocalDate();
+        LocalDate currDate = inputData.getLocalDate();
+        List<Event> allEvents = dataAccess.getMasterListEvents();
+        if (allEvents == null) {
+            return;
+        }
 
-        List<Event> allEvent = dataAccess.getMasterListEvents();
-        List<Event> recentEvents = new ArrayList<>();
+        SortEventsByDate dateSorter = new SortEventsByDate();
+        allEvents.sort(SortEventsOrder.ASCENDING.apply(dateSorter));
 
-        StringBuilder message = new StringBuilder();
-        message.append("recent events:").append("\n");
-        for(Event e: allEvent){
-            long dateDifference = dateCalculator(currData, e.getDate());
-            if(dateDifference < 0){
-                continue;
-            }
-            if(dateDifference < DisplayNotificationsConstants.remindDeadline){
-                message.append(e.getName()).append("will start in ").append(dateDifference)
-                        .append("day").append("\n");
+        StringBuilder messageBuilder = new StringBuilder();
+        boolean hasNotifications = false;
+
+        for (Event e : allEvents) {
+            long dateDifference = dateCalculator(currDate, e.getDate());
+
+            if (dateDifference >= 0 && dateDifference < DisplayNotificationsConstants.REMIND_DEADLINE) {
+                messageBuilder.append("- ")
+                        .append(e.getName())
+                        .append(" starts in ")
+                        .append(dateDifference)
+                        .append(dateDifference == 1 ? " day.\n" : " days.\n");
+                hasNotifications = true;
             }
         }
 
-        DisplayNotificationsOutputData outputData = new DisplayNotificationsOutputData(message.toString());
-        presenter.present(outputData);
+        if (hasNotifications) {
+            messageBuilder.insert(0, "Upcoming Events:\n");
+            presenter.prepareSuccessView(new DisplayNotificationsOutputData(messageBuilder.toString()));
+        } else {
+            presenter.prepareSuccessView(new DisplayNotificationsOutputData(""));
+        }
     }
 
-    private long dateCalculator(LocalDate d1, LocalDate d2){
+    private long dateCalculator(LocalDate d1, LocalDate d2) {
         return ChronoUnit.DAYS.between(d1, d2);
     }
 }

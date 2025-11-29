@@ -3,34 +3,56 @@ package use_case.sort_events.strategies;
 import entity.Event;
 import use_case.sort_events.SortEventsStrategy;
 
+/**
+ * A sorting strategy that orders events by their ticket price.
+ * The sorting logic is as follows:
+ * Primary: Minimum Price (ascending).
+ * Secondary: Maximum Price (ascending) is used as a tie-breaker
+ * Exceptions: Events with no price (indicated by -1)
+ * are sorted to the bottom of the list.
+ */
 public class SortEventsByTicketPrice implements SortEventsStrategy {
 
+    private static final int NO_PRICE_SENTINEL = -1;
+
+    /**
+     * Compares two events based on their ticket prices.
+     * @param o1 The first event to compare.
+     * @param o2 The second event to compare.
+     * @return A negative integer, zero, or a positive integer as the first argument
+     *     is cheaper than, equal to, or more expensive than the second.
+     */
     @Override
     public int compare(Event o1, Event o2) {
-        // Handle no price provided logic
-        boolean noPrice1 = (o1.getPriceMin() == -1);
-        boolean noPrice2 = (o2.getPriceMin() == -1);
+        int result = Integer.compare(
+                getSortablePrice(o1.getPriceMin()),
+                getSortablePrice(o2.getPriceMin())
+        );
 
-        // If both have no price, they are equal
-        if (noPrice1 && noPrice2) return 0;
-
-        // If o1 has no price, push it to the bottom.
-        if (noPrice1) return 1;
-
-        // If o2 has no price, o1 comes first.
-        if (noPrice2) return -1;
-
-        // Primary comparison: minimum price
-        int minPriceComparison = Integer.compare(o1.getPriceMin(), o2.getPriceMin());
-
-        // If minimum prices are different, return that result immediately
-        if (minPriceComparison != 0) {
-            return minPriceComparison;
+        if (result == 0) {
+            result = Integer.compare(
+                    getSortablePrice(o1.getPriceMax()),
+                    getSortablePrice(o2.getPriceMax())
+            );
         }
 
-        // secondary Comparison: maximum price tie-breaker
-        // if minimums are the same
-        // the one with the lower MAXIMUM is cheaper
-        return Integer.compare(o1.getPriceMax(), o2.getPriceMax());
+        return result;
+    }
+
+    /**
+     * Normalizes the price for sorting purposes.
+     * Maps the sentinel value (-1) to Integer.MAX_VALUE to ensure it appears last.
+     * @param price The raw price from the entity.
+     * @return The price, or Integer.MAX_VALUE if the price is invalid/missing.
+     */
+    private int getSortablePrice(int price) {
+        final int result;
+        if (price == NO_PRICE_SENTINEL) {
+            result = Integer.MAX_VALUE;
+        }
+        else {
+            result = price;
+        }
+        return result;
     }
 }

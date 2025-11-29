@@ -12,7 +12,7 @@ public class DisplayNotificationsController {
         this.interactor = interactor;
     }
 
-    public void displayNotifications(LocalDate localDate){
+    public void execute(LocalDate localDate){
         DisplayNotificationsInputData inputData = new DisplayNotificationsInputData(localDate);
         interactor.execute(inputData);
     }

@@ -1,5 +1,23 @@
 package view;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Frame;
+import java.awt.Window;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
+
 import interface_adapter.ViewManagerModel;
 import interface_adapter.create_event_list.CreateEventListController;
 import interface_adapter.create_event_list.CreateEventListState;
@@ -8,12 +26,9 @@ import interface_adapter.create_event_list.EventListSummary;
 import interface_adapter.delete_event_list.DeleteEventListController;
 import interface_adapter.display_event_list.DisplayEventListController;
 
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import java.awt.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-
+/**
+ * The View for the Display Event Lists Use Case.
+ */
 public class AllEventListsView extends JPanel implements PropertyChangeListener {
 
     private final String viewName = "event lists";
@@ -22,9 +37,9 @@ public class AllEventListsView extends JPanel implements PropertyChangeListener 
     private final ViewManagerModel viewManagerModel;
 
     // Controllers
-    private final CreateEventListController createEventListController;
-    private final DeleteEventListController deleteEventListController;
-    private final DisplayEventListController displayEventListController;
+    private CreateEventListController createEventListController;
+    private DeleteEventListController deleteEventListController;
+    private DisplayEventListController displayEventListController;
 
     // Swing components
     private final JButton createListButton;
@@ -32,16 +47,10 @@ public class AllEventListsView extends JPanel implements PropertyChangeListener 
     private final JButton backButton;
 
     public AllEventListsView(CreateEventListViewModel createEventListViewModel,
-                             ViewManagerModel viewManagerModel,
-                             CreateEventListController eventListController,
-                             DeleteEventListController deleteEventListController,
-                             DisplayEventListController displayEventListController) {
+                             ViewManagerModel viewManagerModel) {
 
         this.createEventListViewModel = createEventListViewModel;
         this.viewManagerModel = viewManagerModel;
-        this.createEventListController = eventListController;
-        this.deleteEventListController = deleteEventListController;
-        this.displayEventListController = displayEventListController;
 
         this.createEventListViewModel.addPropertyChangeListener(this);
 
@@ -49,9 +58,9 @@ public class AllEventListsView extends JPanel implements PropertyChangeListener 
         this.setBackground(ViewStyle.WINDOW_BACKGROUND);
 
         // Top panel
-        JPanel topPanel = ViewStyle.createSectionPanel(new BorderLayout());
+        final JPanel topPanel = ViewStyle.createSectionPanel(new BorderLayout());
 
-        JLabel titleLabel = new JLabel("My Lists");
+        final JLabel titleLabel = new JLabel("My Lists");
         ViewStyle.applyTitleStyle(titleLabel);
 
         createListButton = new JButton("Create New List");
@@ -68,12 +77,12 @@ public class AllEventListsView extends JPanel implements PropertyChangeListener 
         eventsPanel.setBackground(ViewStyle.WINDOW_BACKGROUND);
         eventsPanel.setBorder(new EmptyBorder(0, 20, 0, 20)); // Add side padding
 
-        JScrollPane scrollPane = new JScrollPane(eventsPanel);
+        final JScrollPane scrollPane = new JScrollPane(eventsPanel);
         ViewStyle.applyScrollPaneStyle(scrollPane);
         add(scrollPane, BorderLayout.CENTER);
 
         // Bottom panel
-        JPanel bottomPanel = ViewStyle.createSectionPanel(new FlowLayout(FlowLayout.RIGHT));
+        final JPanel bottomPanel = ViewStyle.createSectionPanel(new FlowLayout(FlowLayout.RIGHT));
         backButton = new JButton("Back to Search");
         ViewStyle.applyButtonStyle(backButton);
 
@@ -88,21 +97,35 @@ public class AllEventListsView extends JPanel implements PropertyChangeListener 
         });
 
         createListButton.addActionListener(e -> {
-            if (createEventListController == null) return;
+            if (createEventListController == null) {
+                return;
+            }
 
-            Window window = SwingUtilities.getWindowAncestor(this);
-            Frame parent = window instanceof Frame ? (Frame) window : null;
+            final Window window = SwingUtilities.getWindowAncestor(this);
+            final Frame parent = window instanceof Frame ? (Frame) window : null;
 
-            CreateListDialog dialog = new CreateListDialog(parent);
+            final CreateListDialog dialog = new CreateListDialog(parent);
             dialog.setVisible(true);
 
-            String name = dialog.getEnteredName();
+            final String name = dialog.getEnteredName();
             if (name != null && !name.isBlank()) {
-                createEventListController.create(name);
+                createEventListController.execute(name);
             }
         });
 
         rebuildListRows(createEventListViewModel.getState());
+    }
+
+    public void setCreateEventListController(CreateEventListController createEventListController) {
+        this.createEventListController = createEventListController;
+    }
+
+    public void setDeleteEventListController(DeleteEventListController deleteEventListController) {
+        this.deleteEventListController = deleteEventListController;
+    }
+
+    public void setDisplayEventListController(DisplayEventListController displayEventListController) {
+        this.displayEventListController = displayEventListController;
     }
 
     private void rebuildListRows(CreateEventListState state) {
@@ -112,17 +135,16 @@ public class AllEventListsView extends JPanel implements PropertyChangeListener 
         eventsPanel.add(Box.createVerticalStrut(10));
 
         // Add master list
-        JPanel masterCard = createListCard("Master List", "master_list", false);
+        final JPanel masterCard = createListCard("Master List", "master_list", false);
         eventsPanel.add(masterCard);
         eventsPanel.add(Box.createVerticalStrut(15)); // Spacing between cards
 
         // Add user created lists
         for (EventListSummary summary : state.getLists()) {
-            JPanel listCard = createListCard(summary.getName(), summary.getId(), true);
+            final JPanel listCard = createListCard(summary.getName(), summary.getId(), true);
             eventsPanel.add(listCard);
             eventsPanel.add(Box.createVerticalStrut(15));
         }
-
 
         eventsPanel.add(Box.createVerticalGlue());
 
@@ -131,20 +153,20 @@ public class AllEventListsView extends JPanel implements PropertyChangeListener 
     }
 
     private JPanel createListCard(String listName, String listId, boolean isDeleteable) {
-        JPanel card = ViewStyle.createCardPanel();
+        final JPanel card = ViewStyle.createCardPanel();
         card.setLayout(new BorderLayout());
         card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 80));
 
         // Left: list name
-        JLabel nameLabel = new JLabel(listName);
+        final JLabel nameLabel = new JLabel(listName);
         ViewStyle.applyHeaderStyle(nameLabel);
         card.add(nameLabel, BorderLayout.WEST);
 
         // Right: buttons
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         buttonPanel.setOpaque(false);
 
-        JButton viewButton = new JButton("View");
+        final JButton viewButton = new JButton("View");
         ViewStyle.applyButtonStyle(viewButton);
 
         viewButton.addActionListener(e -> {
@@ -155,22 +177,23 @@ public class AllEventListsView extends JPanel implements PropertyChangeListener 
         buttonPanel.add(viewButton);
 
         if (isDeleteable) {
-            JButton deleteButton = new JButton("Delete");
+            final JButton deleteButton = new JButton("Delete");
             ViewStyle.applyButtonStyle(deleteButton);
             deleteButton.setForeground(ViewStyle.ERROR_COLOR);
 
             if (deleteEventListController == null) {
                 deleteButton.setEnabled(false);
-            } else {
+            }
+            else {
                 deleteButton.addActionListener(e -> {
-                    int confirm = JOptionPane.showConfirmDialog(
+                    final int confirm = JOptionPane.showConfirmDialog(
                             this,
                             "Are you sure you want to delete '" + listName + "'?",
                             "Delete List",
                             JOptionPane.YES_NO_OPTION
                     );
                     if (confirm == JOptionPane.YES_OPTION) {
-                        deleteEventListController.delete(listId);
+                        deleteEventListController.execute(listId);
                     }
                 });
             }
@@ -187,7 +210,7 @@ public class AllEventListsView extends JPanel implements PropertyChangeListener 
             return;
         }
 
-        CreateEventListState state = (CreateEventListState) evt.getNewValue();
+        final CreateEventListState state = (CreateEventListState) evt.getNewValue();
 
         if (state.getErrorMessage() != null && !state.getErrorMessage().isEmpty()) {
             JOptionPane.showMessageDialog(
@@ -195,7 +218,6 @@ public class AllEventListsView extends JPanel implements PropertyChangeListener 
                     state.getErrorMessage()
             );
         }
-
         rebuildListRows(state);
     }
 

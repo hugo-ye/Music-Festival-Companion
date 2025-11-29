@@ -26,8 +26,8 @@ public class CreateEventListController {
      * @param name the name of the new event list to be created
      */
 
-    public void create(String name) {
-        final CreateEventListInputData inputData = new CreateEventListInputData(name);
+    public void execute(String name) {
+        CreateEventListInputData inputData = new CreateEventListInputData(name);
         interactor.execute(inputData);
     }
 }

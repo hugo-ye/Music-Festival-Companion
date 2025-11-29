@@ -1,12 +1,13 @@
 package interface_adapter.display_event_list;
 
+import use_case.display_event_list.DisplayEventListInputBoundary;
 import use_case.display_event_list.DisplayEventListInteractor;
 import use_case.display_event_list.DisplayEventListInputData;
 
 public class DisplayEventListController {
-    private final DisplayEventListInteractor interactor;
+    private final DisplayEventListInputBoundary interactor;
 
-    public DisplayEventListController(DisplayEventListInteractor interactor) {
+    public DisplayEventListController(DisplayEventListInputBoundary interactor) {
         this.interactor = interactor;
     }
 

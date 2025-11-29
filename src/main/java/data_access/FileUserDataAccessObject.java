@@ -5,11 +5,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import data_formatters.LocalDateAdapter;
-import entity.EventList;
 import entity.User;
-import use_case.create_event_list.CreateEventListDataAccessInterface;
 import use_case.login.LoginSessionDataAccessInterface;
-import use_case.delete_event_list.DeleteEventListDataAccessInterface;
 import use_case.login.LoginUserDataAccessInterface;
 import use_case.logout.LogoutUserDataAccessInterface;
 import use_case.signup.SignupDataAccessInterface;
@@ -39,7 +36,7 @@ import java.util.List;
  */
 
 // hasnt been connected yet. just creating general functions
-public class FileListDataAccessObject implements LoginUserDataAccessInterface, SignupDataAccessInterface,
+public class FileUserDataAccessObject implements LoginUserDataAccessInterface, SignupDataAccessInterface,
         LogoutUserDataAccessInterface {
 
     private final String filePath;
@@ -48,7 +45,7 @@ public class FileListDataAccessObject implements LoginUserDataAccessInterface, S
     }.getType();
     private final LoginSessionDataAccessInterface sessionDataAccess;
 
-    public FileListDataAccessObject(String filePath, LoginSessionDataAccessInterface sessionDataAccess) {
+    public FileUserDataAccessObject(String filePath, LoginSessionDataAccessInterface sessionDataAccess) {
         gson = new GsonBuilder()
                 .setPrettyPrinting()
                 .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
