@@ -20,14 +20,13 @@ public class SortEventsStrategyFactory {
      */
     public static SortEventsStrategy create(SortEventsCriteria criteria) {
         switch (criteria) {
-            case ALPHABETICAL:
-                return new SortEventsAlphabetical();
             case DATE:
                 return new SortEventsByDate();
             case VENUE:
                 return new SortEventsByVenue();
             case PRICE:
                 return new SortEventsByTicketPrice();
+            case ALPHABETICAL:
             default:
                 return new SortEventsAlphabetical();
         }
