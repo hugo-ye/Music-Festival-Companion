@@ -4,17 +4,17 @@
 
 ## 1. Search View
 <p align="center">
-  <img src="https://private-user-images.githubusercontent.com/38455097/520417421-c07c23e4-daf1-447e-8c31-6527c004d254.png" width="85%">
+  <img src="https://github.com/user-attachments/assets/c07c23e4-daf1-447e-8c31-6527c004d254" width="85%">
 </p>
 
 ## 2. Search Results View
 <p align="center">
-  <img src="https://private-user-images.githubusercontent.com/38455097/520417582-b4fc3d68-c33e-472e-b613-849e38263c4f.png" width="85%">
+  <img src="https://github.com/user-attachments/assets/b4fc3d68-c33e-472e-b613-849e38263c4f" width="85%">
 </p>
 
 ## 3. Event Details View
 <p align="center">
-  <img src="https://private-user-images.githubusercontent.com/38455097/520417436-6985f167-a3b7-4ffb-aef1-ad711f06bc00.png" width="35%">
+  <img src="https://github.com/user-attachments/assets/6985f167-a3b7-4ffb-aef1-ad711f06bc00" width="35%">
 </p>
 
 ---
@@ -45,4 +45,7 @@ Whether searching by artist, genre, or price, the application serves as a centra
 2. I want to sort my search results alphabetically, by date, by location, or by price, so that I can prioritize the most relevant options. **Hugo**
 3. I want to view detailed information about an event and access a direct link to purchase tickets, so that I can make informed decisions and secure my spot quickly. **Abdullah**
 4. I want to be able to "favorite" events I am going to attend to a main "Wishlist" with a single click, so that I don't lose track of potential concerts I want to attend. **Abdullah**
-5. I want to create custom-named lists (and delete them if necessary), so that I can categorize events (e.g., "Date Night optio
+5. I want to create custom-named lists (and delete them if necessary), so that I can categorize events (e.g., "Date Night options"). **Cheuk-Fung**
+6. I want to add specific events to my custom lists and remove them if I change my mind, so my itinerary is always up to date. **Yifu**
+7. I want to receive reminders about upcoming events whenever I open the app, so that I remember to attend. **Yifu**
+8. I want to create secure accounts for myself, my friends, and my family, and log in with a password, so that my saved events and lists are private and accessible only to me. **Hugo**
