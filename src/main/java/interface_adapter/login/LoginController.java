@@ -5,10 +5,8 @@ import use_case.login.LoginInputData;
 
 /**
  * Controller for the Login use case.
- * <p>
- *     The {@link LoginController} takes in raw input from the UI, username and password, and converts them into
- *     {@link LoginInputData} object and forwards it to the interactor for processing.
- * </p>
+ * The {@link LoginController} takes in raw input from the UI, username and password, and converts them into
+ * {@link LoginInputData} object and forwards it to the interactor for processing.
  */
 public class LoginController {
     private final LoginInputBoundary loginInteractor;
