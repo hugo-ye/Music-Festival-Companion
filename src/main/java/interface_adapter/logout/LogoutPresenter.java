@@ -9,10 +9,8 @@ import use_case.logout.LogoutOutputData;
 
 /**
  * Presenter class for the Logout use case.
- * <p>
- *     The class implements {@link LogoutOutputBoundary} and is responsible for updating the viewModel after the logout
- *     use case has been executed.
- * </p>
+ * The class implements {@link LogoutOutputBoundary} and is responsible for updating the viewModel after the logout
+ * use case has been executed.
  */
 public class LogoutPresenter implements LogoutOutputBoundary {
     private final LoginViewModel loginViewModel;
@@ -40,9 +38,7 @@ public class LogoutPresenter implements LogoutOutputBoundary {
 
     /**
      * Prepares the view for a failed logout.
-     * <p>
-     *     Logout is assumed to always succeed, therefore this method's body is empty.
-     * </p>
+     * Logout is assumed to always succeed, therefore this method's body is empty.
      * @param errorMessage The error message describing why logout failed.
      */
     @Override
