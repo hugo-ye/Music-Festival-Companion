@@ -16,10 +16,8 @@ public class SaveEventToListController{
     }
     /**
      * Saves an {@link Event} to on or more {@link EventList}.
-     * <p>
-     *     This method creates an {@link SaveEventToListInputData} object and then passes it to the interactor
-     *     for execution
-     * </p>
+     * This method creates an {@link SaveEventToListInputData} object and then passes it to the interactor
+     * for execution
      * @param event the event to add to a list/s.
      * @param eventLists a list of {@link EventList} to which the event should be added.
      */
