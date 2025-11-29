@@ -41,3 +41,14 @@ Whether searching by artist, genre, or price, the application serves as a centra
 6. I want to add specific events to my custom lists and remove them if I change my mind, so my itinerary is always up to date. **Yifu**
 7. I want to receive reminders about upcoming events whenever I open the app, so that I remember to attend. **Yifu**
 8. I want to create secure accounts for myself, my friends, and my family, and log in with a password, so that my saved events and lists are private and accessible only to me. **Hugo**
+
+---
+
+## 4. API Integration
+
+### Ticketmaster Discovery API
+The project utilizes the Ticketmaster Discovery API, an interface that provides access to a global inventory of live events.
+
+This API enables the application to search and retrieve real-time data for concerts, sports games, arts, and theater productions. By leveraging this external service, the application can offer users up-to-date schedules, venue details, and ticketing information from all over the world.
+
+---
