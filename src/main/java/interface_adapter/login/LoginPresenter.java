@@ -9,9 +9,7 @@ import use_case.login.LoginOutputData;
 
 /**
  * Presenter for the Login use case
- * <p>
- *     The {@link LoginPresenter} translates the output data to updates the appropriate view models.
- * </p>
+ * The {@link LoginPresenter} translates the output data to updates the appropriate view models.
  */
 import java.time.LocalDate;
 
@@ -50,9 +48,7 @@ public class LoginPresenter implements LoginOutputBoundary {
 
     /**
      * Prepares the fail view after an unsuccessful login attempt.
-     * <p>
-     *     This method sets an error message in the {@link LoginViewModel}.
-     * </p>
+     * This method sets an error message in the {@link LoginViewModel}.
      *
      * @param error the error message describing why the login attempt failed.
      */
