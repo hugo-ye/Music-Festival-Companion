@@ -8,16 +8,12 @@ import use_case.signup.SignupOutputData;
 
 /**
  *  The Presenter for the Signup use case
- *  <p>
- *      This class implements {@link SignupOutputBoundary} and is responsible for updating the appropriate viewModel
- *      based on whether the signup passes or fails.
- *  </p>
+ * This class implements {@link SignupOutputBoundary} and is responsible for updating the appropriate viewModel
+ * based on whether the signup passes or fails.
  *
- *  <p>
- *      If success, it updates the {@link LoginViewModel} with the new user's information and notifies the
- *      {@link ViewManagerModel} to switch to the login view.
- *      If failed it updates the {@link SignupViewModel} with an error message.
- *  </p>
+ * If success, it updates the {@link LoginViewModel} with the new user's information and notifies the
+ * {@link ViewManagerModel} to switch to the login view.
+ * If failed it updates the {@link SignupViewModel} with an error message.
  */
 public class SignupPresenter implements SignupOutputBoundary {
 
