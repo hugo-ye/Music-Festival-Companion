@@ -19,10 +19,8 @@ public class DisplayEventListPresenter implements DisplayEventListOutputBoundary
 
     /**
      * Prepares the success view when an event list is successfully retrieved.
-     * <p>
-     *     The method does the following: updates the view model with the new event list, Fires a property change, and
-     *     Updates the view manager to switch to the event list screen
-     * </p>
+     * The method does the following: updates the view model with the new event list, Fires a property change, and
+     * Updates the view manager to switch to the event list screen
      * @param outputData the output data the contains the EventList.
      */
     @Override
