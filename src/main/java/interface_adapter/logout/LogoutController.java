@@ -5,9 +5,7 @@ import use_case.logout.LogoutInputData;
 
 /**
  * Controller for the Logout use case.
- * <p>
- *     The controller receives logout requests from the UI and calls the Interactor.
- * </p>
+ * The controller receives logout requests from the UI and calls the Interactor.
  */
 public class LogoutController {
     private final LogoutInputBoundary logoutInteractor;
@@ -18,10 +16,8 @@ public class LogoutController {
 
     /**
      * Executes the logout process.
-     * <p>
-     *     This method creates a {@link LogoutInputData} object (which is empty) and passes it to the interactor for
-     *     processing.
-     * </p>
+     * This method creates a {@link LogoutInputData} object (which is empty) and passes it to the interactor for
+     * processing.
      */
     public void execute(){
         logoutInteractor.execute(new LogoutInputData());
