@@ -1,5 +1,44 @@
 package view;
 
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Desktop;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Frame;
+import java.awt.Graphics2D;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Image;
+import java.awt.Insets;
+import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+
+import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
+
 import entity.Event;
 import entity.EventList;
 import interface_adapter.attend_event.AttendEventController;
@@ -9,27 +48,27 @@ import interface_adapter.save_event_to_list.SaveEventToListController;
 import interface_adapter.save_event_to_list.SaveEventToListState;
 import interface_adapter.save_event_to_list.SaveEventToListViewModel;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.net.URI;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-
+/**
+ * The View for the Display Event Use Case.
+ */
 public class EventView extends JDialog implements PropertyChangeListener {
-    public final String viewName = "event details";
+    private final String viewName = "event details";
 
     private final JLabel imageLabel;
 
     private final JTextArea titleArea;
 
     // Components
-    private final JTextArea artistValue, venueValue, locationValue, dateValue, genresValue, priceRangeValue;
-    private final JButton buyButton, attendButton, saveButton, closeButton;
+    private final JTextArea artistValue;
+    private final JTextArea venueValue;
+    private final JTextArea locationValue;
+    private final JTextArea dateValue;
+    private final JTextArea genresValue;
+    private final JTextArea priceRangeValue;
+    private final JButton buyButton;
+    private final JButton attendButton;
+    private final JButton saveButton;
+    private final JButton closeButton;
 
     private String ticketUrl;
 
@@ -74,10 +113,10 @@ public class EventView extends JDialog implements PropertyChangeListener {
         ViewStyle.applyPriceStyle(priceRangeValue);
 
         // Main Panel
-        JPanel mainPanel = new JPanel(new GridBagLayout());
+        final JPanel mainPanel = new JPanel(new GridBagLayout());
         mainPanel.setBackground(ViewStyle.WINDOW_BACKGROUND);
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        GridBagConstraints gbc = new GridBagConstraints();
+        final GridBagConstraints gbc = new GridBagConstraints();
 
         // Image
         imageLabel = new JLabel("Loading...", SwingConstants.CENTER);
@@ -112,12 +151,12 @@ public class EventView extends JDialog implements PropertyChangeListener {
         addLabelAndValue(mainPanel, "Genres:", genresValue, gbc, row++);
         addLabelAndValue(mainPanel, "Price Range:", priceRangeValue, gbc, row++);
 
-        JScrollPane scrollPane = new JScrollPane(mainPanel);
+        final JScrollPane scrollPane = new JScrollPane(mainPanel);
         ViewStyle.applyScrollPaneStyle(scrollPane);
         add(scrollPane, BorderLayout.CENTER);
 
         // Buttons
-        JPanel buttonPanel = new JPanel();
+        final JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
         buttonPanel.setBackground(ViewStyle.WINDOW_BACKGROUND);
         buttonPanel.setBorder(BorderFactory.createCompoundBorder(
@@ -130,7 +169,7 @@ public class EventView extends JDialog implements PropertyChangeListener {
         buyButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         buyButton.addActionListener(this::handleBuyTickets);
 
-        JPanel secondaryActions = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        final JPanel secondaryActions = new JPanel(new FlowLayout(FlowLayout.CENTER));
         secondaryActions.setBackground(ViewStyle.WINDOW_BACKGROUND);
 
         attendButton = new JButton("Attend");
@@ -168,7 +207,7 @@ public class EventView extends JDialog implements PropertyChangeListener {
     }
 
     private void handleAttendEvent() {
-        Event event = displayEventViewModel.getState().getEvent();
+        final Event event = displayEventViewModel.getState().getEvent();
 
         if (event != null) {
             attendEventController.execute(event);
@@ -176,18 +215,20 @@ public class EventView extends JDialog implements PropertyChangeListener {
     }
 
     private void handleSaveEvent() {
-        Event event = displayEventViewModel.getState().getEvent();
-        if (event == null) return;
+        final Event event = displayEventViewModel.getState().getEvent();
+        if (event == null) {
+            return;
+        }
 
-        DisplayEventState state = displayEventViewModel.getState();
-        List<EventList> availableLists = state.getAvailableLists();
+        final DisplayEventState state = displayEventViewModel.getState();
+        final List<EventList> availableLists = state.getAvailableLists();
 
         if (availableLists == null || availableLists.isEmpty()) {
             JOptionPane.showMessageDialog(this, "No lists available to save to.");
             return;
         }
 
-        List<EventList> userLists = new ArrayList<>();
+        final List<EventList> userLists = new ArrayList<>();
         for (EventList list : availableLists) {
             userLists.add(list);
         }
@@ -197,15 +238,16 @@ public class EventView extends JDialog implements PropertyChangeListener {
             return;
         }
 
-        ChooseListDialog dialog = new ChooseListDialog((Frame) SwingUtilities.getWindowAncestor(this), userLists);
+        final ChooseListDialog dialog = new ChooseListDialog((Frame) SwingUtilities.getWindowAncestor(this), userLists);
         dialog.setVisible(true);
 
         if (dialog.isSaved()) {
-            List<EventList> selectedLists = dialog.getSelectedLists();
+            final List<EventList> selectedLists = dialog.getSelectedLists();
             if (!selectedLists.isEmpty()) {
-                EventList[] listsArray = selectedLists.toArray(new EventList[0]);
+                final EventList[] listsArray = selectedLists.toArray(new EventList[0]);
                 saveEventToListController.execute(event, listsArray);
-            } else {
+            }
+            else {
                 JOptionPane.showMessageDialog(this, "No lists selected.");
             }
         }
@@ -219,7 +261,7 @@ public class EventView extends JDialog implements PropertyChangeListener {
         gbc.insets = new Insets(0, 0, 8, 15);
         gbc.anchor = GridBagConstraints.NORTHWEST;
 
-        JLabel staticLabel = new JLabel(labelText);
+        final JLabel staticLabel = new JLabel(labelText);
         ViewStyle.applyLabelStyle(staticLabel);
         panel.add(staticLabel, gbc);
 
@@ -234,35 +276,40 @@ public class EventView extends JDialog implements PropertyChangeListener {
         if (ticketUrl != null && !ticketUrl.isEmpty()) {
             try {
                 Desktop.getDesktop().browse(new URI(ticketUrl));
-            } catch (Exception e) {
+            }
+            catch (IOException | URISyntaxException e) {
+
                 JOptionPane.showMessageDialog(this, "Could not open link.");
             }
-        } else {
+        }
+        else {
             JOptionPane.showMessageDialog(this, "No ticket URL available.");
         }
     }
 
     public void setEventImage(String urlString) {
-        SwingWorker<ImageIcon, Void> worker = new SwingWorker<>() {
+        final SwingWorker<ImageIcon, Void> worker = new SwingWorker<>() {
             @Override
             protected ImageIcon doInBackground() throws Exception {
-                if (urlString == null || urlString.isEmpty()) return null;
-                URL url = new URL(urlString);
-                BufferedImage originalImage = ImageIO.read(url);
+                if (urlString == null || urlString.isEmpty()) {
+                    return null;
+                }
+                final URL url = new URL(urlString);
+                final BufferedImage originalImage = ImageIO.read(url);
 
-                int targetWidth = 300;
-                int targetHeight = 300;
-                double widthRatio = (double) targetWidth / originalImage.getWidth();
-                double heightRatio = (double) targetHeight / originalImage.getHeight();
-                double scaleFactor = Math.max(widthRatio, heightRatio);
-                int scaledWidth = (int) (originalImage.getWidth() * scaleFactor);
-                int scaledHeight = (int) (originalImage.getHeight() * scaleFactor);
-                Image scaledImage = originalImage.getScaledInstance(scaledWidth, scaledHeight, Image.SCALE_SMOOTH);
-                BufferedImage croppedImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
-                Graphics2D g2 = croppedImage.createGraphics();
+                final int targetWidth = 300;
+                final int targetHeight = 300;
+                final double widthRatio = (double) targetWidth / originalImage.getWidth();
+                final double heightRatio = (double) targetHeight / originalImage.getHeight();
+                final double scaleFactor = Math.max(widthRatio, heightRatio);
+                final int scaledWidth = (int) (originalImage.getWidth() * scaleFactor);
+                final int scaledHeight = (int) (originalImage.getHeight() * scaleFactor);
+                final Image scaledImage = originalImage.getScaledInstance(scaledWidth, scaledHeight, Image.SCALE_SMOOTH);
+                final BufferedImage croppedImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
+                final Graphics2D g2 = croppedImage.createGraphics();
                 g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-                int x = (targetWidth - scaledWidth) / 2;
-                int y = (targetHeight - scaledHeight) / 2;
+                final int x = (targetWidth - scaledWidth) / 2;
+                final int y = (targetHeight - scaledHeight) / 2;
                 g2.drawImage(scaledImage, x, y, null);
                 g2.dispose();
                 return new ImageIcon(croppedImage);
@@ -271,19 +318,22 @@ public class EventView extends JDialog implements PropertyChangeListener {
             @Override
             protected void done() {
                 try {
-                    ImageIcon icon = get();
+                    final ImageIcon icon = get();
                     if (icon != null) {
                         imageLabel.setIcon(icon);
                         imageLabel.setText("");
-                    } else {
+                    }
+                    else {
                         imageLabel.setIcon(null);
                         imageLabel.setText("No Image Available");
                     }
-                } catch (Exception e) {
+                }
+                catch (InterruptedException | ExecutionException e) {
                     imageLabel.setIcon(null);
                     imageLabel.setText("Image Error");
-                    e.printStackTrace();
+
                 }
+
             }
         };
         worker.execute();
@@ -292,7 +342,7 @@ public class EventView extends JDialog implements PropertyChangeListener {
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if ("refresh".equals(evt.getPropertyName())) {
-            DisplayEventState state = (DisplayEventState) evt.getNewValue();
+            final DisplayEventState state = (DisplayEventState) evt.getNewValue();
             if (state != null) {
 
                 titleArea.setText(state.getEventName());
@@ -313,14 +363,16 @@ public class EventView extends JDialog implements PropertyChangeListener {
             }
         }
         else if ("message".equals(evt.getPropertyName())) {
-            SaveEventToListState state = saveEventToListViewModel.getState();
+            final SaveEventToListState state = saveEventToListViewModel.getState();
             JOptionPane.showMessageDialog(this, state.getMessage());
         }
         else if ("attend_message".equals(evt.getPropertyName())) {
-            DisplayEventState state = displayEventViewModel.getState();
+            final DisplayEventState state = displayEventViewModel.getState();
             JOptionPane.showMessageDialog(this, state.getAttendMessage());
         }
     }
 
-    public String getViewName(){return viewName;}
+    public String getViewName() {
+        return viewName;
+    }
 }

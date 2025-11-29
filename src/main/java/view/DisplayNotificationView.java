@@ -1,12 +1,18 @@
 package view;
 
-import interface_adapter.display_notifications.DisplayNotificationsViewModel;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Frame;
+import java.awt.Window;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+
+import interface_adapter.display_notifications.DisplayNotificationsViewModel;
+
+/**
+ * The View for the Display Notifications Use Case.
+ */
 public class DisplayNotificationView extends JPanel implements PropertyChangeListener {
     private final DisplayNotificationsViewModel viewModel;
     private final String viewName = "notifications";
@@ -20,7 +26,7 @@ public class DisplayNotificationView extends JPanel implements PropertyChangeLis
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if ("message".equals(evt.getPropertyName())) {
-            String message = viewModel.getState().getMessage();
+            final String message = viewModel.getState().getMessage();
             viewModel.getState().setMessage("");
 
             if (message != null && !message.trim().isEmpty()) {
@@ -34,7 +40,7 @@ public class DisplayNotificationView extends JPanel implements PropertyChangeLis
             Window owner = SwingUtilities.getWindowAncestor(this);
 
             if (owner == null) {
-                Frame[] frames = Frame.getFrames();
+                final Frame[] frames = Frame.getFrames();
                 for (Frame f : frames) {
                     if (f.isVisible() && f.isActive()) {
                         owner = f;
@@ -46,7 +52,7 @@ public class DisplayNotificationView extends JPanel implements PropertyChangeLis
                 }
             }
 
-            NotificationDialog dialog = new NotificationDialog(owner, message);
+            final NotificationDialog dialog = new NotificationDialog(owner, message);
             dialog.setVisible(true);
         });
     }

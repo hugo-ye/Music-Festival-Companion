@@ -1,18 +1,11 @@
 package view;
 
-import interface_adapter.ViewManagerModel;
-import interface_adapter.display_event_lists.DisplayEventListsController;
-import interface_adapter.logout.LogoutController;
-import interface_adapter.search_event.SearchEventController;
-import interface_adapter.search_event.SearchEventState;
-import interface_adapter.search_event.SearchEventViewModel;
-import org.jdatepicker.impl.*;
-
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.SimpleDateFormat;
@@ -21,8 +14,36 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.JDatePickerImpl;
+import org.jdatepicker.impl.UtilDateModel;
+
+import interface_adapter.ViewManagerModel;
+import interface_adapter.display_event_lists.DisplayEventListsController;
+import interface_adapter.logout.LogoutController;
+import interface_adapter.search_event.SearchEventController;
+import interface_adapter.search_event.SearchEventState;
+import interface_adapter.search_event.SearchEventViewModel;
+
+/**
+ * The View for the Search Use Case.
+ */
 public class SearchView extends JPanel implements PropertyChangeListener {
-    public final String viewName = "search event";
+    private final String viewName = "search event";
 
     String[] genre = {
             "alternative", "ballads/romantic", "blues", "chanson francaise",
@@ -81,14 +102,14 @@ public class SearchView extends JPanel implements PropertyChangeListener {
         this.setPreferredSize(new Dimension(800, 700));
 
         // Header panel
-        JPanel headerPanel = ViewStyle.createSectionPanel(new BorderLayout());
+        final JPanel headerPanel = ViewStyle.createSectionPanel(new BorderLayout());
 
         ViewStyle.applyHeaderStyle(usernameLabel);
         ViewStyle.applyButtonStyle(logoutButton);
         ViewStyle.applyButtonStyle(listsButton);
 
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
-        buttonPanel.setOpaque(false); // Make sure it matches background
+        final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
+        buttonPanel.setOpaque(false);
         buttonPanel.add(listsButton);
         buttonPanel.add(logoutButton);
 
@@ -97,11 +118,11 @@ public class SearchView extends JPanel implements PropertyChangeListener {
         this.add(headerPanel, BorderLayout.NORTH);
 
         // Form panel
-        JPanel formPanel = new JPanel(new GridBagLayout());
+        final JPanel formPanel = new JPanel(new GridBagLayout());
         formPanel.setBackground(ViewStyle.WINDOW_BACKGROUND);
         formPanel.setBorder(new EmptyBorder(20, 40, 20, 40));
 
-        GridBagConstraints gbc = new GridBagConstraints();
+        final GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = ViewStyle.STANDARD_PAD;
         gbc.anchor = GridBagConstraints.WEST;
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -169,7 +190,7 @@ public class SearchView extends JPanel implements PropertyChangeListener {
         genreField.setVisibleRowCount(4);
         genreField.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
-        JScrollPane genreScroll = new JScrollPane(genreField);
+        final JScrollPane genreScroll = new JScrollPane(genreField);
         ViewStyle.applyScrollPaneStyle(genreScroll);
         formPanel.add(genreScroll, gbc);
 
@@ -184,10 +205,10 @@ public class SearchView extends JPanel implements PropertyChangeListener {
         gbc.gridwidth = 3;
         gbc.weightx = 1.0;
 
-        JPanel datePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        final JPanel datePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         datePanel.setBackground(ViewStyle.WINDOW_BACKGROUND);
 
-        JLabel toLabel = new JLabel("  to  ");
+        final JLabel toLabel = new JLabel("  to  ");
         toLabel.setFont(ViewStyle.BODY_FONT);
         toLabel.setForeground(ViewStyle.TEXT_SECONDARY);
 
@@ -196,12 +217,12 @@ public class SearchView extends JPanel implements PropertyChangeListener {
         datePanel.add(endDatePicker);
         formPanel.add(datePanel, gbc);
 
-        JScrollPane mainScroll = new JScrollPane(formPanel);
+        final JScrollPane mainScroll = new JScrollPane(formPanel);
         ViewStyle.applyScrollPaneStyle(mainScroll);
         this.add(mainScroll, BorderLayout.CENTER);
 
         // Bottom panel
-        JPanel bottomPanel = new JPanel();
+        final JPanel bottomPanel = new JPanel();
         bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.Y_AXIS));
         bottomPanel.setBackground(ViewStyle.WINDOW_BACKGROUND);
         bottomPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
@@ -265,7 +286,7 @@ public class SearchView extends JPanel implements PropertyChangeListener {
         });
 
         findButton.addActionListener(e -> {
-            SearchEventState currentState = searchViewModel.getState();
+            final SearchEventState currentState = searchViewModel.getState();
 
             controller.execute(
                     currentState.getSearch_keyword(),
@@ -283,7 +304,6 @@ public class SearchView extends JPanel implements PropertyChangeListener {
         });
 
         listsButton.addActionListener(e -> {
-            // Switch view to "Lists"
             displayEventListsController.execute();
         });
     }
@@ -312,24 +332,24 @@ public class SearchView extends JPanel implements PropertyChangeListener {
     }
 
     private JDatePickerImpl generateDataPicker() {
-        UtilDateModel model = new UtilDateModel();
-        Properties p = new Properties();
+        final UtilDateModel model = new UtilDateModel();
+        final Properties p = new Properties();
         p.put("text.today", "Today");
         p.put("text.month", "Month");
         p.put("text.year", "Year");
-        JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
+        final JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
         return new JDatePickerImpl(datePanel, new DateLabelFormatter());
     }
 
 
     private void addDateListeners() {
-        // Listener for Start Date
         startDatePicker.getModel().addChangeListener(e -> {
-            Date selectedDate = (Date) startDatePicker.getModel().getValue();
-            SearchEventState currentState = searchViewModel.getState();
+            final Date selectedDate = (Date) startDatePicker.getModel().getValue();
+            final SearchEventState currentState = searchViewModel.getState();
             if (selectedDate != null) {
                 currentState.setStartDate(dateFormat.format(selectedDate));
-            } else {
+            }
+            else {
                 currentState.setStartDate("");
             }
             searchViewModel.setState(currentState);
@@ -337,11 +357,12 @@ public class SearchView extends JPanel implements PropertyChangeListener {
 
         // Listener for End Date
         endDatePicker.getModel().addChangeListener(e -> {
-            Date selectedDate = (Date) endDatePicker.getModel().getValue();
-            SearchEventState currentState = searchViewModel.getState();
+            final Date selectedDate = (Date) endDatePicker.getModel().getValue();
+            final SearchEventState currentState = searchViewModel.getState();
             if (selectedDate != null) {
                 currentState.setEndDate(dateFormat.format(selectedDate));
-            } else {
+            }
+            else {
                 currentState.setEndDate("");
             }
             searchViewModel.setState(currentState);
@@ -351,7 +372,7 @@ public class SearchView extends JPanel implements PropertyChangeListener {
     private void addCountriesListener() {
         countriesField.getDocument().addDocumentListener(new DocumentListener() {
             private void update() {
-                SearchEventState currentState = searchViewModel.getState();
+                final SearchEventState currentState = searchViewModel.getState();
                 currentState.setCountry(countriesField.getText());
                 searchViewModel.setState(currentState);
             }
@@ -376,7 +397,7 @@ public class SearchView extends JPanel implements PropertyChangeListener {
     private void addCityListener() {
         cityField.getDocument().addDocumentListener(new DocumentListener() {
             private void update() {
-                SearchEventState currentState = searchViewModel.getState();
+                final SearchEventState currentState = searchViewModel.getState();
                 currentState.setCity(cityField.getText());
                 searchViewModel.setState(currentState);
             }
@@ -401,7 +422,7 @@ public class SearchView extends JPanel implements PropertyChangeListener {
     private void addKeywordListener() {
         searchField.getDocument().addDocumentListener(new DocumentListener() {
             private void update() {
-                SearchEventState currentState = searchViewModel.getState();
+                final SearchEventState currentState = searchViewModel.getState();
                 currentState.setSearch_keyword(searchField.getText());
                 searchViewModel.setState(currentState);
             }
@@ -426,7 +447,7 @@ public class SearchView extends JPanel implements PropertyChangeListener {
     private void addArtistListener() {
         artistField.getDocument().addDocumentListener(new DocumentListener() {
             private void update() {
-                SearchEventState currentState = searchViewModel.getState();
+                final SearchEventState currentState = searchViewModel.getState();
                 currentState.setArtist(artistField.getText());
                 searchViewModel.setState(currentState);
             }
@@ -450,7 +471,7 @@ public class SearchView extends JPanel implements PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        SearchEventState state = (SearchEventState) evt.getNewValue();
+        final SearchEventState state = (SearchEventState) evt.getNewValue();
 
         if (state.getUsername() != null) {
             usernameLabel.setText("Logged in as: " + state.getUsername());

@@ -1,9 +1,24 @@
 package view;
 
-import javax.swing.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Insets;
+import java.awt.LayoutManager;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
-import java.awt.*;
 
 public final class ViewStyle {
 
@@ -12,45 +27,44 @@ public final class ViewStyle {
     // =========================
 
     // Backgrounds
-    public static final Color WINDOW_BACKGROUND   = new Color(244, 245, 249);
-    public static final Color CARD_BACKGROUND     = Color.WHITE;
-    public static final Color HEADER_BACKGROUND   = new Color(234, 235, 245);
+    public static final Color WINDOW_BACKGROUND = new Color(244, 245, 249);
+    public static final Color CARD_BACKGROUND = Color.WHITE;
+    public static final Color HEADER_BACKGROUND = new Color(234, 235, 245);
 
     // Text
-    public static final Color TEXT_PRIMARY        = new Color(23, 24, 28);
-    public static final Color TEXT_SECONDARY      = new Color(120, 122, 135);
-    public static final Color TEXT_INVERTED       = Color.WHITE;
+    public static final Color TEXT_PRIMARY = new Color(23, 24, 28);
+    public static final Color TEXT_SECONDARY = new Color(120, 122, 135);
+    public static final Color TEXT_INVERTED = Color.WHITE;
 
     // Status Colors
-    public static final Color TEXT_PRICE          = new Color(34, 197, 94);
-    public static final Color ERROR_COLOR         = new Color(239, 68, 68);
+    public static final Color TEXT_PRICE = new Color(34, 197, 94);
+    public static final Color ERROR_COLOR = new Color(239, 68, 68);
 
     // Accents
-    public static final Color ACCENT_PRIMARY      = new Color(88, 86, 214);
+    public static final Color ACCENT_PRIMARY = new Color(88, 86, 214);
     public static final Color ACCENT_PRIMARY_SOFT = new Color(232, 232, 255);
-    public static final Color ACCENT_OUTLINE      = new Color(176, 175, 245);
+    public static final Color ACCENT_OUTLINE = new Color(176, 175, 245);
 
     // Borders
-    public static final Color BORDER_SUBTLE       = new Color(220, 220, 230);
-
+    public static final Color BORDER_SUBTLE = new Color(220, 220, 230);
 
     // =========================
     // FONTS
     // =========================
 
-    public static final Font TITLE_FONT           = new Font("SansSerif", Font.BOLD, 22);
-    public static final Font HEADER_FONT          = new Font("SansSerif", Font.BOLD, 16);
-    public static final Font BODY_FONT            = new Font("SansSerif", Font.PLAIN, 14);
-    public static final Font BODY_FONT_BOLD       = new Font("SansSerif", Font.BOLD, 14);
-    public static final Font SMALL_FONT           = new Font("SansSerif", Font.PLAIN, 12);
+    public static final Font TITLE_FONT = new Font("SansSerif", Font.BOLD, 22);
+    public static final Font HEADER_FONT = new Font("SansSerif", Font.BOLD, 16);
+    public static final Font BODY_FONT = new Font("SansSerif", Font.PLAIN, 14);
+    public static final Font BODY_FONT_BOLD = new Font("SansSerif", Font.BOLD, 14);
+    public static final Font SMALL_FONT = new Font("SansSerif", Font.PLAIN, 12);
 
 
     // =========================
     // SPACING
     // =========================
 
-    public static final Insets STANDARD_PAD       = new Insets(10, 15, 10, 15);
-    public static final Insets SECTION_PAD        = new Insets(20, 20, 20, 20);
+    public static final Insets STANDARD_PAD = new Insets(10, 15, 10, 15);
+    public static final Insets SECTION_PAD = new Insets(20, 20, 20, 20);
     public static final Dimension INPUT_FIELD_SIZE = new Dimension(240, 35);
 
 
@@ -58,7 +72,8 @@ public final class ViewStyle {
     // FACTORY METHODS
     // =========================
 
-    private ViewStyle() { }
+    private ViewStyle() {
+    }
 
     // LABELS
 
@@ -117,7 +132,7 @@ public final class ViewStyle {
     }
 
     public static JTextArea createReadOnlyTextArea() {
-        JTextArea area = new JTextArea();
+        final JTextArea area = new JTextArea();
         applyValueStyle(area);
         return area;
     }
@@ -189,7 +204,7 @@ public final class ViewStyle {
     // PANELS
 
     public static JPanel createCardPanel() {
-        JPanel panel = new JPanel(new BorderLayout());
+        final JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(CARD_BACKGROUND);
         panel.setBorder(BorderFactory.createCompoundBorder(
                 new LineBorder(BORDER_SUBTLE, 1, false),
@@ -199,7 +214,7 @@ public final class ViewStyle {
     }
 
     public static JPanel createSectionPanel(LayoutManager layout) {
-        JPanel panel = new JPanel(layout);
+        final JPanel panel = new JPanel(layout);
         panel.setBackground(HEADER_BACKGROUND);
         panel.setBorder(new EmptyBorder(SECTION_PAD));
         return panel;

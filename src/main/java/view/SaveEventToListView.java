@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SaveEventToListView extends JDialog implements PropertyChangeListener {
+    private final String viewName = "save event to list";
     private SaveEventToListController controller;
     private final SaveEventToListViewModel viewModel;
 
@@ -106,5 +107,8 @@ public class SaveEventToListView extends JDialog implements PropertyChangeListen
             JOptionPane.showMessageDialog(this, state.getMessage());
             this.dispose();
         }
+    }
+    public String getViewName() {
+        return this.viewName;
     }
 }
