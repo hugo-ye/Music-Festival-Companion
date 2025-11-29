@@ -1,12 +1,14 @@
 # Music Festival Companion
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/c07c23e4-daf1-447e-8c31-6527c004d254" width="49%">
-  <img src="https://github.com/user-attachments/assets/b4fc3d68-c33e-472e-b613-849e38263c4f" width="49%">
-</p>
+  <!-- Search View -->
+  <img src="https://github.com/user-attachments/assets/c07c23e4-daf1-447e-8c31-6527c004d254" width="33%">
 
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/6985f167-a3b7-4ffb-aef1-ad711f06bc00" width="25%">
+  <!-- Search Results -->
+  <img src="https://github.com/user-attachments/assets/b4fc3d68-c33e-472e-b613-849e38263c4f" width="33%">
+
+  <!-- Event Details (portrait, narrower to match height visually) -->
+  <img src="https://github.com/user-attachments/assets/6985f167-a3b7-4ffb-aef1-ad711f06bc00" width="20%">
 </p>
 
 ---
