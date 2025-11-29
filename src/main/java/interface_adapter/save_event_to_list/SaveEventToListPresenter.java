@@ -5,10 +5,8 @@ import use_case.save_event_to_list.SaveEventToListOutputData;
 
 /**
  * Presenter for the SaveEventToList use case.
- * <p>
- *     this class implements {@link SaveEventToListOutputBoundary} and is responsible for taking an output data from
- *     the interactor and updating the {@link SaveEventToListViewModel}.
- * </p>
+ * this class implements {@link SaveEventToListOutputBoundary} and is responsible for taking an output data from
+ * the interactor and updating the {@link SaveEventToListViewModel}.
  */
 public class SaveEventToListPresenter implements SaveEventToListOutputBoundary {
     private final SaveEventToListViewModel viewModel;
