@@ -16,7 +16,7 @@ public class AttendEventInteractorTest {
 
     @Test
     void EventNotInMasterList(){
-        final String eventName = "eventName";
+        final String  eventName = "eventName";
         final Event event = getEvent();
         final User user = new User("Abdullah", "123");
 
