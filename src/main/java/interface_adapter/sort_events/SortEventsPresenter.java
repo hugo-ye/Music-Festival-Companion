@@ -15,6 +15,12 @@ public class SortEventsPresenter implements SortEventsOutputBoundary {
         this.displaySearchResultsViewModel = displaySearchResultsViewModel;
     }
 
+    /**
+     * Prepares the success view after events have been sorted.
+     * This method updates the {@link DisplaySearchResultsViewModel} with the sorted list of events the criteria
+     * used to sort the events and the sorting order.
+     * @param outputData the output data that contains the list of events, the criteria, and the order.
+     */
     @Override
     public void prepareSuccessView(SortEventsOutputData sortEventsOutputData) {
         final DisplaySearchResultsState state = displaySearchResultsViewModel.getState();

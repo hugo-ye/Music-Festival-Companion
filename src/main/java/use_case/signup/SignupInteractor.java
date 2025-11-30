@@ -2,15 +2,24 @@ package use_case.signup;
 
 import entity.User;
 
-public class SignupInteractor implements SignupInputBoundary{
+/**
+ * Interactor class for the signup use case.
+ * This class implements {@link SignupInputBoundary} and it performs the following checks:
+ * whether the user already exists,
+ * whether the provided password matched the repeated password,
+ * and whether the username and password fields are non-empty
+ * If all the checks fails, the interactor creates a new {@link User} object and saves it.
+ */
+public class SignupInteractor implements SignupInputBoundary {
     public final SignupDataAccessInterface signUpDataAccessObject;
     private final SignupOutputBoundary signupPresenter;
-    public SignupInteractor(SignupDataAccessInterface signupDataAccessInterface, SignupOutputBoundary signupOutputBoundary) {
+    public SignupInteractor(SignupDataAccessInterface signupDataAccessInterface,
+                            SignupOutputBoundary signupOutputBoundary) {
         this.signUpDataAccessObject = signupDataAccessInterface;
         this.signupPresenter = signupOutputBoundary;
 
     }
-    public void execute(SignupInputData signupInputData){
+    public void execute(SignupInputData signupInputData) {
         if (signUpDataAccessObject.existsByUsername(signupInputData.getUsername())){
             signupPresenter.prepareFailView("User already exists.");
         }

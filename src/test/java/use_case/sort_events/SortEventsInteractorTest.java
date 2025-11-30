@@ -1,6 +1,7 @@
 package use_case.sort_events;
 
 import entity.Event;
+import entity.EventBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -27,15 +28,35 @@ class SortEventsInteractorTest {
 
     @Test
     void testSortAlphabetically() {
-        Event eventB = new Event(
-                "id1", "Artist B", new ArrayList<>(), "Venue", "City", "Country",
-                LocalDate.now(), 10, 20, "url", new ArrayList<>(), "img"
-        );
+        Event eventB = new EventBuilder()
+                .id("id1")
+                .name("Artist B")
+                .artists(new ArrayList<>())
+                .venue("Venue")
+                .city("City")
+                .country("Country")
+                .date(LocalDate.now())
+                .priceMin(10)
+                .priceMax(20)
+                .ticketUrl("url")
+                .genres(new ArrayList<>())
+                .imageURL("img")
+                .build();
 
-        Event eventA = new Event(
-                "id2", "Artist A", new ArrayList<>(), "Venue", "City", "Country",
-                LocalDate.now(), 10, 20, "url", new ArrayList<>(), "img"
-        );
+        Event eventA = new EventBuilder()
+                .id("id2")
+                .name("Artist A")
+                .artists(new ArrayList<>())
+                .venue("Venue")
+                .city("City")
+                .country("Country")
+                .date(LocalDate.now())
+                .priceMin(10)
+                .priceMax(20)
+                .ticketUrl("url")
+                .genres(new ArrayList<>())
+                .imageURL("img")
+                .build();
 
         SortEventsInputData input = new SortEventsInputData(
                 Arrays.asList(eventB, eventA),
@@ -55,15 +76,35 @@ class SortEventsInteractorTest {
 
     @Test
     void testSortByDate() {
-        Event eventToday = new Event(
-                "id1", "Today Event", new ArrayList<>(), "Venue", "City", "Country",
-                LocalDate.now(), 10, 20, "url", new ArrayList<>(), "img"
-        );
+        Event eventToday = new EventBuilder()
+                .id("id1")
+                .name("Today Event")
+                .artists(new ArrayList<>())
+                .venue("Venue")
+                .city("City")
+                .country("Country")
+                .date(LocalDate.now())
+                .priceMin(10)
+                .priceMax(20)
+                .ticketUrl("url")
+                .genres(new ArrayList<>())
+                .imageURL("img")
+                .build();
 
-        Event eventYesterday = new Event(
-                "id2", "Yesterday Event", new ArrayList<>(), "Venue", "City", "Country",
-                LocalDate.now().minusDays(1), 10, 20, "url", new ArrayList<>(), "img"
-        );
+        Event eventYesterday = new EventBuilder()
+                .id("id2")
+                .name("Yesterday Event")
+                .artists(new ArrayList<>())
+                .venue("Venue")
+                .city("City")
+                .country("Country")
+                .date(LocalDate.now().minusDays(1))
+                .priceMin(10)
+                .priceMax(20)
+                .ticketUrl("url")
+                .genres(new ArrayList<>())
+                .imageURL("img")
+                .build();
 
         SortEventsInputData input = new SortEventsInputData(
                 Arrays.asList(eventToday, eventYesterday),
@@ -83,15 +124,35 @@ class SortEventsInteractorTest {
 
     @Test
     void testSortByPriceMin() {
-        Event expensive = new Event(
-                "id1", "Expensive", new ArrayList<>(), "Venue", "City", "Country",
-                LocalDate.now(), 100, 200, "url", new ArrayList<>(), "img"
-        );
+        Event expensive = new EventBuilder()
+                .id("id1")
+                .name("Expensive")
+                .artists(new ArrayList<>())
+                .venue("Venue")
+                .city("City")
+                .country("Country")
+                .date(LocalDate.now())
+                .priceMin(100)
+                .priceMax(200)
+                .ticketUrl("url")
+                .genres(new ArrayList<>())
+                .imageURL("img")
+                .build();
 
-        Event cheap = new Event(
-                "id2", "Cheap", new ArrayList<>(), "Venue", "City", "Country",
-                LocalDate.now(), 10, 20, "url", new ArrayList<>(), "img"
-        );
+        Event cheap = new EventBuilder()
+                .id("id2")
+                .name("Cheap")
+                .artists(new ArrayList<>())
+                .venue("Venue")
+                .city("City")
+                .country("Country")
+                .date(LocalDate.now())
+                .priceMin(10)
+                .priceMax(20)
+                .ticketUrl("url")
+                .genres(new ArrayList<>())
+                .imageURL("img")
+                .build();
 
         SortEventsInputData input = new SortEventsInputData(
                 Arrays.asList(expensive, cheap),
@@ -111,15 +172,35 @@ class SortEventsInteractorTest {
 
     @Test
     void testSortByVenue() {
-        Event venueZ = new Event(
-                "id1", "Event 1", new ArrayList<>(), "Zoo", "City", "Country",
-                LocalDate.now(), 10, 20, "url", new ArrayList<>(), "img"
-        );
+        Event venueZ = new EventBuilder()
+                .id("id1")
+                .name("Event 1")
+                .artists(new ArrayList<>())
+                .venue("Zoo")
+                .city("City")
+                .country("Country")
+                .date(LocalDate.now())
+                .priceMin(10)
+                .priceMax(20)
+                .ticketUrl("url")
+                .genres(new ArrayList<>())
+                .imageURL("img")
+                .build();
 
-        Event venueA = new Event(
-                "id2", "Event 2", new ArrayList<>(), "Arena", "City", "Country",
-                LocalDate.now(), 10, 20, "url", new ArrayList<>(), "img"
-        );
+        Event venueA = new EventBuilder()
+                .id("id2")
+                .name("Event 2")
+                .artists(new ArrayList<>())
+                .venue("Arena")
+                .city("City")
+                .country("Country")
+                .date(LocalDate.now())
+                .priceMin(10)
+                .priceMax(20)
+                .ticketUrl("url")
+                .genres(new ArrayList<>())
+                .imageURL("img")
+                .build();
 
         SortEventsInputData input = new SortEventsInputData(
                 Arrays.asList(venueZ, venueA),
@@ -139,15 +220,35 @@ class SortEventsInteractorTest {
 
     @Test
     void testChoosingDescendingOrder() {
-        Event low = new Event(
-                "id1", "Low", new ArrayList<>(), "Venue", "City", "Country",
-                LocalDate.now(), 10, 20, "url", new ArrayList<>(), "img"
-        );
+        Event low = new EventBuilder()
+                .id("id1")
+                .name("Low")
+                .artists(new ArrayList<>())
+                .venue("Venue")
+                .city("City")
+                .country("Country")
+                .date(LocalDate.now())
+                .priceMin(10)
+                .priceMax(20)
+                .ticketUrl("url")
+                .genres(new ArrayList<>())
+                .imageURL("img")
+                .build();
 
-        Event high = new Event(
-                "id2", "High", new ArrayList<>(), "Venue", "City", "Country",
-                LocalDate.now(), 100, 200, "url", new ArrayList<>(), "img"
-        );
+        Event high = new EventBuilder()
+                .id("id2")
+                .name("High")
+                .artists(new ArrayList<>())
+                .venue("Venue")
+                .city("City")
+                .country("Country")
+                .date(LocalDate.now())
+                .priceMin(100)
+                .priceMax(200)
+                .ticketUrl("url")
+                .genres(new ArrayList<>())
+                .imageURL("img")
+                .build();
 
         SortEventsInputData input = new SortEventsInputData(
                 Arrays.asList(low, high),
@@ -183,10 +284,20 @@ class SortEventsInteractorTest {
 
     @Test
     void testPassingChosenCriteriaToOutput() {
-        Event event = new Event(
-                "id1", "Name", new ArrayList<>(), "Venue", "City", "Country",
-                LocalDate.now(), 10, 20, "url", new ArrayList<>(), "img"
-        );
+        Event event = new EventBuilder()
+                .id("id1")
+                .name("Name")
+                .artists(new ArrayList<>())
+                .venue("Venue")
+                .city("City")
+                .country("Country")
+                .date(LocalDate.now())
+                .priceMin(10)
+                .priceMax(20)
+                .ticketUrl("url")
+                .genres(new ArrayList<>())
+                .imageURL("img")
+                .build();
 
         SortEventsInputData input = new SortEventsInputData(
                 Collections.singletonList(event),
@@ -205,15 +316,35 @@ class SortEventsInteractorTest {
 
     @Test
     void testSortByPriceWithNoPrice() {
-        Event normalEvent = new Event(
-                "id1", "Normal", new ArrayList<>(), "Venue", "City", "Country",
-                LocalDate.now(), 10, 20, "url", new ArrayList<>(), "img"
-        );
+        Event normalEvent = new EventBuilder()
+                .id("id1")
+                .name("Normal")
+                .artists(new ArrayList<>())
+                .venue("Venue")
+                .city("City")
+                .country("Country")
+                .date(LocalDate.now())
+                .priceMin(10)
+                .priceMax(20)
+                .ticketUrl("url")
+                .genres(new ArrayList<>())
+                .imageURL("img")
+                .build();
 
-        Event noPriceEvent = new Event(
-                "id2", "No Price", new ArrayList<>(), "Venue", "City", "Country",
-                LocalDate.now(), -1, -1, "url", new ArrayList<>(), "img"
-        );
+        Event noPriceEvent = new EventBuilder()
+                .id("id2")
+                .name("No Price")
+                .artists(new ArrayList<>())
+                .venue("Venue")
+                .city("City")
+                .country("Country")
+                .date(LocalDate.now())
+                .priceMin(-1)
+                .priceMax(-1)
+                .ticketUrl("url")
+                .genres(new ArrayList<>())
+                .imageURL("img")
+                .build();
 
         SortEventsInputData input = new SortEventsInputData(
                 Arrays.asList(noPriceEvent, normalEvent),
@@ -234,15 +365,35 @@ class SortEventsInteractorTest {
 
     @Test
     void testSortByPriceTieBreaker() {
-        Event cheapMax = new Event(
-                "id1", "Cheap Max", new ArrayList<>(), "Venue", "City", "Country",
-                LocalDate.now(), 10, 20, "url", new ArrayList<>(), "img"
-        );
+        Event cheapMax = new EventBuilder()
+                .id("id1")
+                .name("Cheap Max")
+                .artists(new ArrayList<>())
+                .venue("Venue")
+                .city("City")
+                .country("Country")
+                .date(LocalDate.now())
+                .priceMin(10)
+                .priceMax(20)
+                .ticketUrl("url")
+                .genres(new ArrayList<>())
+                .imageURL("img")
+                .build();
 
-        Event expensiveMax = new Event(
-                "id2", "Expensive Max", new ArrayList<>(), "Venue", "City", "Country",
-                LocalDate.now(), 10, 50, "url", new ArrayList<>(), "img"
-        );
+        Event expensiveMax = new EventBuilder()
+                .id("id2")
+                .name("Expensive Max")
+                .artists(new ArrayList<>())
+                .venue("Venue")
+                .city("City")
+                .country("Country")
+                .date(LocalDate.now())
+                .priceMin(10)
+                .priceMax(50)
+                .ticketUrl("url")
+                .genres(new ArrayList<>())
+                .imageURL("img")
+                .build();
 
         SortEventsInputData input = new SortEventsInputData(
                 Arrays.asList(expensiveMax, cheapMax),
@@ -256,7 +407,7 @@ class SortEventsInteractorTest {
         verify(presenter).prepareSuccessView(captor.capture());
 
         List<Event> result = captor.getValue().getEvents();
-        
+
         assertEquals(cheapMax, result.get(0));
         assertEquals(expensiveMax, result.get(1));
     }

@@ -7,6 +7,10 @@ import interface_adapter.search_event.SearchEventViewModel;
 import use_case.login.LoginOutputBoundary;
 import use_case.login.LoginOutputData;
 
+/**
+ * Presenter for the Login use case
+ * The {@link LoginPresenter} translates the output data to updates the appropriate view models.
+ */
 import java.time.LocalDate;
 
 public class LoginPresenter implements LoginOutputBoundary {
@@ -21,6 +25,11 @@ public class LoginPresenter implements LoginOutputBoundary {
         this.searchEventViewModel = searchEventViewModel;
     }
 
+    /**
+     * Prepares the success view after a successful login attempt.
+     * This method updates the LoginViewModel and SearchEventViewModel
+     * @param response the output data containing the username of the logged in user.
+     */
     public void prepareSuccessView(LoginOutputData response) {
         LoginState loginState = loginViewModel.getState();
         loginState.setUsername(response.getUsername());
@@ -32,11 +41,17 @@ public class LoginPresenter implements LoginOutputBoundary {
         this.searchEventViewModel.setState(searchState);
         this.searchEventViewModel.firePropertyChanged();
 
-
         viewManagerModel.setState(searchEventViewModel.getViewName());
         viewManagerModel.firePropertyChanged();
 
     }
+
+    /**
+     * Prepares the fail view after an unsuccessful login attempt.
+     * This method sets an error message in the {@link LoginViewModel}.
+     *
+     * @param error the error message describing why the login attempt failed.
+     */
     public void prepareFailView(String error) {
         LoginState loginState = loginViewModel.getState();
         loginState.setErrorMessage(error);

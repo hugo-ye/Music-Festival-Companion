@@ -6,20 +6,28 @@ import entity.EventList;
 import java.time.LocalDate;
 import java.util.List;
 
-
-public class DisplayEventInteractor implements DisplayEventInputBoundary{
+/**
+ * Interactor for the DisplayEvent use case.
+ *
+ */
+public class DisplayEventInteractor implements DisplayEventInputBoundary {
     private final DisplayEventOutputBoundary presenter;
     private final DisplayEventDataAccessInterface dataAccess;
 
-    public DisplayEventInteractor(DisplayEventOutputBoundary presenter, DisplayEventDataAccessInterface dataAccess) {
+    public DisplayEventInteractor(DisplayEventOutputBoundary presenter,
+                                  DisplayEventDataAccessInterface dataAccess) {
         this.presenter = presenter;
         this.dataAccess = dataAccess;
     }
+
+    /**
+     * Extracts relevant data from an event and creates an outputData.
+     * @param input the input data containing the event to display.
+     */
     @Override
     public void execute(DisplayEventInputData input) {
 
-        Event event = input.getEvent();
-        final boolean hasPrice;
+        final Event event = input.getEvent();
         final int priceMin = event.getPriceMin();
         final int priceMax = event.getPriceMax();
         final LocalDate date = event.getDate();
@@ -31,13 +39,14 @@ public class DisplayEventInteractor implements DisplayEventInputBoundary{
         final List<String> genre = event.getGenres();
         final String ticket = event.getTicketUrl();
         final String image = event.getImageURL();
-        List<EventList> existingLists = dataAccess.getEventLists();
-        hasPrice = priceMin > 0 || priceMax > 0;
+        final List<EventList> existingLists = dataAccess.getEventLists();
+        final boolean hasPrice = priceMin > 0 || priceMax > 0;
 
 
 
-        DisplayEventOutputData outputData = new DisplayEventOutputData(eventName, artist, venues, city, country, date,
-                priceMin, priceMax, ticket,genre, image, hasPrice, event, existingLists);
+        final DisplayEventOutputData outputData = new DisplayEventOutputData(
+                eventName, artist, venues, city, country, date,
+                priceMin, priceMax, ticket, genre, image, hasPrice, event, existingLists);
 
 
         presenter.prepareSuccessView(outputData);

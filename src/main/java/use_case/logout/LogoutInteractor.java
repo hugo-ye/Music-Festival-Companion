@@ -1,5 +1,10 @@
 package use_case.logout;
 
+/**
+ * Interactor for the logout use case.
+ * This class implements {@link LogoutInputBoundary} and handles the logout process for the user.
+ * 
+ */
 public class LogoutInteractor implements LogoutInputBoundary{
     private final LogoutSessionDataAccessInterface currentUserDataAccessObject;
     private final LogoutUserDataAccessInterface logoutUserDataAccessObject;
@@ -13,6 +18,15 @@ public class LogoutInteractor implements LogoutInputBoundary{
         this.logoutUserDataAccessObject = logoutUserDataAccessInterface;
     }
 
+    /**
+     * Executes the logout process.
+     *
+     * it performs the following steps: it saves the currently loggedin user, Clears the current user,
+     * Creates a {@link LogoutOutputData} object and passes it to the presenter
+     * 
+     * @param logoutInputData the input data for logout, which is empty because you don't need an input to logout.
+     *
+     */
     @Override
     public void execute(LogoutInputData logoutInputData) {
         logoutUserDataAccessObject.save(currentUserDataAccessObject.getCurrentUser());

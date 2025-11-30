@@ -8,6 +8,10 @@ import entity.Event;
 import use_case.sort_events.SortEventsOrder;
 import use_case.sort_events.strategies.SortEventsByDate;
 
+/**
+ * The {@code DisplayNotificationsInteractor} generates notification messages for upcoming events based on the current
+ * date.
+ */
 public class DisplayNotificationsInteractor implements DisplayNotificationsInputBoundary {
     private final DisplayNotificationsDataAccessInterface dataAccess;
     private final DisplayNotificationsOutputBoundary presenter;
@@ -18,6 +22,13 @@ public class DisplayNotificationsInteractor implements DisplayNotificationsInput
         this.presenter = presenter;
     }
 
+    /**
+     * Executes the display_notifications use case.
+     * The method does the following: Fetches all events from the master list, sorts them by date, Builds a message for
+     * events occurring within the reminder window, and Sends an empty message if no reminders apply.
+     *
+     * @param inputData contains the date.
+     */
     @Override
     public void execute(DisplayNotificationsInputData inputData) {
         final LocalDate currDate = inputData.getLocalDate();
@@ -56,7 +67,15 @@ public class DisplayNotificationsInteractor implements DisplayNotificationsInput
         }
     }
 
-    private long dateCalculator(LocalDate date1, LocalDate date2) {
-        return ChronoUnit.DAYS.between(date1, date2);
+    /**
+     * Returns the number of days between two dates.
+     *
+     * @param d1 the start date
+     * @param d2 the end date
+     *
+     * @return the number of days from {@code d1} to {@code d2}.
+     */
+    private long dateCalculator(LocalDate d1, LocalDate d2) {
+        return ChronoUnit.DAYS.between(d1, d2);
     }
 }
