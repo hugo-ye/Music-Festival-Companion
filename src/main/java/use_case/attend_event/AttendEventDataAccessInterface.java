@@ -1,6 +1,7 @@
 package use_case.attend_event;
 
 import entity.Event;
+import entity.User;
 
 /**
  * DAO interface for the AttendEvent use case.
@@ -21,4 +22,5 @@ public interface AttendEventDataAccessInterface {
      * @param event the event to add
      */
     void saveEventToMasterList(Event event);
+    void setCurrentUser(User user);
 }
