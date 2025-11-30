@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 /**
- * A class to construct Event objects.
+ * A builder class to construct Event objects.
  */
 public class EventBuilder {
     private String id;
