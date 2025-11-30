@@ -4,8 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 /**
- * A separate class to construct Event objects.
- * Corresponds to "ProductBuilder" in the UML.
+ * A class to construct Event objects.
  */
 public class EventBuilder {
     private String id;
@@ -131,6 +130,7 @@ public class EventBuilder {
 
     /**
      * Constructs the Event object by calling its package-private constructor.
+     * @return the constructed Event object.
      */
     public Event build() {
         return new Event(this);
