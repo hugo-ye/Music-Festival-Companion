@@ -21,7 +21,21 @@ public class EventTest {
         final List<String> genres = List.of("Genre 1", "Genre 2");
         final String imageURL = "https://www.example.com/image.jpg";
 
-        Event event = new Event(id, name, artists, venue, city, country, date, priceMin, priceMax, ticketUrl, genres, imageURL);
+        Event event = new EventBuilder()
+                .id(id)
+                .name(name)
+                .artists(artists)
+                .venue(venue)
+                .city(city)
+                .country(country)
+                .date(date)
+                .priceMin(priceMin)
+                .priceMax(priceMax)
+                .ticketUrl(ticketUrl)
+                .genres(genres)
+                .imageURL(imageURL)
+                .build();
+
         assert event.getId().equals(id);
         assert event.getName().equals(name);
         assert event.getArtists().equals(artists);
