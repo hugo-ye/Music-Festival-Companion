@@ -12,10 +12,10 @@ import java.util.Set;
 
 /**
  * Interactor for the SearchEvent use case
- * <p>
- *     The class implements {@link SearchEventInputBoundary} and is responsible to retrieve event data from
- *     {@link SearchEventDataAccessInterface} and parse it into domain entities {@link Event}.
- * </p>
+ *
+ * The class implements {@link SearchEventInputBoundary} and is responsible to retrieve event data from
+ * {@link SearchEventDataAccessInterface} and parse it into domain entities {@link Event}.
+ *
  */
 public class SearchEventInteractor implements SearchEventInputBoundary{
     private final SearchEventDataAccessInterface dataAccess;
