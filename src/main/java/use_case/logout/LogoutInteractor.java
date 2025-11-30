@@ -1,9 +1,8 @@
 package use_case.logout;
 
 /**
- * Interactor fot the logout use case.
- * 
- * This class Implements {@link LogoutInputBoundary} and handles the logout process for the user.
+ * Interactor for the logout use case.
+ * This class implements {@link LogoutInputBoundary} and handles the logout process for the user.
  * 
  */
 public class LogoutInteractor implements LogoutInputBoundary{
@@ -22,7 +21,7 @@ public class LogoutInteractor implements LogoutInputBoundary{
     /**
      * Executes the logout process.
      *
-     * it perfrome the following steps: it saves the currently loggedin user, Clears the current user,
+     * it performs the following steps: it saves the currently loggedin user, Clears the current user,
      * Creates a {@link LogoutOutputData} object and passes it to the presenter
      * 
      * @param logoutInputData the input data for logout, which is empty because you don't need an input to logout.
