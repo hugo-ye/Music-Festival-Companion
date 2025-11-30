@@ -4,6 +4,9 @@ import entity.EventList;
 
 import java.util.UUID;
 
+/**
+ * The {@code CreateEventListInteractor} validates user's input and creates a new {@link EventList}
+ */
 public class CreateEventListInteractor implements CreateEventListInputBoundary {
 
     private final CreateEventListDataAccessInterface dataAccess;
@@ -17,6 +20,13 @@ public class CreateEventListInteractor implements CreateEventListInputBoundary {
         this.presenter = presenter;
     }
 
+    /**
+     * Executes the "create event list" use case.
+     * This method performs all the following validation steps: ensures the list name is not empty, the list
+     * name is not the same as the master list, and finally it ensures the list name is unique.
+     *
+     * @param inputData the input data containing the user-provided list name
+     */
     @Override
     public void execute(CreateEventListInputData inputData) {
 
