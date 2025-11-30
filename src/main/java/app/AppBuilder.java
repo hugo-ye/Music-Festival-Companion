@@ -1,5 +1,14 @@
 package app;
 
+import java.awt.CardLayout;
+import java.awt.Dimension;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.WindowConstants;
+
 import data_access.DBDataAccessObject;
 import data_access.FileUserDataAccessObject;
 import data_access.InMemoryUserDataAccessObject;
@@ -67,25 +76,34 @@ import use_case.search_event.SearchEventInteractor;
 import use_case.search_event.SearchEventOutputBoundary;
 import use_case.signup.SignupInteractor;
 import use_case.sort_events.SortEventsInteractor;
-import view.*;
+import view.AllEventListsView;
+import view.DisplayNotificationView;
+import view.EventListView;
+import view.EventView;
+import view.LoginView;
+import view.SearchResultView;
+import view.SearchView;
+import view.SignupView;
+import view.ViewManager;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-
+/**
+ * A central builder responsible for wiring together all UI views, ViewModels, controllers,
+ * presenters, interactors, and data access objects of the Event Search Application.
+ *
+ */
 public class AppBuilder {
     private final JFrame application = new JFrame("Event Search Application");
 
     private final JPanel views = new JPanel();
     private final CardLayout cardLayout = new CardLayout();
-    final ViewManagerModel viewManagerModel = new ViewManagerModel();
-    ViewManager viewManager = new ViewManager(views, cardLayout, viewManagerModel);
+    private final ViewManagerModel viewManagerModel = new ViewManagerModel();
+    private final ViewManager viewManager = new ViewManager(views, cardLayout, viewManagerModel);
 
     // Data access setup
-    final InMemoryUserDataAccessObject sessionDao = new InMemoryUserDataAccessObject();
-    final SearchEventDataAccessInterface searchDao = new DBDataAccessObject();
-    final FileUserDataAccessObject fileUserDataAccessObject = new FileUserDataAccessObject("users.json", sessionDao);
+    private final InMemoryUserDataAccessObject sessionDao = new InMemoryUserDataAccessObject();
+    private final SearchEventDataAccessInterface searchDao = new DBDataAccessObject();
+    private final FileUserDataAccessObject fileUserDataAccessObject =
+            new FileUserDataAccessObject("users.json", sessionDao);
 
     // view models
     private final SearchEventViewModel searchViewModel = new SearchEventViewModel();
@@ -100,192 +118,299 @@ public class AppBuilder {
     private final DisplayNotificationsViewModel displayNotificationsViewModel = new DisplayNotificationsViewModel();
     private final RemoveEventFromListViewModel removeEventFromListViewModel = new RemoveEventFromListViewModel();
 
-
     // Login
-    private LoginView loginView = new LoginView(loginViewModel, viewManagerModel);
+    private final LoginView loginView = new LoginView(loginViewModel, viewManagerModel);
 
     // Sign up
-    private SignupView signupView = new SignupView(signupViewModel, loginViewModel ,viewManagerModel);
+    private final SignupView signupView = new SignupView(signupViewModel, loginViewModel, viewManagerModel);
 
     // Search
-    private SearchView searchView = new SearchView(searchViewModel, viewManagerModel);
+    private final SearchView searchView = new SearchView(searchViewModel, viewManagerModel);
 
     // Display Search Result
-    private SearchResultView displaySearchResultsView = new SearchResultView(resultViewModel, viewManagerModel);
+    private final SearchResultView displaySearchResultsView = new SearchResultView(resultViewModel, viewManagerModel);
 
     // Display Notifications
-    private DisplayNotificationView displayNotificationsView = new DisplayNotificationView(displayNotificationsViewModel);
+    private final DisplayNotificationView displayNotificationsView =
+            new DisplayNotificationView(displayNotificationsViewModel);
 
     // Event List
-    private EventListView eventListView = new EventListView(displayEventListViewModel, viewManagerModel);
+    private final EventListView eventListView = new EventListView(displayEventListViewModel, viewManagerModel);
 
     // All Event Lists
-    private AllEventListsView displayAllEventListsView = new AllEventListsView(createEventListViewModel, viewManagerModel);
+    private final AllEventListsView displayAllEventListsView =
+            new AllEventListsView(createEventListViewModel, viewManagerModel);
 
     // Event View
-    private EventView eventView = new EventView(application, eventViewModel, saveEventToListViewModel);
-
-
+    private final EventView eventView = new EventView(application, eventViewModel, saveEventToListViewModel);
 
     public AppBuilder() {
         views.setLayout(cardLayout);
     }
 
+    /**
+     * Return this AppBuilder which views contains a SignupView.
+     * @return this AppBuilder
+     */
     public AppBuilder addSignupView() {
         views.add(signupView, signupView.getViewName());
         return this;
     }
 
+    /**
+     * Return this AppBuilder which views contains a LoginView.
+     * @return this AppBuilder
+     */
     public AppBuilder addLoginView() {
         views.add(loginView, loginView.getViewName());
         return this;
     }
 
+    /**
+     * Return this AppBuilder which views contains a SearchView.
+     * @return this AppBuilder
+     */
     public AppBuilder addSearchView() {
         views.add(searchView, searchView.getViewName());
         return this;
     }
 
+    /**
+     * Return this AppBuilder which views contains a DisplayEventView.
+     * @return this AppBuilder
+     */
     public AppBuilder addDisplayEventView() {
         views.add(eventListView, eventListView.getViewName());
         return this;
     }
 
+    /**
+     * Return this AppBuilder which views contains a DisplayAllEventView.
+     * @return this AppBuilder
+     */
     public AppBuilder addDisplayAllEventListsView() {
         views.add(displayAllEventListsView, displayAllEventListsView.getViewName());
         return this;
     }
 
+    /**
+     * Return this AppBuilder which views contains a DisplaySearchResultsView.
+     * @return this AppBuilder
+     */
     public AppBuilder addDisplaySearchResultsView() {
         views.add(displaySearchResultsView, displaySearchResultsView.getViewName());
         return this;
     }
 
+    /**
+     * Return this AppBuilder which views contains a DisplayNotificationView.
+     * @return this AppBuilder
+     */
     public AppBuilder addDisplayNotificationView() {
         views.add(displayNotificationsView, displayNotificationsView.getViewName());
         return this;
     }
 
+    /**
+     * Initialize Signup use case and return this AppBuilder.
+     * @return this AppBuilder
+     */
     public AppBuilder addSignupUseCase() {
-        SignupPresenter signupOutputBoundary = new SignupPresenter(viewManagerModel, signupViewModel, loginViewModel);
-        SignupInteractor signupInteractor = new SignupInteractor(fileUserDataAccessObject, signupOutputBoundary);
-        SignupController signupController = new SignupController(signupInteractor);
+        final SignupPresenter signupOutputBoundary =
+                new SignupPresenter(viewManagerModel, signupViewModel, loginViewModel);
+        final SignupInteractor signupInteractor = new SignupInteractor(fileUserDataAccessObject, signupOutputBoundary);
+        final SignupController signupController = new SignupController(signupInteractor);
         signupView.setSignupController(signupController);
         return this;
     }
 
+    /**
+     * Initialize Login use case and return this AppBuilder.
+     * @return this AppBuilder
+     */
     public AppBuilder addLoginUseCase() {
-        LoginOutputBoundary loginOutputBoundary = new LoginPresenter(viewManagerModel, loginViewModel, searchViewModel);
-        LoginInputBoundary loginInteractor = new LoginInteractor(fileUserDataAccessObject, loginOutputBoundary, sessionDao);
-        LoginController loginController = new LoginController(loginInteractor);
+        final LoginOutputBoundary loginOutputBoundary =
+                new LoginPresenter(viewManagerModel, loginViewModel, searchViewModel);
+        final LoginInputBoundary loginInteractor =
+                new LoginInteractor(fileUserDataAccessObject, loginOutputBoundary, sessionDao);
+        final LoginController loginController = new LoginController(loginInteractor);
         loginView.setLoginController(loginController);
         return this;
     }
 
+    /**
+     * Initialize Search use case and return this AppBuilder.
+     * @return this AppBuilder
+     */
     public AppBuilder addSearchUseCase() {
-        SearchEventOutputBoundary searchPresenter = new SearchEventPresenter(searchViewModel, viewManagerModel, resultViewModel);
-        SearchEventInputBoundary searchInteractor = new SearchEventInteractor(searchDao, searchPresenter);
-        SearchEventController searchController = new SearchEventController(searchInteractor);
+        final SearchEventOutputBoundary searchPresenter =
+                new SearchEventPresenter(searchViewModel, viewManagerModel, resultViewModel);
+        final SearchEventInputBoundary searchInteractor = new SearchEventInteractor(searchDao, searchPresenter);
+        final SearchEventController searchController = new SearchEventController(searchInteractor);
         searchView.setController(searchController);
         return this;
     }
 
+    /**
+     * Initialize Logout use case and return this AppBuilder.
+     * @return this AppBuilder
+     */
     public AppBuilder addLogoutUseCase() {
-        LogoutPresenter logoutPresenter = new LogoutPresenter(viewManagerModel, loginViewModel, searchViewModel);
-        LogoutInteractor logoutInteractor = new LogoutInteractor(sessionDao, fileUserDataAccessObject , logoutPresenter);
-        LogoutController logoutController = new LogoutController(logoutInteractor);
+        final LogoutPresenter logoutPresenter = new LogoutPresenter(viewManagerModel, loginViewModel, searchViewModel);
+        final LogoutInteractor logoutInteractor =
+                new LogoutInteractor(sessionDao, fileUserDataAccessObject, logoutPresenter);
+        final LogoutController logoutController = new LogoutController(logoutInteractor);
         searchView.setLogoutController(logoutController);
         return this;
     }
 
+    /**
+     * Initialize Sort use case and return this AppBuilder.
+     * @return this AppBuilder
+     */
     public AppBuilder addSortUseCase() {
-        SortEventsPresenter sortPresenter = new SortEventsPresenter(resultViewModel);
-        SortEventsInteractor sortInteractor = new SortEventsInteractor(sortPresenter);
-        SortEventsController sortEventsController = new SortEventsController(sortInteractor);
+        final SortEventsPresenter sortPresenter = new SortEventsPresenter(resultViewModel);
+        final SortEventsInteractor sortInteractor = new SortEventsInteractor(sortPresenter);
+        final SortEventsController sortEventsController = new SortEventsController(sortInteractor);
         displaySearchResultsView.setSortEventsController(sortEventsController);
         return this;
     }
 
+    /**
+     * Initialize DisplayEvent use case and return this AppBuilder.
+     * @return this AppBuilder
+     */
     public AppBuilder addDisplayEventUseCase() {
-        DisplayEventPresenter eventPresenter = new DisplayEventPresenter(eventViewModel, viewManagerModel);
-        DisplayEventInteractor eventInteractor = new DisplayEventInteractor(eventPresenter, sessionDao);
-        DisplayEventController eventController = new DisplayEventController(eventInteractor);
+        final DisplayEventPresenter eventPresenter = new DisplayEventPresenter(eventViewModel, viewManagerModel);
+        final DisplayEventInteractor eventInteractor = new DisplayEventInteractor(eventPresenter, sessionDao);
+        final DisplayEventController eventController = new DisplayEventController(eventInteractor);
         displaySearchResultsView.setDisplayEventController(eventController);
         eventListView.setDisplayEventController(eventController);
         return this;
     }
 
+    /**
+     * Initialize CreateEventList use case and return this AppBuilder.
+     * @return this AppBuilder
+     */
     public AppBuilder addCreateEventListUseCase() {
-        CreateEventListPresenter createEventListPresenter = new CreateEventListPresenter(createEventListViewModel);
-        CreateEventListInteractor createEventListInteractor = new CreateEventListInteractor(sessionDao, createEventListPresenter);
-        CreateEventListController createEventListController = new CreateEventListController(createEventListInteractor);
+        final CreateEventListPresenter createEventListPresenter =
+                new CreateEventListPresenter(createEventListViewModel);
+        final CreateEventListInteractor createEventListInteractor =
+                new CreateEventListInteractor(sessionDao, createEventListPresenter);
+        final CreateEventListController createEventListController =
+                new CreateEventListController(createEventListInteractor);
         displayAllEventListsView.setCreateEventListController(createEventListController);
         return this;
     }
 
+    /**
+     * Initialize DisplayEventList use case and return this AppBuilder.
+     * @return this AppBuilder
+     */
     public AppBuilder addDisplayEventListUseCase() {
-        DisplayEventListOutputBoundary displayEventListPresenter = new DisplayEventListPresenter(displayEventListViewModel, viewManagerModel);
-        DisplayEventListInputBoundary displayEventListInteractor = new DisplayEventListInteractor(sessionDao, displayEventListPresenter);
-        DisplayEventListController displayEventListController = new DisplayEventListController(displayEventListInteractor);
+        final DisplayEventListOutputBoundary displayEventListPresenter =
+                new DisplayEventListPresenter(displayEventListViewModel, viewManagerModel);
+        final DisplayEventListInputBoundary displayEventListInteractor =
+                new DisplayEventListInteractor(sessionDao, displayEventListPresenter);
+        final DisplayEventListController displayEventListController =
+                new DisplayEventListController(displayEventListInteractor);
         eventListView.setDisplayEventListController(displayEventListController);
         displayAllEventListsView.setDisplayEventListController(displayEventListController);
         return this;
     }
 
+    /**
+     * Initialize DeleteEventList use case and return this AppBuilder.
+     * @return this AppBuilder
+     */
     public AppBuilder addDeleteEventListUseCase() {
-        DeleteEventListPresenter deleteEventListPresenter = new DeleteEventListPresenter(deleteEventListViewModel, createEventListViewModel);
-        DeleteEventListInteractor deleteEventListInteractor = new DeleteEventListInteractor(sessionDao, deleteEventListPresenter);
-        DeleteEventListController deleteEventListController = new DeleteEventListController(deleteEventListInteractor);
+        final DeleteEventListPresenter deleteEventListPresenter =
+                new DeleteEventListPresenter(deleteEventListViewModel, createEventListViewModel);
+        final DeleteEventListInteractor deleteEventListInteractor =
+                new DeleteEventListInteractor(sessionDao, deleteEventListPresenter);
+        final DeleteEventListController deleteEventListController =
+                new DeleteEventListController(deleteEventListInteractor);
         displayAllEventListsView.setDeleteEventListController(deleteEventListController);
         return this;
     }
 
+    /**
+     * Initialize DisplayEventLists use case and return this AppBuilder.
+     * @return this AppBuilder
+     */
     public AppBuilder addDisplayEventListsUseCase() {
-        DisplayEventListsPresenter displayEventListsPresenter = new DisplayEventListsPresenter(viewManagerModel, createEventListViewModel);
-        DisplayEventListsInteractor displayEventListsInteractor = new DisplayEventListsInteractor(sessionDao, displayEventListsPresenter);
-        DisplayEventListsController displayEventListsController = new DisplayEventListsController(displayEventListsInteractor);
+        final DisplayEventListsPresenter displayEventListsPresenter =
+                new DisplayEventListsPresenter(viewManagerModel, createEventListViewModel);
+        final DisplayEventListsInteractor displayEventListsInteractor =
+                new DisplayEventListsInteractor(sessionDao, displayEventListsPresenter);
+        final DisplayEventListsController displayEventListsController =
+                new DisplayEventListsController(displayEventListsInteractor);
         searchView.setDisplayEventListsController(displayEventListsController);
         return this;
     }
 
+    /**
+     * Initialize SaveEventToList use case and return this AppBuilder.
+     * @return this AppBuilder
+     */
     public AppBuilder addSaveEventToListUseCase() {
-        SaveEventToListPresenter savePresenter = new SaveEventToListPresenter(saveEventToListViewModel);
-        SaveEventToListInteractor saveInteractor = new SaveEventToListInteractor(sessionDao, savePresenter);
-        SaveEventToListController saveEventToListController = new SaveEventToListController(saveInteractor);
+        final SaveEventToListPresenter savePresenter = new SaveEventToListPresenter(saveEventToListViewModel);
+        final SaveEventToListInteractor saveInteractor = new SaveEventToListInteractor(sessionDao, savePresenter);
+        final SaveEventToListController saveEventToListController = new SaveEventToListController(saveInteractor);
         eventView.setSaveEventToListController(saveEventToListController);
         return this;
     }
 
-
+    /**
+     * Initialize DisplayNotification use case and return this AppBuilder.
+     * @return this AppBuilder
+     */
     public AppBuilder addDisplayNotificationUseCase() {
-        DisplayNotificationsOutputBoundary displayNotificationsPresenter = new DisplayNotificationsPresenter(displayNotificationsViewModel);
-        DisplayNotificationsInputBoundary displayNotificationsInteractor = new DisplayNotificationsInteractor(sessionDao, displayNotificationsPresenter);
-        DisplayNotificationsController displayNotificationsController = new DisplayNotificationsController(displayNotificationsInteractor);
+        final DisplayNotificationsOutputBoundary displayNotificationsPresenter =
+                new DisplayNotificationsPresenter(displayNotificationsViewModel);
+        final DisplayNotificationsInputBoundary displayNotificationsInteractor =
+                new DisplayNotificationsInteractor(sessionDao, displayNotificationsPresenter);
+        final DisplayNotificationsController displayNotificationsController =
+                new DisplayNotificationsController(displayNotificationsInteractor);
         loginView.setDisplayNotificationsController(displayNotificationsController);
         return this;
     }
 
+    /**
+     * Initialize AttendEvent use case and return this AppBuilder.
+     * @return this AppBuilder
+     */
     public AppBuilder addAttendEventUseCase() {
-        AttendEventPresenter attendPresenter = new AttendEventPresenter(eventViewModel, viewManagerModel);
-        AttendEventInteractor attendInteractor = new AttendEventInteractor(sessionDao, attendPresenter);
-        AttendEventController attendEventController = new AttendEventController(attendInteractor);
+        final AttendEventPresenter attendPresenter = new AttendEventPresenter(eventViewModel, viewManagerModel);
+        final AttendEventInteractor attendInteractor = new AttendEventInteractor(sessionDao, attendPresenter);
+        final AttendEventController attendEventController = new AttendEventController(attendInteractor);
         eventView.setAttendEventController(attendEventController);
         return this;
     }
 
+    /**
+     * Initialize RemoveEventFromList use case and return this AppBuilder.
+     * @return this AppBuilder
+     */
     public AppBuilder addRemoveEventFromListUseCase() {
-        RemoveEventFromListPresenter removePresenter = new RemoveEventFromListPresenter(removeEventFromListViewModel);
-        RemoveEventFromListInteractor removeInteractor = new RemoveEventFromListInteractor(sessionDao, removePresenter);
-        RemoveEventFromListController removeEventFromListController = new RemoveEventFromListController(removeInteractor);
+        final RemoveEventFromListPresenter removePresenter =
+                new RemoveEventFromListPresenter(removeEventFromListViewModel);
+        final RemoveEventFromListInteractor removeInteractor =
+                new RemoveEventFromListInteractor(sessionDao, removePresenter);
+        final RemoveEventFromListController removeEventFromListController =
+                new RemoveEventFromListController(removeInteractor);
         eventListView.setRemoveEventFromListController(removeEventFromListController);
         return this;
     }
 
-
-
+    /**
+     * Combine all part and return a JFrame.
+     * @return a JFrame which contains views and use cases added
+     */
     public JFrame build() {
         application.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        application.setPreferredSize(new Dimension(1000, 800));
+        application.setPreferredSize(new Dimension(AppConstants.DEFAULT_WIDTH_SIZE, AppConstants.DEFAULT_HEIGHT_SIZE));
 
         application.add(views);
 
@@ -294,7 +419,7 @@ public class AppBuilder {
 
             @Override
             public void windowClosing(WindowEvent e) {
-                User currentUser = sessionDao.getCurrentUser();
+                final User currentUser = sessionDao.getCurrentUser();
                 if (currentUser != null) {
                     fileUserDataAccessObject.save(currentUser);
                     sessionDao.clearCurrentUser();
