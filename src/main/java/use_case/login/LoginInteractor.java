@@ -8,7 +8,7 @@ import entity.User;
  * The class implements {@link LoginInputBoundary}. The interactor validates user credentials, sets the currently
  * logged in user, and calls either the prepareFailView, if the user does not exist or the password is wrong,
  * or prepareSuccessView, if the user exists and the password isn't wrong.
- * </p>
+ * 
  */
 public class LoginInteractor implements LoginInputBoundary{
     private final LoginUserDataAccessInterface loginDataAccessObject;
