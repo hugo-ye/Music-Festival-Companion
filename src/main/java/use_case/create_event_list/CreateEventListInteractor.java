@@ -11,7 +11,6 @@ public class CreateEventListInteractor implements CreateEventListInputBoundary {
 
     private final CreateEventListDataAccessInterface dataAccess;
     private final CreateEventListOutputBoundary presenter;
-    private final String MASTER_LIST_NAME = "Master List";
     // Another field for user at Logged In State
 
     public CreateEventListInteractor(CreateEventListDataAccessInterface dataAccess,
@@ -29,17 +28,17 @@ public class CreateEventListInteractor implements CreateEventListInputBoundary {
      */
     @Override
     public void execute(CreateEventListInputData inputData) {
-
-        String rawName = inputData.getListName(); // Cleaned according to Abdullah's suggestion
-        String name = rawName.trim();
+        final String masterListName = "Master List";
+        final String rawName = inputData.getListName(); // Cleaned according to Abdullah's suggestion
+        final String name = rawName.trim();
 
         if (name.isEmpty()) {
             presenter.prepareFailView("List name cannot be empty.");
             return;
         }
 
-        if (name.equalsIgnoreCase(MASTER_LIST_NAME)) {
-            presenter.prepareFailView("You cannot create a list named '" + MASTER_LIST_NAME + "'.");
+        if (name.equalsIgnoreCase(masterListName)) {
+            presenter.prepareFailView("You cannot create a list named '" + masterListName + "'.");
             return;
         }
 
@@ -49,13 +48,13 @@ public class CreateEventListInteractor implements CreateEventListInputBoundary {
             return;
         }
         // Generate ID for the new list
-        String id = UUID.randomUUID().toString();
+        final String id = UUID.randomUUID().toString();
 
-        EventList newList = new EventList(id, name);
+        final EventList newList = new EventList(id, name);
 
         dataAccess.createEventList(newList);
 
-        CreateEventListOutputData outputData =
+        final CreateEventListOutputData outputData =
                 new CreateEventListOutputData(id, name);
 
         presenter.prepareSuccessView(outputData);

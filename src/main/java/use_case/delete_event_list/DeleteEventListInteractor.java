@@ -26,8 +26,8 @@ public class DeleteEventListInteractor implements DeleteEventListInputBoundary {
     @Override
     public void execute(DeleteEventListInputData inputData) {
 
-        String rawId = inputData.getListId();
-        String listId = rawId.trim(); // Fixed
+        final String rawId = inputData.getListId();
+        final String listId = rawId.trim(); // Fixed
 
         // Check list exists
         if (!dataAccess.existsById(listId)) {
@@ -44,7 +44,7 @@ public class DeleteEventListInteractor implements DeleteEventListInputBoundary {
         dataAccess.deleteById(listId);
 
         // call presenter
-        DeleteEventListOutputData outputData =
+        final DeleteEventListOutputData outputData =
                 new DeleteEventListOutputData(listId);
         presenter.prepareSuccessView(outputData);
     }

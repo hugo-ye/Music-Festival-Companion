@@ -16,7 +16,8 @@ public class DisplayNotificationsInteractor implements DisplayNotificationsInput
     private final DisplayNotificationsDataAccessInterface dataAccess;
     private final DisplayNotificationsOutputBoundary presenter;
 
-    public DisplayNotificationsInteractor(DisplayNotificationsDataAccessInterface dataAccess, DisplayNotificationsOutputBoundary presenter) {
+    public DisplayNotificationsInteractor(DisplayNotificationsDataAccessInterface dataAccess,
+                                          DisplayNotificationsOutputBoundary presenter) {
         this.dataAccess = dataAccess;
         this.presenter = presenter;
     }
@@ -30,13 +31,13 @@ public class DisplayNotificationsInteractor implements DisplayNotificationsInput
      */
     @Override
     public void execute(DisplayNotificationsInputData inputData) {
-        LocalDate currDate = inputData.getLocalDate();
-        List<Event> allEvents = dataAccess.getMasterListEvents();
+        final LocalDate currDate = inputData.getLocalDate();
+        final List<Event> allEvents = dataAccess.getMasterListEvents();
         if (allEvents == null) {
             return;
         }
 
-        SortEventsByDate dateSorter = new SortEventsByDate();
+        final SortEventsByDate dateSorter = new SortEventsByDate();
         allEvents.sort(SortEventsOrder.ASCENDING.apply(dateSorter));
 
         StringBuilder messageBuilder = new StringBuilder();

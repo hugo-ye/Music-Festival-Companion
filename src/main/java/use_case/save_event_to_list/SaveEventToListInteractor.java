@@ -14,22 +14,21 @@ public class SaveEventToListInteractor implements SaveEventToListInputBoundary {
     private final SaveEventToListDataAccessInterface dataAccess;
     private final SaveEventToListOutputBoundary presenter;
 
-    public SaveEventToListInteractor(SaveEventToListDataAccessInterface dataAccess, SaveEventToListOutputBoundary presenter) {
+    public SaveEventToListInteractor(SaveEventToListDataAccessInterface dataAccess,
+                                     SaveEventToListOutputBoundary presenter) {
         this.dataAccess = dataAccess;
         this.presenter = presenter;
     }
 
     /**
      * Executes the "Save Event To List" use case.
-     *
      * iterates through each {@link EventList}, and adds the given {@link Event} if its not already there.
-     *
      * @param inputData the input data containing the {@link Event} and the eventLists.
      */
     @Override
     public void execute(SaveEventToListInputData inputData) {
-        Event event = inputData.getEvent();
-        EventList[] eventLists = inputData.getEventLists();
+        final Event event = inputData.getEvent();
+        final EventList[] eventLists = inputData.getEventLists();
         StringBuilder message = new StringBuilder();
 
         for (EventList eventList : eventLists) {
@@ -45,7 +44,7 @@ public class SaveEventToListInteractor implements SaveEventToListInputBoundary {
             }
         }
 
-        SaveEventToListOutputData output = new SaveEventToListOutputData(event, eventLists, message.toString());
+        final SaveEventToListOutputData output = new SaveEventToListOutputData(event, eventLists, message.toString());
         presenter.present(output);
     }
 }

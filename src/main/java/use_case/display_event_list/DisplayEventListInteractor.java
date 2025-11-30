@@ -14,7 +14,7 @@ public class DisplayEventListInteractor implements DisplayEventListInputBoundary
 
     private final LoginSessionDataAccessInterface sessionDataAccess;
     private final DisplayEventListOutputBoundary presenter;
-    private final String MASTER_LIST_ID = "master_list";
+    private static final String MASTER_LIST_ID = "master_list";
 
     public DisplayEventListInteractor(LoginSessionDataAccessInterface sessionDataAccess, DisplayEventListOutputBoundary presenter) {
         this.sessionDataAccess = sessionDataAccess;
@@ -29,8 +29,8 @@ public class DisplayEventListInteractor implements DisplayEventListInputBoundary
      * @param inputData the input containing the ID of the event list to display
      */
     public void execute(DisplayEventListInputData inputData) {
-        String listId = inputData.getListId();
-        User currentUser = sessionDataAccess.getCurrentUser();
+        final String listId = inputData.getListId();
+        final User currentUser = sessionDataAccess.getCurrentUser();
 
         if (currentUser == null) {
             presenter.prepareFailView("User is not logged in.");
