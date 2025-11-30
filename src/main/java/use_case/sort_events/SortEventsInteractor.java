@@ -18,6 +18,10 @@ public class SortEventsInteractor implements SortEventsInputBoundary {
         this.presenter = presenter;
     }
 
+    /**
+     * executes the sorting use case based on the provided input data.
+     * @param input the inout data containing the list of Events, sorting criteria, and sorting order.
+     */
     @Override
     public void execute(SortEventsInputData input) {
         final List<Event> events = new ArrayList<>(input.getEvents());

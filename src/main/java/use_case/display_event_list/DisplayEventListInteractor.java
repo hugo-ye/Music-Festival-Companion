@@ -4,6 +4,12 @@ import entity.User;
 import entity.EventList;
 import use_case.login.LoginSessionDataAccessInterface;
 
+/**
+ * Interactor for the DisplayEventList use case.
+ * The {@code DisplayEventListInteractor} has the responsibility to retrieve the currently logged in user,
+ * gets the eventList given the id of the list and pass the result to the output boundary. If the user is not logged
+ * in or the event list can not be found then the Interactor calls the preparefailview method
+ */
 public class DisplayEventListInteractor implements DisplayEventListInputBoundary {
 
     private final LoginSessionDataAccessInterface sessionDataAccess;
@@ -15,6 +21,13 @@ public class DisplayEventListInteractor implements DisplayEventListInputBoundary
         this.presenter = presenter;
     }
 
+    /**
+     * Executes the Display Event List use case using the provided input data.
+     * This method performs the following steps: Retrieves the current user, checks whether the user is logged in,
+     * Retrieves the Eventlist given an id, if no such list exists then checks if the list is the masterlist,
+     * Returns a success view with the event list if found, or a failure view otherwise.
+     * @param inputData the input containing the ID of the event list to display
+     */
     public void execute(DisplayEventListInputData inputData) {
         String listId = inputData.getListId();
         User currentUser = sessionDataAccess.getCurrentUser();

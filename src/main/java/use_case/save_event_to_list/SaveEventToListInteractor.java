@@ -3,6 +3,13 @@ package use_case.save_event_to_list;
 import entity.Event;
 import entity.EventList;
 
+/**
+ * Interactor for the SaveEventToList use case
+ *
+ * This class implements the {@link SaveEventToListInputBoundary} and is responsible for saving/adding an
+ * {@link Event} to one list or more.
+ *
+ */
 public class SaveEventToListInteractor implements SaveEventToListInputBoundary {
     private final SaveEventToListDataAccessInterface dataAccess;
     private final SaveEventToListOutputBoundary presenter;
@@ -12,6 +19,13 @@ public class SaveEventToListInteractor implements SaveEventToListInputBoundary {
         this.presenter = presenter;
     }
 
+    /**
+     * Executes the "Save Event To List" use case.
+     *
+     * iterates through each {@link EventList}, and adds the given {@link Event} if its not already there.
+     *
+     * @param inputData the input data containing the {@link Event} and the eventLists.
+     */
     @Override
     public void execute(SaveEventToListInputData inputData) {
         Event event = inputData.getEvent();

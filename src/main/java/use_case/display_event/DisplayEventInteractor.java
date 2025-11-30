@@ -6,7 +6,10 @@ import entity.EventList;
 import java.time.LocalDate;
 import java.util.List;
 
-
+/**
+ * Interactor for rhe DisplayEvent use case.
+ *
+ */
 public class DisplayEventInteractor implements DisplayEventInputBoundary{
     private final DisplayEventOutputBoundary presenter;
     private final DisplayEventDataAccessInterface dataAccess;
@@ -15,6 +18,11 @@ public class DisplayEventInteractor implements DisplayEventInputBoundary{
         this.presenter = presenter;
         this.dataAccess = dataAccess;
     }
+
+    /**
+     * Extracts relevant data from an event and creates an outputData
+     * @param input the input data containing the event to display.
+     */
     @Override
     public void execute(DisplayEventInputData input) {
 
