@@ -1,42 +1,45 @@
 package entity;
 
 import java.time.LocalDate;
-import java.util.Comparator;
 import java.util.List;
-import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Objects;
 
+/**
+ * Represents an event in our program.
+ */
 public class Event {
-    final String id;
-    final String name;
-    final List<String> artists;
-    final String venue;
-    final String city;
-    final String country;
-    final LocalDate date;
-    final int priceMin;
-    final int priceMax;
-    final String ticketUrl;
-    final List<String> genres;
-    final String imageURL;
+    private final String id;
+    private final String name;
+    private final List<String> artists;
+    private final String venue;
+    private final String city;
+    private final String country;
+    private final LocalDate date;
+    private final int priceMin;
+    private final int priceMax;
+    private final String ticketUrl;
+    private final List<String> genres;
+    private final String imageURL;
 
-    public Event(String id, String name, List<String> artists, String venue, String city, String country, LocalDate date, int priceMin, int priceMax, String ticketUrl, List<String> genres, String imageURL) {
-        this.id = id;
-        this.name = name;
-        this.artists = artists;
-        this.venue = venue;
-        this.city = city;
-        this.country = country;
-        this.date = date;
-        this.priceMin = priceMin;
-        this.priceMax = priceMax;
-        this.ticketUrl = ticketUrl;
-        this.genres = genres;
-        this.imageURL = imageURL;
+    /**
+     * Constructor for an event.
+     * @param builder the builder that constructs the event.
+     */
+    Event(EventBuilder builder) {
+        this.id = builder.getId();
+        this.name = builder.getName();
+        this.artists = builder.getArtists();
+        this.venue = builder.getVenue();
+        this.city = builder.getCity();
+        this.country = builder.getCountry();
+        this.date = builder.getDate();
+        this.priceMin = builder.getPriceMin();
+        this.priceMax = builder.getPriceMax();
+        this.ticketUrl = builder.getTicketUrl();
+        this.genres = builder.getGenres();
+        this.imageURL = builder.getImageURL();
     }
 
-    // Getters
     public String getId() {
         return id;
     }
@@ -85,34 +88,22 @@ public class Event {
         return imageURL;
     }
 
-
-    @Override
-    public String toString() {
-        // Simple date formatter for human readability
-        String formattedDate = date != null ? date.toString() : "TBD";
-        String priceRange = (priceMin > 0 || priceMax > 0) ?
-                String.format("Min: %d, Max: %d", priceMin, priceMax) : "N/A";
-
-        return "--- EVENT DETAILS ---\n" +
-                "Event Name: " + name + " (" + id + ")\n" +
-                "Artist(s):  " + String.join(", ", artists) + "\n" +
-                "Location:   " + city + ", " + country + "\n" +
-                "Venue:      " + venue + "\n" +
-                "Date/Time:  " + formattedDate + "\n" +
-                "Genres:     " + String.join(", ", genres) + "\n" +
-                "Price ($):  " + priceRange + "\n" +
-                "Tickets:    " + ticketUrl + "\n" +
-                "Image:      " + imageURL + "\n" +
-                "----------------------";
-    }
-
+    /**
+     * Defines business logic for equality. Two events are considered equal if they have the same ID.
+     */
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Event event = (Event) o;
-        return Objects.equals(id, event.id);
+        boolean result = false;
+        if (o != null && getClass() == o.getClass()) {
+            final Event event = (Event) o;
+            result = Objects.equals(id, event.id);
+        }
+        return result;
     }
 
+    /**
+     * Defines the hash code of an event based on its ID.
+     */
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
