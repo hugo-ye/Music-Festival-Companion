@@ -1,6 +1,7 @@
 package use_case.search_event;
 
 import entity.Event;
+import entity.EventBuilder;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -22,7 +23,7 @@ public class SearchEventInteractor implements SearchEventInputBoundary{
     private final SearchEventOutputBoundary presenter;
 
     public SearchEventInteractor(SearchEventDataAccessInterface dataAccess,
-                                 SearchEventOutputBoundary presenter){
+                                 SearchEventOutputBoundary presenter) {
         this.dataAccess = dataAccess;
         this.presenter = presenter;
     }
@@ -104,7 +105,20 @@ public class SearchEventInteractor implements SearchEventInputBoundary{
         String countryName = extractCountry(jsonEvent);
         String imageUrl = extractImageUrl(jsonEvent);
 
-        return new Event(id, name, artists, venueName, cityName, countryName, date, priceMin, priceMax, ticketUrl, genres, imageUrl);
+        return new EventBuilder()
+                .id(id)
+                .name(name)
+                .artists(artists)
+                .venue(venueName)
+                .city(cityName)
+                .country(countryName)
+                .date(date)
+                .priceMin(priceMin)
+                .priceMax(priceMax)
+                .ticketUrl(ticketUrl)
+                .genres(genres)
+                .imageURL(imageUrl)
+                .build();
     }
 
     private static JSONObject getEmbedded(JSONObject jsonEvent) {
@@ -158,7 +172,7 @@ public class SearchEventInteractor implements SearchEventInputBoundary{
                     System.out.println("price range is: " + priceRange);
                     priceMin = priceRange.optInt("min", -1);
                     priceMax = priceRange.optInt("max", -1);
-                    System.out.println("prices is: " + priceMin + ", " + priceMax );
+                    System.out.println("prices is: " + priceMin + ", " + priceMax);
                 }
             }
         } catch (Exception e) {
@@ -275,7 +289,7 @@ public class SearchEventInteractor implements SearchEventInputBoundary{
         if (jsonEvent.has("images")) {
             JSONArray images = jsonEvent.getJSONArray("images");
             if (!images.isEmpty()) {
-                return  images.getJSONObject(0).getString("url");
+                return images.getJSONObject(0).getString("url");
             }
         }
         return "";

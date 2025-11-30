@@ -1,5 +1,16 @@
 # Music Festival Companion
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/c07c23e4-daf1-447e-8c31-6527c004d254" height="260" style="max-width:30%;">
+
+  <img src="https://github.com/user-attachments/assets/b4fc3d68-c33e-472e-b613-849e38263c4f" height="260" style="max-width:30%;">
+
+  <img src="https://github.com/user-attachments/assets/6985f167-a3b7-4ffb-aef1-ad711f06bc00" height="260" style="max-width:15%;">
+</p>
+
+---
+
+
 ## 1. Group Members
 
 | Name                   | GitHub username |
@@ -21,16 +32,15 @@ Whether searching by artist, genre, or price, the application serves as a centra
 ---
 
 ## 3. User Stories
-The application is built to satisfy the following core user requirements:
 
-1.  I want to search for events by artist, genre, venue location, and date so that I can easily find concerts that match my specific tastes and schedule. **Amir**
-2.  I want to sort my search results alphabetically, by date, by location, or by price, so that I can prioritize the most relevant options. **Hugo**
-3.  I want to view detailed information about an event and access a direct link to purchase tickets, so that I can make informed decisions and secure my spot quickly. **Abdullah**
-4.  I want to be able to "favorite" events I am going to attend to a main "Wishlist" with a single click, so that I don't lose track of potential concerts I want to attend. **Abdullah**
-5.  I want to create custom-named lists (and delete them if necessary), so that I can categorize events (e.g., "Date Night options"). **Cheuk-Fung**
-6.  I want to add specific events to my custom lists and remove them if I change my mind, so my itinerary is always up to date. **Yifu**
-7.  I want to receive reminders about upcoming events whenever I open the app, so that I remember to attend. **Yifu**
-8.  I want to create secure accounts for myself, my friends, and my family, and log in with a password, so that my saved events and lists are private and accessible only to me. **Hugo**
+1. I want to search for events by artist, genre, venue location, and date so that I can easily find concerts that match my specific tastes and schedule. **Amir**
+2. I want to sort my search results alphabetically, by date, by location, or by price, so that I can prioritize the most relevant options. **Hugo**
+3. I want to view detailed information about an event and access a direct link to purchase tickets, so that I can make informed decisions and secure my spot quickly. **Abdullah**
+4. I want to be able to "favorite" events I am going to attend to a main "Wishlist" with a single click, so that I don't lose track of potential concerts I want to attend. **Abdullah**
+5. I want to create custom-named lists (and delete them if necessary), so that I can categorize events (e.g., "Date Night options"). **Cheuk-Fung**
+6. I want to add specific events to my custom lists and remove them if I change my mind, so my itinerary is always up to date. **Yifu**
+7. I want to receive reminders about upcoming events whenever I open the app, so that I remember to attend. **Yifu**
+8. I want to create secure accounts for myself, my friends, and my family, and log in with a password, so that my saved events and lists are private and accessible only to me. **Hugo**
 
 ---
 
@@ -42,6 +52,3 @@ The project utilizes the Ticketmaster Discovery API, an interface that provides 
 This API enables the application to search and retrieve real-time data for concerts, sports games, arts, and theater productions. By leveraging this external service, the application can offer users up-to-date schedules, venue details, and ticketing information from all over the world.
 
 ---
-
-## 5. Functionality Demo
-> **[Add screenshots or GIFs here]**
