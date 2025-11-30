@@ -6,10 +6,9 @@ import entity.EventList;
 /**
  * Interactor for the SaveEventToList use case
  *
- * <p>
- *     This class implements the {@link SaveEventToListInputBoundary} and is responsible for saving/adding an
- *     {@link Event} to one list or more.
- * </p>
+ * This class implements the {@link SaveEventToListInputBoundary} and is responsible for saving/adding an
+ * {@link Event} to one list or more.
+ *
  */
 public class SaveEventToListInteractor implements SaveEventToListInputBoundary {
     private final SaveEventToListDataAccessInterface dataAccess;
@@ -22,9 +21,9 @@ public class SaveEventToListInteractor implements SaveEventToListInputBoundary {
 
     /**
      * Executes the "Save Event To List" use case.
-     * <p>
-     *     iterates through each {@link EventList}, and adds the given {@link Event} if its not already there.
-     * </p>
+     *
+     * iterates through each {@link EventList}, and adds the given {@link Event} if its not already there.
+     *
      * @param inputData the input data containing the {@link Event} and the eventLists.
      */
     @Override
