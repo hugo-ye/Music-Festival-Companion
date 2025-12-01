@@ -8,7 +8,6 @@ import java.util.List;
 
 /**
  * Interactor for the DisplayEvent use case.
- *
  */
 public class DisplayEventInteractor implements DisplayEventInputBoundary {
     private final DisplayEventOutputBoundary presenter;
@@ -22,6 +21,7 @@ public class DisplayEventInteractor implements DisplayEventInputBoundary {
 
     /**
      * Extracts relevant data from an event and creates an outputData.
+     *
      * @param input the input data containing the event to display.
      */
     @Override
@@ -42,12 +42,9 @@ public class DisplayEventInteractor implements DisplayEventInputBoundary {
         final List<EventList> existingLists = dataAccess.getEventLists();
         final boolean hasPrice = priceMin > 0 || priceMax > 0;
 
-
-
         final DisplayEventOutputData outputData = new DisplayEventOutputData(
                 eventName, artist, venues, city, country, date,
                 priceMin, priceMax, ticket, genre, image, hasPrice, event, existingLists);
-
 
         presenter.prepareSuccessView(outputData);
 

@@ -13,11 +13,11 @@ import java.util.Set;
 
 /**
  * Interactor for the SearchEvent use case
- * The class implements {@link SearchEventInputBoundary} and is responsible to retrieve event data from
- * {@link SearchEventDataAccessInterface} and parse it into domain entities {@link Event}.
+ * The class implements SearchEventInputBoundary and is responsible to retrieve event data from
+ * SearchEventDataAccessInterface and parse it into Event entities.
  *
  */
-public class SearchEventInteractor implements SearchEventInputBoundary{
+public class SearchEventInteractor implements SearchEventInputBoundary {
     private final SearchEventDataAccessInterface dataAccess;
     private final SearchEventOutputBoundary presenter;
 
@@ -28,19 +28,19 @@ public class SearchEventInteractor implements SearchEventInputBoundary{
     }
 
     /**
-     * Retrieves event data from the DAO, parse it into {@link Event} object.
+     * Retrieves event data from the DAO, parse it into an Event object.
      *
-     * @param inputData the input data containing the search criteria.
+     * @param input the input data containing the search criteria.
      */
     @Override
-    public void execute(SearchEventInputData inputData) {
+    public void execute(SearchEventInputData input) {
         final String events = dataAccess.search(
-                inputData.getKeyword(),
-                inputData.getCountry(),
-                inputData.getCity(),
-                inputData.getStartDate(),
-                inputData.getEndDate(),
-                inputData.getGenre()
+                input.getKeyword(),
+                input.getCountry(),
+                input.getCity(),
+                input.getStartDate(),
+                input.getEndDate(),
+                input.getGenre()
         );
         SearchEventOutputData outputData = new SearchEventOutputData(createEventsFromJson(events));
         presenter.prepareSuccessView(outputData);
@@ -84,6 +84,7 @@ public class SearchEventInteractor implements SearchEventInputBoundary{
 
     /**
      * Converts a single JSON object into an {@link Event}.
+     *
      * @param jsonEvent the JSON representation of the event
      * @return an {@link Event}.
      */
@@ -281,6 +282,7 @@ public class SearchEventInteractor implements SearchEventInputBoundary{
 
     /**
      * Extracts the URL of the first image from an event JSON object
+     *
      * @param jsonEvent the event JSON object.
      * @return the URL of the first image, if available, otherwise an empty string
      */

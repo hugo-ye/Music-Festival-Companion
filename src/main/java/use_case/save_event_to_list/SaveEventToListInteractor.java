@@ -5,9 +5,8 @@ import entity.EventList;
 
 /**
  * Interactor for the SaveEventToList use case
- *
- * This class implements the {@link SaveEventToListInputBoundary} and is responsible for saving/adding an
- * {@link Event} to one list or more.
+ * This class implements the SaveEventToListInputBoundary and is responsible for saving/adding an
+ *Event to one list or more.
  *
  */
 public class SaveEventToListInteractor implements SaveEventToListInputBoundary {
@@ -22,13 +21,13 @@ public class SaveEventToListInteractor implements SaveEventToListInputBoundary {
 
     /**
      * Executes the "Save Event To List" use case.
-     * iterates through each {@link EventList}, and adds the given {@link Event} if its not already there.
-     * @param inputData the input data containing the {@link Event} and the eventLists.
+     * Iterates through each Event List and adds the given Event if it is not already there.
+     * @param input the input data containing the Event and the Event Lists.
      */
     @Override
-    public void execute(SaveEventToListInputData inputData) {
-        final Event event = inputData.getEvent();
-        final EventList[] eventLists = inputData.getEventLists();
+    public void execute(SaveEventToListInputData input) {
+        final Event event = input.getEvent();
+        final EventList[] eventLists = input.getEventLists();
         StringBuilder message = new StringBuilder();
 
         for (EventList eventList : eventLists) {
@@ -44,7 +43,8 @@ public class SaveEventToListInteractor implements SaveEventToListInputBoundary {
             }
         }
 
-        final SaveEventToListOutputData output = new SaveEventToListOutputData(event, eventLists, message.toString());
+        final SaveEventToListOutputData output = new SaveEventToListOutputData(event,
+                eventLists, message.toString());
         presenter.present(output);
     }
 }

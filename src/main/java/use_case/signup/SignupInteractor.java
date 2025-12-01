@@ -4,11 +4,11 @@ import entity.User;
 
 /**
  * Interactor class for the signup use case.
- * This class implements {@link SignupInputBoundary} and it performs the following checks:
+ * The class checks:
  * whether the user already exists,
  * whether the provided password matched the repeated password,
  * and whether the username and password fields are non-empty
- * If all the checks fails, the interactor creates a new {@link User} object and saves it.
+ * If all the checks fail, the interactor creates a new User object and saves it.
  */
 public class SignupInteractor implements SignupInputBoundary {
     public final SignupDataAccessInterface signUpDataAccessObject;
@@ -35,7 +35,5 @@ public class SignupInteractor implements SignupInputBoundary {
             final SignupOutputData signupOutputData = new SignupOutputData(user.getUsername(), false);
             signupPresenter.prepareSuccessView(signupOutputData);
         }
-
     }
-
 }

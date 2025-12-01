@@ -15,6 +15,6 @@ public class RemoveEventFromListController {
 
     public void execute(Event event, EventList eventList){
         RemoveEventFromListInputData inputData = new RemoveEventFromListInputData(event, eventList);
-        interactor.removeEventFromList(inputData);
+        interactor.execute(inputData);
     }
 }
