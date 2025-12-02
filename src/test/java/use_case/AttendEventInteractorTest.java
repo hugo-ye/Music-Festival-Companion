@@ -2,6 +2,7 @@ package use_case;
 
 import data_access.InMemoryUserDataAccessObject;
 import entity.Event;
+import entity.EventBuilder;
 import entity.User;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
@@ -56,8 +57,20 @@ public class AttendEventInteractorTest {
         final String ticketUrl = "http://example.com/tic";
         final String imageUrl = "http://example.com/img";
         final List<String> genres = Arrays.asList("Rock", "Jazz");
-        return new Event(id, "eventName",
-                artists, venue, city, country, eventDate, priceMin, priceMax, ticketUrl, genres, imageUrl);
+        return new EventBuilder()
+                .id(id)
+                .name("eventName")
+                .artists(artists)
+                .venue(venue)
+                .city(city)
+                .country(country)
+                .date(eventDate)
+                .priceMin(priceMin)
+                .priceMax(priceMax)
+                .ticketUrl(ticketUrl)
+                .genres(genres)
+                .imageURL(imageUrl)
+                .build();
     }
 
     @Test
@@ -68,8 +81,10 @@ public class AttendEventInteractorTest {
 
         user.getMasterList().addEvent(event);
 
-        AttendEventDataAccessInterface attendEventDataAccessInterface = new InMemoryUserDataAccessObject();
+        final AttendEventDataAccessInterface attendEventDataAccessInterface = new InMemoryUserDataAccessObject();
+
         attendEventDataAccessInterface.setCurrentUser(user);
+
         AttendEventOutputBoundary presenter = new AttendEventOutputBoundary() {
             @Override
             public void prepareSuccessView(AttendEventOutputData attendEventOutputData) {
@@ -83,9 +98,10 @@ public class AttendEventInteractorTest {
         };
 
 
-        AttendEventInputData inputData = new AttendEventInputData(event);
+        final AttendEventInputData inputData = new AttendEventInputData(event);
 
-        AttendEventInputBoundary interactor = new AttendEventInteractor(attendEventDataAccessInterface, presenter);
+        final AttendEventInputBoundary interactor = new AttendEventInteractor(attendEventDataAccessInterface,
+                presenter);
 
         interactor.execute(inputData);
     }
@@ -102,8 +118,20 @@ public class AttendEventInteractorTest {
         final String ticketUrl = "http://example.com/tic";
         final String imageUrl = "http://example.com/img";
         final List<String> genres = Arrays.asList("Rap", "jazz");
-        return new Event(id, eventName,
-                artists, venue, city, country, eventDate, priceMin, priceMax, ticketUrl, genres, imageUrl);
+        return new EventBuilder()
+                .id(id)
+                .name(eventName)
+                .artists(artists)
+                .venue(venue)
+                .city(city)
+                .country(country)
+                .date(eventDate)
+                .priceMin(priceMin)
+                .priceMax(priceMax)
+                .ticketUrl(ticketUrl)
+                .genres(genres)
+                .imageURL(imageUrl)
+                .build();
     }
 }
 
