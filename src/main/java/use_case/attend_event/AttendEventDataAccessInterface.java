@@ -22,5 +22,10 @@ public interface AttendEventDataAccessInterface {
      * @param event the event to add
      */
     void saveEventToMasterList(Event event);
+
+    /**
+     * Method to set current user as user.
+     * @param user target user to set.
+     */
     void setCurrentUser(User user);
 }
