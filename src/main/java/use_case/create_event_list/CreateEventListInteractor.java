@@ -22,37 +22,31 @@ public class CreateEventListInteractor implements CreateEventListInputBoundary {
     /**
      * Executes the "create event list" use case.
      * This method performs all the following validation steps: ensures the list name is not empty, the list
-     * name is not the same as the master list, and finally it ensures the list name is unique.
+     * name is different from the Master list, and finally, it ensures the list name is unique.
      *
-     * @param inputData the input data containing the user-provided list name
+     * @param input the input data containing the user-provided list name
      */
     @Override
-    public void execute(CreateEventListInputData inputData) {
+    public void execute(CreateEventListInputData input) {
         final String masterListName = "Master List";
-        final String rawName = inputData.getListName();
+        final String rawName = input.getListName();
         final String name = rawName.trim();
 
         if (name.isEmpty()) {
             presenter.prepareFailView("List name cannot be empty.");
             return;
         }
-
         if (name.equalsIgnoreCase(masterListName)) {
             presenter.prepareFailView("You cannot create a list named '" + masterListName + "'.");
             return;
         }
-
         if (dataAccess.existsByName(name)) {
             presenter.prepareFailView("A list with this name already exists.");
             return;
         }
-        // Generate ID for the new list
         final String id = UUID.randomUUID().toString();
-
         final EventList newList = new EventList(id, name);
-
         dataAccess.createEventList(newList);
-
         final CreateEventListOutputData outputData =
                 new CreateEventListOutputData(id, name);
 

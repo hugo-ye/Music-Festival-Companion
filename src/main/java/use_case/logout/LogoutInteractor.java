@@ -2,10 +2,9 @@ package use_case.logout;
 
 /**
  * Interactor for the logout use case.
- * This class implements {@link LogoutInputBoundary} and handles the logout process for the user.
- * 
+ * This class handles logout and saving to persistent storage.
  */
-public class LogoutInteractor implements LogoutInputBoundary{
+public class LogoutInteractor implements LogoutInputBoundary {
     private final LogoutSessionDataAccessInterface currentUserDataAccessObject;
     private final LogoutUserDataAccessInterface logoutUserDataAccessObject;
     private final LogoutOutputBoundary logoutPresenter;
@@ -14,18 +13,15 @@ public class LogoutInteractor implements LogoutInputBoundary{
                             LogoutUserDataAccessInterface logoutUserDataAccessInterface,
                             LogoutOutputBoundary logoutOutputBoundary) {
         this.currentUserDataAccessObject = logoutSessionDataAccessInterface;
-        this.logoutPresenter = logoutOutputBoundary;
         this.logoutUserDataAccessObject = logoutUserDataAccessInterface;
+        this.logoutPresenter = logoutOutputBoundary;
     }
 
     /**
-     * Executes the logout process.
+     * Executes the logout Use Case.
+     * Saves the user and their lists to persistent storage
      *
-     * it performs the following steps: it saves the currently loggedin user, Clears the current user,
-     * Creates a {@link LogoutOutputData} object and passes it to the presenter
-     * 
-     * @param logoutInputData the input data for logout, which is empty because you don't need an input to logout.
-     *
+     * @param logoutInputData the input data for logout.
      */
     @Override
     public void execute(LogoutInputData logoutInputData) {
@@ -34,6 +30,7 @@ public class LogoutInteractor implements LogoutInputBoundary{
 
         final LogoutOutputData logoutOutputData = new LogoutOutputData();
         logoutPresenter.prepareSuccessView(logoutOutputData);
-
     }
 }
+
+

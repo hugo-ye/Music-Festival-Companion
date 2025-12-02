@@ -7,7 +7,7 @@ import entity.User;
  */
 public interface LogoutUserDataAccessInterface {
     /**
-     * updates any necessary information related to the user who is logging out.
+     * Saves the user entity to persistent storage.
      *
      * @param user the {@link User} who is logging out.
      */
