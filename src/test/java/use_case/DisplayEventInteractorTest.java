@@ -1,6 +1,7 @@
 package use_case;
 import data_access.InMemoryUserDataAccessObject;
 import entity.Event;
+import entity.EventBuilder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import use_case.display_event.*;
@@ -27,7 +28,7 @@ public class DisplayEventInteractorTest {
         final String imageUrl = "http://example.com/img";
         final List<String> genres = Arrays.asList("Rock", "Jazz");
 
-        DisplayEventDataAccessInterface displayEventDataAccessInterface = new InMemoryUserDataAccessObject();
+        final DisplayEventDataAccessInterface displayEventDataAccessInterface = new InMemoryUserDataAccessObject();
         DisplayEventOutputBoundary presenter = outputData -> {
             // check for null
             assertNotNull(outputData.getEventName());
@@ -54,11 +55,26 @@ public class DisplayEventInteractorTest {
 
             Assertions.assertFalse(outputData.getHasPrice());
         };
-        Event event = new Event(id, eventName,
-                artists, venue, city, country, eventDate, priceMin, priceMax, ticketUrl, genres, imageUrl);
-        DisplayEventInputData inputData = new DisplayEventInputData(event);
 
-        DisplayEventInputBoundary interactor = new DisplayEventInteractor(presenter, displayEventDataAccessInterface);
+        final Event event = new EventBuilder()
+                .id(id)
+                .name(eventName)
+                .artists(artists)
+                .venue(venue)
+                .city(city)
+                .country(country)
+                .date(eventDate)
+                .priceMin(priceMin)
+                .priceMax(priceMax)
+                .ticketUrl(ticketUrl)
+                .genres(genres)
+                .imageURL(imageUrl)
+                .build();
+
+        final DisplayEventInputData inputData = new DisplayEventInputData(event);
+
+        final DisplayEventInputBoundary interactor = new DisplayEventInteractor(presenter,
+                displayEventDataAccessInterface);
 
         interactor.execute(inputData);
     }
@@ -80,7 +96,7 @@ public class DisplayEventInteractorTest {
         final String imageUrl = "http://example.com/img";
         final List<String> genres = Arrays.asList("Rock", "Jazz");
 
-        DisplayEventDataAccessInterface displayEventDataAccessInterface = new InMemoryUserDataAccessObject();
+        final DisplayEventDataAccessInterface displayEventDataAccessInterface = new InMemoryUserDataAccessObject();
         DisplayEventOutputBoundary presenter = outputData -> {
             // check for null
             assertNotNull(outputData.getEventName());
@@ -107,11 +123,26 @@ public class DisplayEventInteractorTest {
 
             Assertions.assertTrue(outputData.getHasPrice());
         };
-        final Event event = new Event(id, eventName,
-                artists, venue, city, country, eventDate, priceMin, priceMax, ticketUrl, genres, imageUrl);
-        DisplayEventInputData inputData = new DisplayEventInputData(event);
 
-        DisplayEventInputBoundary interactor = new DisplayEventInteractor(presenter, displayEventDataAccessInterface);
+        final Event event = new EventBuilder()
+                .id(id)
+                .name(eventName)
+                .artists(artists)
+                .venue(venue)
+                .city(city)
+                .country(country)
+                .date(eventDate)
+                .priceMin(priceMin)
+                .priceMax(priceMax)
+                .ticketUrl(ticketUrl)
+                .genres(genres)
+                .imageURL(imageUrl)
+                .build();
+        
+        final DisplayEventInputData inputData = new DisplayEventInputData(event);
+
+        final DisplayEventInputBoundary interactor = new DisplayEventInteractor(presenter,
+                displayEventDataAccessInterface);
 
         interactor.execute(inputData);
     }
@@ -131,10 +162,22 @@ public class DisplayEventInteractorTest {
         final String ticketUrl = "http://example.com/tic";
         final String imageUrl = "http://example.com/img";
         final List<String> genres = Arrays.asList("Rock", "Jazz");
-        final Event event = new Event(id, eventName,
-                artists, venue, city, country, eventDate, priceMin, priceMax, ticketUrl, genres, imageUrl);
+        final Event event = new EventBuilder()
+                .id(id)
+                .name(eventName)
+                .artists(artists)
+                .venue(venue)
+                .city(city)
+                .country(country)
+                .date(eventDate)
+                .priceMin(priceMin)
+                .priceMax(priceMax)
+                .ticketUrl(ticketUrl)
+                .genres(genres)
+                .imageURL(imageUrl)
+                .build();
 
-        DisplayEventDataAccessInterface displayEventDataAccessInterface = new InMemoryUserDataAccessObject();
+        final DisplayEventDataAccessInterface displayEventDataAccessInterface = new InMemoryUserDataAccessObject();
         DisplayEventOutputBoundary presenter = outputData -> {
             // check for null
             assertNotNull(outputData.getEventName());
@@ -161,9 +204,9 @@ public class DisplayEventInteractorTest {
             Assertions.assertTrue(outputData.getHasPrice());
 
         };
-        DisplayEventInputData inputData = new DisplayEventInputData(event);
+        final DisplayEventInputData inputData = new DisplayEventInputData(event);
 
-        DisplayEventInputBoundary interactor = new DisplayEventInteractor(presenter, displayEventDataAccessInterface);
+        final DisplayEventInputBoundary interactor = new DisplayEventInteractor(presenter, displayEventDataAccessInterface);
 
         interactor.execute(inputData);
     }
