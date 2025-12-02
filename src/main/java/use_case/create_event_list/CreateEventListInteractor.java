@@ -1,11 +1,11 @@
 package use_case.create_event_list;
 
-import entity.EventList;
-
 import java.util.UUID;
 
+import entity.EventList;
+
 /**
- * The {@code CreateEventListInteractor} validates user's input and creates a new {@link EventList}
+ * The {@code CreateEventListInteractor} validates user's input and creates a new {@link EventList}.
  */
 public class CreateEventListInteractor implements CreateEventListInputBoundary {
 
@@ -28,28 +28,33 @@ public class CreateEventListInteractor implements CreateEventListInputBoundary {
      */
     @Override
     public void execute(CreateEventListInputData input) {
-        final String masterListName = "Master List";
         final String rawName = input.getListName();
         final String name = rawName.trim();
 
+        if (!createEventListCriteria(name)) {
+            final String id = UUID.randomUUID().toString();
+            final EventList newList = new EventList(id, name);
+            dataAccess.createEventList(newList);
+            final CreateEventListOutputData outputData =
+                    new CreateEventListOutputData(id, name);
+
+            presenter.prepareSuccessView(outputData);
+        }
+    }
+
+    private boolean createEventListCriteria(String name) {
         if (name.isEmpty()) {
             presenter.prepareFailView("List name cannot be empty.");
-            return;
+            return true;
         }
-        if (name.equalsIgnoreCase(masterListName)) {
-            presenter.prepareFailView("You cannot create a list named '" + masterListName + "'.");
-            return;
+        if ("Master List".equalsIgnoreCase(name)) {
+            presenter.prepareFailView("You cannot create a list named '" + "Master List" + "'.");
+            return true;
         }
         if (dataAccess.existsByName(name)) {
             presenter.prepareFailView("A list with this name already exists.");
-            return;
+            return true;
         }
-        final String id = UUID.randomUUID().toString();
-        final EventList newList = new EventList(id, name);
-        dataAccess.createEventList(newList);
-        final CreateEventListOutputData outputData =
-                new CreateEventListOutputData(id, name);
-
-        presenter.prepareSuccessView(outputData);
+        return false;
     }
 }
