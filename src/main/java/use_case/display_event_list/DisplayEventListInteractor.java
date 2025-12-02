@@ -1,7 +1,7 @@
 package use_case.display_event_list;
 
-import entity.User;
 import entity.EventList;
+import entity.User;
 import use_case.login.LoginSessionDataAccessInterface;
 
 /**
@@ -11,12 +11,12 @@ import use_case.login.LoginSessionDataAccessInterface;
  * in or the event list can not be found then the Interactor calls the preparefailview method
  */
 public class DisplayEventListInteractor implements DisplayEventListInputBoundary {
-
+    private static final String MASTER_LIST_ID = "master_list";
     private final LoginSessionDataAccessInterface sessionDataAccess;
     private final DisplayEventListOutputBoundary presenter;
-    private static final String MASTER_LIST_ID = "master_list";
 
-    public DisplayEventListInteractor(LoginSessionDataAccessInterface sessionDataAccess, DisplayEventListOutputBoundary presenter) {
+    public DisplayEventListInteractor(LoginSessionDataAccessInterface sessionDataAccess,
+                                      DisplayEventListOutputBoundary presenter) {
         this.sessionDataAccess = sessionDataAccess;
         this.presenter = presenter;
     }
@@ -32,29 +32,30 @@ public class DisplayEventListInteractor implements DisplayEventListInputBoundary
         final String listId = inputData.getListId();
         final User currentUser = sessionDataAccess.getCurrentUser();
 
-        if (currentUser == null) {
-            presenter.prepareFailView("User is not logged in.");
-            return;
-        }
+        if (currentUser != null) {
+            EventList targetList = null;
 
-        EventList targetList = null;
+            // Check if the requested ID matches the Master List
+            if (currentUser.getMasterList() != null && (currentUser.getMasterList().getId().equals(listId)
+                    || MASTER_LIST_ID.equals(listId))) {
+                targetList = currentUser.getMasterList();
+            }
+            // Check the user's custom lists
+            else {
+                targetList = currentUser.getListById(listId);
+            }
 
-        // Check if the requested ID matches the Master List
-        if (currentUser.getMasterList() != null &&
-                (currentUser.getMasterList().getId().equals(listId) || MASTER_LIST_ID.equals(listId))) {
-            targetList = currentUser.getMasterList();
+            // Prepare View
+            if (targetList != null) {
+                final DisplayEventListOutputData outputData = new DisplayEventListOutputData(targetList);
+                presenter.prepareSuccessView(outputData);
+            }
+            else {
+                presenter.prepareFailView("Event list with ID '" + listId + "' not found.");
+            }
         }
-        // Check the user's custom lists
         else {
-            targetList = currentUser.getListById(listId);
-        }
-
-        // Prepare View
-        if (targetList != null) {
-            DisplayEventListOutputData outputData = new DisplayEventListOutputData(targetList);
-            presenter.prepareSuccessView(outputData);
-        } else {
-            presenter.prepareFailView("Event list with ID '" + listId + "' not found.");
+            presenter.prepareFailView("User is not logged in.");
         }
     }
 }
