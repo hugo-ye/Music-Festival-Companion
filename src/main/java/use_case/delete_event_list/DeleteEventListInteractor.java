@@ -16,7 +16,6 @@ public class DeleteEventListInteractor implements DeleteEventListInputBoundary {
     }
 
     /**
-     *
      * Executes the delete event list use case.
      * The method performs the following steps:
      * Trims and validates the input data (list id), Fails if the list does not
@@ -45,3 +44,4 @@ public class DeleteEventListInteractor implements DeleteEventListInputBoundary {
         presenter.prepareSuccessView(outputData);
     }
 }
+
