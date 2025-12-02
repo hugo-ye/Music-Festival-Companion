@@ -53,7 +53,7 @@ public class DisplayEventInteractorTest {
             Assertions.assertEquals(imageUrl, outputData.getImageUrl());
             Assertions.assertEquals(outputData.getGenres(), genres);
 
-            Assertions.assertFalse(outputData.getHasPrice());
+            Assertions.assertFalse(outputData.hasPrice());
         };
 
         final Event event = new EventBuilder()
@@ -121,7 +121,7 @@ public class DisplayEventInteractorTest {
             Assertions.assertEquals(imageUrl, outputData.getImageUrl());
             Assertions.assertEquals(outputData.getGenres(), genres);
 
-            Assertions.assertTrue(outputData.getHasPrice());
+            Assertions.assertTrue(outputData.hasPrice());
         };
 
         final Event event = new EventBuilder()
@@ -201,7 +201,7 @@ public class DisplayEventInteractorTest {
             Assertions.assertEquals(ticketUrl, outputData.getTicketUrl());
             Assertions.assertEquals(imageUrl, outputData.getImageUrl());
             Assertions.assertEquals(outputData.getGenres(), genres);
-            Assertions.assertTrue(outputData.getHasPrice());
+            Assertions.assertTrue(outputData.hasPrice());
 
         };
         final DisplayEventInputData inputData = new DisplayEventInputData(event);
