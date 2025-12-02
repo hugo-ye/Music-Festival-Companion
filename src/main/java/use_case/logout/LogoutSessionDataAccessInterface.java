@@ -3,11 +3,11 @@ package use_case.logout;
 import entity.User;
 
 /**
- * DAO for the LogoutSession
+ * DAO for the LogoutSession.
  */
 public interface LogoutSessionDataAccessInterface {
     /**
-     * clears the current user session.
+     * Clears the current user session.
      */
     void clearCurrentUser();
 

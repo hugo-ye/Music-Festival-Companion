@@ -1,10 +1,10 @@
 package use_case.display_event;
 
-import entity.Event;
-import entity.EventList;
-
 import java.time.LocalDate;
 import java.util.List;
+
+import entity.Event;
+import entity.EventList;
 
 /**
  * Interactor for the DisplayEvent use case.

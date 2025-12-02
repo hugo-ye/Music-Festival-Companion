@@ -6,8 +6,8 @@ public class LoginOutputData {
     public LoginOutputData(String username) {
         this.username = username;
     }
+
     public String getUsername() {
         return username;
     }
-
 }

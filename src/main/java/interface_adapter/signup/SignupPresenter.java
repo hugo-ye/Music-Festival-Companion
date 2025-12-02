@@ -1,8 +1,8 @@
 package interface_adapter.signup;
 
 import interface_adapter.ViewManagerModel;
-import interface_adapter.login.LoginViewModel; // Assuming this exists
-import interface_adapter.login.LoginState;     // Assuming this exists
+import interface_adapter.login.LoginState;
+import interface_adapter.login.LoginViewModel;
 import use_case.signup.SignupOutputBoundary;
 import use_case.signup.SignupOutputData;
 
@@ -10,7 +10,6 @@ import use_case.signup.SignupOutputData;
  *  The Presenter for the Signup use case
  * This class implements {@link SignupOutputBoundary} and is responsible for updating the appropriate viewModel
  * based on whether the signup passes or fails.
- *
  * If success, it updates the {@link LoginViewModel} with the new user's information and notifies the
  * {@link ViewManagerModel} to switch to the login view.
  * If failed it updates the {@link SignupViewModel} with an error message.
@@ -52,7 +51,7 @@ public class SignupPresenter implements SignupOutputBoundary {
      */
     @Override
     public void prepareFailView(String error) {
-        SignupState signupState = signupViewModel.getState();
+        final SignupState signupState = signupViewModel.getState();
         signupState.setErrorMessage(error);
         signupViewModel.firePropertyChanged();
     }

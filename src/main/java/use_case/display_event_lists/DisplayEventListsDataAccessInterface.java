@@ -1,9 +1,13 @@
 package use_case.display_event_lists;
 
-import entity.EventList;
-
 import java.util.List;
 
+import entity.EventList;
+
 public interface DisplayEventListsDataAccessInterface {
-    public List<EventList> getEventLists();
+    /**
+     * A method that get all existing eventLists in user.
+     * @return the eventLists of user.
+     */
+    List<EventList> getEventLists();
 }

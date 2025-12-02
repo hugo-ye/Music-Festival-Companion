@@ -1,15 +1,15 @@
 package data_formatters;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonParseException;
-
 import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 
 /**
  * Custom TypeAdapter for Gson to correctly serialize and deserialize LocalDate objects
@@ -34,16 +34,18 @@ public class LocalDateAdapter implements JsonSerializer<LocalDate>, JsonDeserial
      * Deserializer: Converts JSON primitive (String) back to a LocalDate object.
      */
     @Override
-    public LocalDate deserialize(JsonElement json, Type typeOfT, com.google.gson.JsonDeserializationContext context) throws JsonParseException {
+    public LocalDate deserialize(JsonElement json, Type typeOfT, com.google.gson.JsonDeserializationContext context)
+            throws JsonParseException {
         // We expect the JSON element to be a String
-        String dateString = json.getAsString();
+        final String dateString = json.getAsString();
 
         try {
             // Parse the String back into a LocalDate using the defined format
             return LocalDate.parse(dateString, FORMATTER);
-        } catch (Exception e) {
+        }
+        catch (Exception exception) {
             // If parsing fails (e.g., malformed date string in the file), throw a JsonParseException
-            throw new JsonParseException("Failed to parse LocalDate: " + dateString, e);
+            throw new JsonParseException("Failed to parse LocalDate: " + dateString, exception);
         }
     }
 }

@@ -32,5 +32,3 @@ public class LogoutInteractor implements LogoutInputBoundary {
         logoutPresenter.prepareSuccessView(logoutOutputData);
     }
 }
-
-

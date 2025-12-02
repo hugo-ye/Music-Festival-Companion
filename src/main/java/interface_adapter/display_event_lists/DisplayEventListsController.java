@@ -9,6 +9,9 @@ public class DisplayEventListsController {
         this.interactor = interactor;
     }
 
+    /**
+     * Method to use controller to execute interactor of DisplayEventLists.
+     */
     public void execute() {
         interactor.execute();
     }

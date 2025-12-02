@@ -47,19 +47,20 @@ public class DeleteEventListPresenter implements DeleteEventListOutputBoundary {
         deleteViewModel.setState(deleteState);
         deleteViewModel.firePropertyChanged();
 
-        // Update create-event-list view model so UI refreshes
+        // Update the create-list viewmodel so AllEventListsView refreshes rows
         final CreateEventListState createState = createViewModel.getState();
+
         final List<EventListSummary> oldLists = createState.getLists();
-        final List<EventListSummary> updatedLists = new ArrayList<>();
+        final List<EventListSummary> filtered = new ArrayList<>();
 
         for (EventListSummary summary : oldLists) {
             if (!summary.getId().equals(deletedId)) {
-                updatedLists.add(summary);
+                filtered.add(summary);
             }
         }
-
-        createState.setLists(updatedLists);
+        createState.setLists(filtered);
         createState.setErrorMessage("");
+
         createViewModel.setState(createState);
         createViewModel.firePropertyChanged();
     }

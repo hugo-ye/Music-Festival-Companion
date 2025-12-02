@@ -18,7 +18,7 @@ public class AttendEventInteractor implements AttendEventInputBoundary {
     }
 
     /**
-     * saves an event to the Master List.
+     * Saves an event to the Master List.
      * @param input the event to add
      */
     @Override
@@ -30,7 +30,8 @@ public class AttendEventInteractor implements AttendEventInputBoundary {
         if (added) {
             attendEventDataAccessInterface.saveEventToMasterList(event);
             attendEventOutputBoundary.prepareSuccessView(outputData);
-        } else {
+        }
+        else {
             attendEventOutputBoundary.prepareFailView("Event already Attended");
         }
     }

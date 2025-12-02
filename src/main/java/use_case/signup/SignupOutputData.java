@@ -13,8 +13,8 @@ public class SignupOutputData {
     public String getUsername() {
         return username;
     }
+
     public boolean isUseCaseFailed() {
         return useCaseFailed;
     }
-
 }

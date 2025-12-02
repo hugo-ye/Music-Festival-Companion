@@ -3,7 +3,7 @@ package use_case.login;
 import entity.User;
 
 /**
- * DAO for LoginUser
+ * DAO for LoginUser.
  */
 public interface LoginUserDataAccessInterface {
     /**

@@ -1,6 +1,7 @@
 package interface_adapter.save_event_to_list;
 
 import entity.Event;
+import entity.EventBuilder;
 import entity.EventList;
 import org.junit.jupiter.api.Test;
 import use_case.save_event_to_list.SaveEventToListInputBoundary;
@@ -22,21 +23,12 @@ class SaveEventToListControllerTest {
         }
     }
 
-    private Event createSampleEvent() {
-        return new Event(
-                "E002",
-                "Taylor Swift Eras Tour",
-                List.of("Taylor Swift"),
-                "Scotiabank Arena",
-                "Toronto",
-                "Canada",
-                LocalDate.of(2025, 8, 3),
-                150,
-                600,
-                "https://ticket.taylor.example.com",
-                List.of("Pop"),
-                "https://image.taylor.example.com"
-        );
+    public Event getOneEvent(){
+        return new EventBuilder().id("E001").name("Coldplay World Tour").artists(List.of("Coldplay"))
+                .venue("Rogers Centre").city("Toronto").country("Canada")
+                .date(LocalDate.of(2025, 7, 15))
+                .priceMax(350).priceMin(120).ticketUrl("https://ticketmaster.com/coldplay/toronto")
+                .genres(List.of("Rock", "Pop")).imageURL( "https://images.example.com/coldplay.jpg").build();
     }
 
     @Test
@@ -44,7 +36,7 @@ class SaveEventToListControllerTest {
         FakeInputBoundary interactor = new FakeInputBoundary();
         SaveEventToListController controller = new SaveEventToListController(interactor);
 
-        Event event = createSampleEvent();
+        Event event = getOneEvent();
         EventList list = new EventList("1", "My List");
         EventList[] lists = {list};
 

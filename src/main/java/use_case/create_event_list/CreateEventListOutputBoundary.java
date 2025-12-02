@@ -15,7 +15,7 @@ public interface CreateEventListOutputBoundary {
     /**
      * Prepares the view to display an error message when event list creation fails.
      *
-     * @param errorMessage a user readable explanation of why the creation failed
+     * @param errorMessage a readable explanation of why the creation failed
      */
     void prepareFailView(String errorMessage);
 }

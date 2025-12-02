@@ -26,8 +26,10 @@ public class SortEventsController {
      * @param sortEventsCriteria The criteria to sort by.
      * @param sortEventsOrder    The direction of the sort.
      */
-    public void execute(List<Event> unsortedList, SortEventsCriteria sortEventsCriteria, SortEventsOrder sortEventsOrder) {
-        final SortEventsInputData inputData = new SortEventsInputData(unsortedList, sortEventsCriteria, sortEventsOrder);
+    public void execute(List<Event> unsortedList, SortEventsCriteria sortEventsCriteria,
+                        SortEventsOrder sortEventsOrder) {
+        final SortEventsInputData inputData = new SortEventsInputData(unsortedList,
+                sortEventsCriteria, sortEventsOrder);
         sortEventsInteractor.execute(inputData);
     }
 }

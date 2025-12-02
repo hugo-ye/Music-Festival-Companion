@@ -21,7 +21,7 @@ public class SaveEventToListPresenter implements SaveEventToListOutputBoundary {
      */
     @Override
     public void present(SaveEventToListOutputData outputData) {
-        SaveEventToListState state = viewModel.getState();
+        final SaveEventToListState state = viewModel.getState();
 
         state.setEvent(outputData.getEvent());
         state.setEventLists(outputData.getEventLists());

@@ -17,7 +17,7 @@ public interface DeleteEventListOutputBoundary {
     /**
      * Prepares the view to display an error message when deletion fails.
      *
-     * @param errorMessage a user readble description of why the deletion operation failed
+     * @param errorMessage a readable description of why the deletion operation failed
      */
     void prepareFailView(String errorMessage);
 }

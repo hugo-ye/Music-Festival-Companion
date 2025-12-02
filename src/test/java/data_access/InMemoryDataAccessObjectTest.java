@@ -1,6 +1,7 @@
 package data_access;
 
 import entity.Event;
+import entity.EventBuilder;
 import entity.EventList;
 import entity.User;
 import org.junit.jupiter.api.Test;
@@ -13,21 +14,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class InMemoryUserDataAccessObjectTest {
 
-    private Event createSampleEvent() {
-        return new Event(
-                "E003",
-                "Jazz Night",
-                List.of("Tokyo Jazz Ensemble"),
-                "Blue Note Tokyo",
-                "Tokyo",
-                "Japan",
-                LocalDate.of(2025, 11, 21),
-                60,
-                150,
-                "https://ticket.jazz.example.com",
-                List.of("Jazz"),
-                "https://image.jazz.example.com"
-        );
+    public Event getOneEvent(){
+        return new EventBuilder().id("E001").name("Coldplay World Tour").artists(List.of("Coldplay"))
+                .venue("Rogers Centre").city("Toronto").country("Canada")
+                .date(LocalDate.of(2025, 7, 15))
+                .priceMax(350).priceMin(120).ticketUrl("https://ticketmaster.com/coldplay/toronto")
+                .genres(List.of("Rock", "Pop")).imageURL( "https://images.example.com/coldplay.jpg").build();
     }
 
     @Test
@@ -44,7 +36,7 @@ class InMemoryUserDataAccessObjectTest {
         InMemoryUserDataAccessObject dao = new InMemoryUserDataAccessObject();
         dao.setCurrentUser(user);
 
-        Event event = createSampleEvent();
+        Event event = getOneEvent();
 
         dao.saveEventToList(event, list2);
 

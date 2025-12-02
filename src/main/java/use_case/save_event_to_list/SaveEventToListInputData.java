@@ -10,7 +10,6 @@ public class SaveEventToListInputData {
     private final Event event;
     private final EventList[] eventLists;
 
-
     public SaveEventToListInputData(Event event, EventList[] eventLists) {
         this.event = event;
         this.eventLists = eventLists;

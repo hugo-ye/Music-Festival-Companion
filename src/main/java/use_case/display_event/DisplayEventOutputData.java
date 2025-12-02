@@ -1,10 +1,10 @@
 package use_case.display_event;
 
-import entity.Event;
-import entity.EventList;
-
 import java.time.LocalDate;
 import java.util.List;
+
+import entity.Event;
+import entity.EventList;
 
 public class DisplayEventOutputData {
     private final String eventName;
@@ -24,7 +24,8 @@ public class DisplayEventOutputData {
 
     public DisplayEventOutputData(String eventName, List<String> artists, String venue, String city,
                                   String country, LocalDate date, int priceMin, int priceMax, String ticketUrl,
-                                  List<String> genres, String imageUrl, boolean hasPrice, Event event, List<EventList> existingLists ){
+                                  List<String> genres, String imageUrl, boolean hasPrice, Event event,
+                                  List<EventList> existingLists) {
         this.eventName = eventName;
         this.artists = artists;
         this.venue = venue;
@@ -41,21 +42,59 @@ public class DisplayEventOutputData {
         this.existingLists = existingLists;
     }
 
-    //getters
-    public String getEventName(){return eventName;}
-    public List<String> getArtists(){return artists;}
-    public String getVenue(){return venue;}
-    public String getCity(){return city;}
-    public String getCountry(){return country;}
-    public LocalDate getDate(){return date;}
-    public int getPriceMax() {return priceMax;}
-    public int getPriceMin() {return priceMin;}
-    public List<String> getGenres(){return genres;}
-    public String getTicketUrl(){return ticketUrl;}
-    public String getImageUrl(){return imageUrl;}
-    public boolean getHasPrice(){return hasPrice;}
-    public Event getEvent(){return event;}
-    public List<EventList> getExistingLists(){return existingLists;}
+    public String getEventName() {
+        return eventName;
+    }
 
+    public List<String> getArtists() {
+        return artists;
+    }
 
+    public String getVenue() {
+        return venue;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public int getPriceMax() {
+        return priceMax;
+    }
+
+    public int getPriceMin() {
+        return priceMin;
+    }
+
+    public List<String> getGenres() {
+        return genres;
+    }
+
+    public String getTicketUrl() {
+        return ticketUrl;
+    }
+
+    public boolean isHasPrice() {
+        return hasPrice;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public Event getEvent() {
+        return event;
+    }
+
+    public List<EventList> getExistingLists() {
+        return existingLists;
+    }
 }

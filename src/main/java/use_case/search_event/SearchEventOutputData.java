@@ -1,8 +1,8 @@
 package use_case.search_event;
 
-import entity.Event;
-
 import java.util.List;
+
+import entity.Event;
 
 public class SearchEventOutputData {
     private final List<Event> events;

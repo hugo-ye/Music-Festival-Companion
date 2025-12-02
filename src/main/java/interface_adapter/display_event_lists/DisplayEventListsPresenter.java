@@ -10,7 +10,8 @@ public class DisplayEventListsPresenter implements DisplayEventListsOutputBounda
     private final ViewManagerModel viewManagerModel;
     private final CreateEventListViewModel createEventListViewModel;
 
-    public DisplayEventListsPresenter(ViewManagerModel viewManagerModel, CreateEventListViewModel createEventListViewModel) {
+    public DisplayEventListsPresenter(ViewManagerModel viewManagerModel,
+                                      CreateEventListViewModel createEventListViewModel) {
         this.viewManagerModel = viewManagerModel;
         this.createEventListViewModel = createEventListViewModel;
 
@@ -18,7 +19,7 @@ public class DisplayEventListsPresenter implements DisplayEventListsOutputBounda
 
     @Override
     public void prepareSuccessView(DisplayEventListsOutputData outputData) {
-        CreateEventListState state = createEventListViewModel.getState();
+        final CreateEventListState state = createEventListViewModel.getState();
         state.setLists(outputData.getEventLists());
         createEventListViewModel.setState(state);
         createEventListViewModel.firePropertyChanged();

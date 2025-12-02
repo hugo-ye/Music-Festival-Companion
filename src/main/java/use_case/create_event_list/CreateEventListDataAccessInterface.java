@@ -22,3 +22,5 @@ public interface CreateEventListDataAccessInterface {
      */
     void createEventList(EventList eventList);
 }
+
+//existByName and save is done in data access layer for In Memory

@@ -19,7 +19,7 @@ public class SortEventsInteractor implements SortEventsInputBoundary {
     }
 
     /**
-     * executes the sorting use case based on the provided input data.
+     * Executes the sorting use case based on the provided input data.
      * @param input the inout data containing the list of Events, sorting criteria, and sorting order.
      */
     @Override

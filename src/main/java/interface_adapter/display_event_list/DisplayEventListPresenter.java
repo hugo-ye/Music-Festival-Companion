@@ -25,7 +25,7 @@ public class DisplayEventListPresenter implements DisplayEventListOutputBoundary
      */
     @Override
     public void prepareSuccessView(DisplayEventListOutputData outputData) {
-        DisplayEventListState state = viewModel.getState();
+        final DisplayEventListState state = viewModel.getState();
         state.setEventList(outputData.getEventList());
 
         viewModel.setState(state);
