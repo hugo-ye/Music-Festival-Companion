@@ -24,18 +24,9 @@ import use_case.logout.LogoutUserDataAccessInterface;
 import use_case.signup.SignupDataAccessInterface;
 
 /**
- * The json model.
- * [
- * {username, lists}
- * ]
- * in lists:
- * {
- * masterList:[EventList]
- * lists: [ [list of EventList] ]
- * }
+ * Persistent Storage Data Access Object for User.
+ * This class is responsible for reading and writing user data to a file.
  */
-
-// has not been connected yet. just creating general functions
 public class FileUserDataAccessObject implements LoginUserDataAccessInterface, SignupDataAccessInterface,
         LogoutUserDataAccessInterface {
 
@@ -57,6 +48,7 @@ public class FileUserDataAccessObject implements LoginUserDataAccessInterface, S
 
     /**
      * Method to get a list of users by reading file at filePath.
+     *
      * @return List of user read from filePath. Or empty List for no existing filePath or empty file in filePath.
      */
     public List<User> read() {
@@ -71,6 +63,7 @@ public class FileUserDataAccessObject implements LoginUserDataAccessInterface, S
 
     /**
      * Helper used by read, which will return a list of user once the given filePath is existing.
+     *
      * @return List of user read from filePath.
      * @throws RuntimeException if an I/O error occurs when reading the file.
      */
@@ -83,8 +76,7 @@ public class FileUserDataAccessObject implements LoginUserDataAccessInterface, S
                 result = data;
             }
             return result;
-        }
-        catch (IOException ioException) {
+        } catch (IOException ioException) {
             System.out.println("Error reading file at filePath: " + filePath);
             throw new RuntimeException(ioException);
         }
@@ -92,6 +84,7 @@ public class FileUserDataAccessObject implements LoginUserDataAccessInterface, S
 
     /**
      * A method that get User by username.
+     *
      * @param username the username used to retrieve the {@link User}
      * @return The User data that with same username as provided, or null for no such User.
      */
@@ -109,6 +102,7 @@ public class FileUserDataAccessObject implements LoginUserDataAccessInterface, S
 
     /**
      * A method to save user to file.
+     *
      * @param user the {@link User} object to save
      */
     public void save(User user) {
@@ -116,8 +110,7 @@ public class FileUserDataAccessObject implements LoginUserDataAccessInterface, S
         final User existingUser = existsByUsername(user.getUsername(), users);
         if (existingUser != null) {
             replaceUser(existingUser, user, users);
-        }
-        else {
+        } else {
             users.add(user);
         }
         writeAllUsers(users);
@@ -125,22 +118,23 @@ public class FileUserDataAccessObject implements LoginUserDataAccessInterface, S
 
     /**
      * A method that write users into a file.
+     *
      * @param users A List of users provided.
      * @throws RuntimeException if an I/O error occurs when reading the file.
      */
     public void writeAllUsers(List<User> users) {
         try (FileWriter writer = new FileWriter(filePath)) {
             gson.toJson(users, writer);
-        }
-        catch (IOException ioException) {
+        } catch (IOException ioException) {
             throw new RuntimeException(ioException);
         }
     }
 
     /**
      * A method to get a user from A List of user by a username.
+     *
      * @param username name of user, String.
-     * @param users a List of user.
+     * @param users    a List of user.
      * @return the user if a certain user with the username in the users, else null;
      */
     private User existsByUsername(String username, List<User> users) {
@@ -156,6 +150,7 @@ public class FileUserDataAccessObject implements LoginUserDataAccessInterface, S
 
     /**
      * A boolean method that return whether the user with such username is existing.
+     *
      * @param username the username to check for existence.
      * @return whether the such user existing.
      */
@@ -164,6 +159,12 @@ public class FileUserDataAccessObject implements LoginUserDataAccessInterface, S
         return existsByUsername(username, users) != null;
     }
 
+    /**
+     * A method that replace a user in a list of user.
+     * @param oldUser the user to be replaced.
+     * @param newUser the new user.
+     * @param users the list of users.
+     */
     private void replaceUser(User oldUser, User newUser, List<User> users) {
         for (int i = 0; i < users.size(); i++) {
             if (users.get(i).equals(oldUser)) {

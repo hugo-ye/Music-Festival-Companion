@@ -16,6 +16,16 @@ public class DBDataAccessObject implements SearchEventDataAccessInterface {
     private static final String BASE_URL = "https://app.ticketmaster.com/discovery/v2/events.json";
     private static final String API_KEY = System.getenv("DB_KEY");
 
+    /**
+     * Searches for events matching the provided criteria.
+     * @param keyword a keyword to search for an event.
+     * @param countryCode a country code to filter events.
+     * @param city the city to filter events.
+     * @param startDateTime the start date of the event.
+     * @param endDateTime the end date of the event.
+     * @param genreIds a comma-separated list of genre IDs to filter events.
+     * @return a String containing the raw data of the event.
+     */
     @Override
     public String search(String keyword, String countryCode, String city, String startDateTime,
                          String endDateTime, String genreIds) {

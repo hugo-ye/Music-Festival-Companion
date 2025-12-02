@@ -30,11 +30,19 @@ public class InMemoryUserDataAccessObject implements
 
     private User currentUser;
 
+    /**
+     * A method that returns the current user.
+     * @return the current user.
+     */
     @Override
     public User getCurrentUser() {
         return currentUser;
     }
 
+    /**
+     * A method that sets the current user.
+     * @param currentUser the user to set as the current user.
+     */
     @Override
     public void setCurrentUser(User currentUser) {
         this.currentUser = currentUser;
@@ -64,8 +72,6 @@ public class InMemoryUserDataAccessObject implements
             currentEventList.addEvent(event);
         }
         // I omit the situation that eventList that will add the same event
-
-        // for persistent storage, may need discuss later, currently I only deal with inMemory
     }
 
     /**
@@ -137,6 +143,12 @@ public class InMemoryUserDataAccessObject implements
         }
     }
 
+    /**
+     * Helper method for createEventList.
+     * @param eventList the eventList to be created.
+     * @param user the user that will create the eventList.
+     * @return whether the eventList is created successfully.
+     */
     private static boolean createEventListHelper(EventList eventList, User user) {
         boolean result = user == null;
         if (eventList == null) {

@@ -150,6 +150,11 @@ public class SearchResultView extends JPanel implements PropertyChangeListener {
         }
     }
 
+    /**
+     * A method to create a row of event card.
+     * @param event the event to be added.
+     * @return the created row of event card.
+     */
     private JPanel createEventRow(Event event) {
         final String priceString = (event.getPriceMin() == -1)
                 ? "Price unavailable"
@@ -171,7 +176,6 @@ public class SearchResultView extends JPanel implements PropertyChangeListener {
         ViewStyle.applySecondaryLabelStyle(dateLabel);
 
         // Venue
-
         final JLabel venueLabel = new JLabel("Venue: " + event.getVenue());
         ViewStyle.applySecondaryLabelStyle(venueLabel);
 
@@ -218,6 +222,10 @@ public class SearchResultView extends JPanel implements PropertyChangeListener {
         return eventRow;
     }
 
+    /**
+     * Get the name of this view.
+     * @return the name of this view.
+     */
     public String getViewName() {
         return viewName;
     }
