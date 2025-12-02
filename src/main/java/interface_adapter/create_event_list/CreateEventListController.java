@@ -17,6 +17,7 @@ public class CreateEventListController {
     public CreateEventListController(CreateEventListInputBoundary interactor) {
         this.interactor = interactor;
     }
+
     /**
      * Executes the Create Event List use case using the provided list name.
      *
@@ -25,7 +26,6 @@ public class CreateEventListController {
      * a new list.
      * @param name the name of the new event list to be created
      */
-
     public void execute(String name) {
         final CreateEventListInputData inputData = new CreateEventListInputData(name);
         interactor.execute(inputData);
