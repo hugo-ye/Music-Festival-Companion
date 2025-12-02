@@ -1,16 +1,5 @@
 package data_access;
 
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
-import data_formatters.LocalDateAdapter;
-import entity.User;
-import use_case.login.LoginSessionDataAccessInterface;
-import use_case.login.LoginUserDataAccessInterface;
-import use_case.logout.LogoutUserDataAccessInterface;
-import use_case.signup.SignupDataAccessInterface;
-
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -22,12 +11,23 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import data_formatters.LocalDateAdapter;
+import entity.User;
+import use_case.login.LoginSessionDataAccessInterface;
+import use_case.login.LoginUserDataAccessInterface;
+import use_case.logout.LogoutUserDataAccessInterface;
+import use_case.signup.SignupDataAccessInterface;
+
 /**
- * the json model
+ * The json model.
  * [
  * {username, lists}
  * ]
- * <p>
  * in lists:
  * {
  * masterList:[EventList]
@@ -35,14 +35,15 @@ import java.util.List;
  * }
  */
 
-// hasnt been connected yet. just creating general functions
+// has not been connected yet. just creating general functions
 public class FileUserDataAccessObject implements LoginUserDataAccessInterface, SignupDataAccessInterface,
         LogoutUserDataAccessInterface {
 
-    private final String filePath;
-    private final Gson gson;
     private static final Type USER_LIST_TYPE = new TypeToken<List<User>>() {
     }.getType();
+    private final String filePath;
+    private final Gson gson;
+
     private final LoginSessionDataAccessInterface sessionDataAccess;
 
     public FileUserDataAccessObject(String filePath, LoginSessionDataAccessInterface sessionDataAccess) {
@@ -54,63 +55,112 @@ public class FileUserDataAccessObject implements LoginUserDataAccessInterface, S
         this.sessionDataAccess = sessionDataAccess;
     }
 
+    /**
+     * Method to get a list of users by reading file at filePath.
+     * @return List of user read from filePath. Or empty List for no existing filePath or empty file in filePath.
+     */
     public List<User> read() {
-        Path path = Paths.get(filePath);
+        final Path path = Paths.get(filePath);
+        List<User> result = new ArrayList<>();
 
-        if (!Files.exists(path)) {
-            return new ArrayList<>();
+        if (Files.exists(path)) {
+            result = readHelper();
         }
+        return result;
+    }
 
+    /**
+     * Helper used by read, which will return a list of user once the given filePath is existing.
+     * @return List of user read from filePath.
+     * @throws RuntimeException if an I/O error occurs when reading the file.
+     */
+    @NotNull
+    private List<User> readHelper() {
+        List<User> result = new ArrayList<>();
         try (FileReader reader = new FileReader(filePath)) {
-            List<User> data = gson.fromJson(reader, USER_LIST_TYPE);
-            return data != null ? data : new ArrayList<>();
-        } catch (IOException e) {
+            final List<User> data = gson.fromJson(reader, USER_LIST_TYPE);
+            if (data != null) {
+                result = data;
+            }
+            return result;
+        }
+        catch (IOException ioException) {
             System.out.println("Error reading file at filePath: " + filePath);
-            throw new RuntimeException(e);
+            throw new RuntimeException(ioException);
         }
     }
 
+    /**
+     * A method that get User by username.
+     * @param username the username used to retrieve the {@link User}
+     * @return The User data that with same username as provided, or null for no such User.
+     */
     public User getByUsername(String username) {
-        List<User> users = read();
+        final List<User> users = read();
+        User result = null;
         for (User user : users) {
             if (user.getUsername().equals(username)) {
-                return user;
+                result = user;
+                break;
             }
         }
-        return null;
+        return result;
     }
 
-
+    /**
+     * A method to save user to file.
+     * @param user the {@link User} object to save
+     */
     public void save(User user) {
-        List<User> users = read();
-        User existingUser = existsByUsername(user.getUsername(), users);
+        final List<User> users = read();
+        final User existingUser = existsByUsername(user.getUsername(), users);
         if (existingUser != null) {
             replaceUser(existingUser, user, users);
-        } else {
+        }
+        else {
             users.add(user);
         }
         writeAllUsers(users);
     }
 
+    /**
+     * A method that write users into a file.
+     * @param users A List of users provided.
+     * @throws RuntimeException if an I/O error occurs when reading the file.
+     */
     public void writeAllUsers(List<User> users) {
         try (FileWriter writer = new FileWriter(filePath)) {
             gson.toJson(users, writer);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        }
+        catch (IOException ioException) {
+            throw new RuntimeException(ioException);
         }
     }
 
+    /**
+     * A method to get a user from A List of user by a username.
+     * @param username name of user, String.
+     * @param users a List of user.
+     * @return the user if a certain user with the username in the users, else null;
+     */
     private User existsByUsername(String username, List<User> users) {
+        User result = null;
         for (User user : users) {
             if (user.getUsername().equals(username)) {
-                return user;
+                result = user;
+                break;
             }
         }
-        return null;
+        return result;
     }
 
+    /**
+     * A boolean method that return whether the user with such username is existing.
+     * @param username the username to check for existence.
+     * @return whether the such user existing.
+     */
     public boolean existsByUsername(String username) {
-        List<User> users = read();
+        final List<User> users = read();
         return existsByUsername(username, users) != null;
     }
 
@@ -122,7 +172,4 @@ public class FileUserDataAccessObject implements LoginUserDataAccessInterface, S
             }
         }
     }
-
 }
-
-
