@@ -1,13 +1,13 @@
 package interface_adapter.remove_event_from_list;
 
 public class RemoveEventFromListViewModel {
-    private String RemoveEventMessage;
+    private String removeEventMessage;
 
     public String getRemoveEventMessage() {
-        return RemoveEventMessage;
+        return removeEventMessage;
     }
 
     public void setRemoveEventMessage(String removeEventMessage) {
-        RemoveEventMessage = removeEventMessage;
+        this.removeEventMessage = removeEventMessage;
     }
 }

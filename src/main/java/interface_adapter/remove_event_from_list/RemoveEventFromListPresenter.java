@@ -1,6 +1,5 @@
 package interface_adapter.remove_event_from_list;
 
-import interface_adapter.display_event_list.DisplayEventListController;
 import use_case.remove_event_from_list.RemoveEventFromListOutputBoundary;
 import use_case.remove_event_from_list.RemoveEventFromListOutputData;
 
