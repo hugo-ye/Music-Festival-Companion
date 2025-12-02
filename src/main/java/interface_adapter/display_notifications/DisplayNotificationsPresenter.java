@@ -12,7 +12,7 @@ public class DisplayNotificationsPresenter implements DisplayNotificationsOutput
 
     @Override
     public void prepareSuccessView(DisplayNotificationsOutputData outputData) {
-        DisplayNotificationsState state = displayNotificationsViewModel.getState();
+        final DisplayNotificationsState state = displayNotificationsViewModel.getState();
         state.setMessage(outputData.getMessage());
         displayNotificationsViewModel.setState(state);
         displayNotificationsViewModel.firePropertyChanged("message");
