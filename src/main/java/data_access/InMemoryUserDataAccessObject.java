@@ -1,26 +1,24 @@
 package data_access;
 
+import java.util.List;
+
 import entity.Event;
 import entity.EventList;
 import entity.User;
 import use_case.attend_event.AttendEventDataAccessInterface;
-import use_case.display_event.DisplayEventDataAccessInterface;
-import use_case.display_notifications.DisplayNotificationsDataAccessInterface;
 import use_case.create_event_list.CreateEventListDataAccessInterface;
 import use_case.delete_event_list.DeleteEventListDataAccessInterface;
+import use_case.display_event.DisplayEventDataAccessInterface;
 import use_case.display_event_lists.DisplayEventListsDataAccessInterface;
+import use_case.display_notifications.DisplayNotificationsDataAccessInterface;
 import use_case.login.LoginSessionDataAccessInterface;
 import use_case.logout.LogoutSessionDataAccessInterface;
 import use_case.remove_event_from_list.RemoveEventFromListDataAccessInterface;
 import use_case.save_event_to_list.SaveEventToListDataAccessInterface;
 
-import java.util.List;
-
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
-
+/**
+ * In-memory implementation of all user-related data access interfaces.
+ */
 public class InMemoryUserDataAccessObject implements
         LoginSessionDataAccessInterface,
         LogoutSessionDataAccessInterface,
@@ -35,14 +33,17 @@ public class InMemoryUserDataAccessObject implements
 
     private User currentUser;
 
+    @Override
     public User getCurrentUser() {
         return currentUser;
     }
 
+    @Override
     public void setCurrentUser(User currentUser) {
         this.currentUser = currentUser;
     }
 
+    @Override
     public void clearCurrentUser() {
         this.currentUser = null;
     }
@@ -62,23 +63,30 @@ public class InMemoryUserDataAccessObject implements
         // for persistent storage, may need discuss later, currently I only deal with inMemory
     }
 
+    @Override
     public void saveEventToMasterList(Event event) {
         currentUser.getMasterList().addEvent(event);
     }
 
+    @Override
     public boolean alreadyAttends(Event event) {
         return currentUser.getMasterList().getEvents().contains(event);
     }
 
     @Override
     public List<Event> getMasterListEvents() {
-        if (currentUser == null) return null;
+        if (currentUser == null) {
+            return null;
+        }
         return currentUser.getMasterList().getEvents();
     }
 
+    @Override
     public boolean existsByName(String listName) {
         User user = getCurrentUser();
-        if (user == null) return false;
+        if (user == null) {
+            return false;
+        }
         for (EventList list : user.getLists()) {
             if (list.getName().equalsIgnoreCase(listName)) {
                 return true;
@@ -90,8 +98,12 @@ public class InMemoryUserDataAccessObject implements
     @Override
     public void createEventList(EventList eventList) {
         User user = getCurrentUser();
-        if (user == null) return;
-        if (eventList == null) return;
+        if (user == null) {
+            return;
+        }
+        if (eventList == null) {
+            return;
+        }
         if (user.getLists().contains(eventList)) {
             return;
         }
@@ -101,10 +113,16 @@ public class InMemoryUserDataAccessObject implements
     @Override
     public boolean existsById(String listId) {
         User current = getCurrentUser();
-        if (current == null) return false;
-        if (current.getMasterList().getId().equals(listId)) return true;
+        if (current == null) {
+            return false;
+        }
+        if (current.getMasterList().getId().equals(listId)) {
+            return true;
+        }
         for (EventList list : current.getLists()) {
-            if (list.getId().equals(listId)) return true;
+            if (list.getId().equals(listId)) {
+                return true;
+            }
         }
         return false;
     }
@@ -112,21 +130,27 @@ public class InMemoryUserDataAccessObject implements
     @Override
     public boolean isMasterList(String listId) {
         User user = getCurrentUser();
-        if (user == null) return false;
+        if (user == null) {
+            return false;
+        }
         return user.getMasterList().getId().equals(listId);
     }
 
     @Override
     public void deleteById(String listId) {
         User user = getCurrentUser();
-        if (user == null) return;
+        if (user == null) {
+            return;
+        }
         user.removeListById(listId);
     }
 
     @Override
     public List<EventList> getEventLists() {
         User user = getCurrentUser();
-        if (user == null) return null;
+        if (user == null) {
+            return null;
+        }
         return user.getLists();
     }
 
@@ -136,7 +160,6 @@ public class InMemoryUserDataAccessObject implements
         int currentEventListIndex = currentUser.getLists().indexOf(targetEventList);
         // for situation of non-exist: may not happen, since user cannot select eventList that is not created
         if (currentEventListIndex == -1) {
-            System.out.println("no eventList currently");
             return;
         }
         EventList currentEventList = currentUser.getLists().get(currentEventListIndex);
