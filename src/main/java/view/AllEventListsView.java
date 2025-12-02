@@ -75,7 +75,8 @@ public class AllEventListsView extends JPanel implements PropertyChangeListener 
         eventsPanel = new JPanel();
         eventsPanel.setLayout(new BoxLayout(eventsPanel, BoxLayout.Y_AXIS));
         eventsPanel.setBackground(ViewStyle.WINDOW_BACKGROUND);
-        eventsPanel.setBorder(new EmptyBorder(0, 20, 0, 20)); // Add side padding
+        eventsPanel.setBorder(new EmptyBorder(ViewConstants.DEFAULT_BORDER_TOP, ViewConstants.DEFAULT_BORDER_LEFT,
+                ViewConstants.DEFAULT_BORDER_BOTTOM, ViewConstants.DEFAULT_BORDER_RIGHT));
 
         final JScrollPane scrollPane = new JScrollPane(eventsPanel);
         ViewStyle.applyScrollPaneStyle(scrollPane);
@@ -91,12 +92,12 @@ public class AllEventListsView extends JPanel implements PropertyChangeListener 
 
         // Listeners
 
-        backButton.addActionListener(e -> {
+        backButton.addActionListener(actionEvent -> {
             viewManagerModel.setState("search event");
             viewManagerModel.firePropertyChanged();
         });
 
-        createListButton.addActionListener(e -> {
+        createListButton.addActionListener(actionEvent -> {
             if (createEventListController == null) {
                 return;
             }
@@ -137,7 +138,7 @@ public class AllEventListsView extends JPanel implements PropertyChangeListener 
         // Add master list
         final JPanel masterCard = createListCard("Master List", "master_list", false);
         eventsPanel.add(masterCard);
-        eventsPanel.add(Box.createVerticalStrut(15)); // Spacing between cards
+        eventsPanel.add(Box.createVerticalStrut(15));
 
         // Add user created lists
         for (EventListSummary summary : state.getLists()) {
