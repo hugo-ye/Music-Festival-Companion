@@ -1,12 +1,12 @@
 package use_case.display_notifications;
 
-import entity.Event;
-import use_case.sort_events.SortEventsOrder;
-import use_case.sort_events.strategies.SortEventsByDate;
-
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+
+import entity.Event;
+import use_case.sort_events.SortEventsOrder;
+import use_case.sort_events.strategies.SortEventsByDate;
 
 /**
  * The interactor for the display_notifications use case.
@@ -27,19 +27,28 @@ public class DisplayNotificationsInteractor implements DisplayNotificationsInput
      */
     @Override
     public void execute(DisplayNotificationsInputData inputData) {
-        final LocalDate currDate = inputData.getLocalDate();
+        final LocalDate eventDate = inputData.getLocalDate();
         final List<Event> allEvents = dataAccess.getMasterListEvents();
-        if (allEvents == null) {
-            return;
+        if (allEvents != null) {
+            executeHelper(allEvents, eventDate);
         }
+    }
 
+    /**
+     * Helper method for executing the display_notifications use case.
+     * @param allEvents the list of all events.
+     * @param currDate the current date.
+     */
+    private void executeHelper(List<Event> allEvents, LocalDate currDate) {
         final SortEventsByDate dateSorter = new SortEventsByDate();
         allEvents.sort(SortEventsOrder.ASCENDING.apply(dateSorter));
-        StringBuilder messageBuilder = new StringBuilder();
+
+        final StringBuilder messageBuilder = new StringBuilder();
         boolean hasNotifications = false;
 
         for (Event e : allEvents) {
-            long dateDifference = dateCalculator(currDate, e.getDate());
+            final long dateDifference = dateCalculator(currDate, e.getDate());
+
             if (dateDifference >= 0 && dateDifference < DisplayNotificationsConstants.REMIND_DEADLINE) {
                 messageBuilder.append("- ")
                         .append(e.getName())
@@ -49,10 +58,12 @@ public class DisplayNotificationsInteractor implements DisplayNotificationsInput
                 hasNotifications = true;
             }
         }
+
         if (hasNotifications) {
             messageBuilder.insert(0, "Upcoming Events:\n");
             presenter.prepareSuccessView(new DisplayNotificationsOutputData(messageBuilder.toString()));
-        } else {
+        }
+        else {
             presenter.prepareSuccessView(new DisplayNotificationsOutputData(""));
         }
     }
