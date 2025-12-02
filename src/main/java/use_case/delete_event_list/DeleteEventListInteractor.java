@@ -51,3 +51,4 @@ public class DeleteEventListInteractor implements DeleteEventListInputBoundary {
         return result;
     }
 }
+

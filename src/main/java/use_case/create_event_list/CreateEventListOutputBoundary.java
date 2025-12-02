@@ -1,17 +1,21 @@
 package use_case.create_event_list;
 
+/**
+ * Output boundary for the Create Event List use case.
+ */
 public interface CreateEventListOutputBoundary {
+
     /**
-     * Prepares the success view for the user gallery.
+     * Prepares the view to display a successful view for creating an event list.
      *
-     * @param outputData the data to be sent to the Search Results view.
+     * @param outputData the output data containing the ID and name of the newly created event list
      */
     void prepareSuccessView(CreateEventListOutputData outputData);
 
     /**
-     * Prepares the success view for the user gallery.
+     * Prepares the view to display an error message when event list creation fails.
      *
-     * @param errorMessage the data to be sent to the Search Results view.
+     * @param errorMessage a readable explanation of why the creation failed
      */
     void prepareFailView(String errorMessage);
 }

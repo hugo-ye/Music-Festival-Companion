@@ -1,13 +1,11 @@
 package use_case.delete_event_list;
 
 public interface DeleteEventListInputBoundary {
+
     /**
-     * Executes the delete event list use case.
-     * The method performs the following steps:
-     * Trims and validates the input data (list id), Fails if the list does not
-     * exist or is the Master List, and Deletes the list and reports success otherwise.
+     * Executes the delete event list use case using the provided input data.
      *
-     * @param input contains the ID of the list to delete.
+     * @param inputData the input data object containing the ID of the list to be deleted
      */
-    void execute(DeleteEventListInputData input);
+    void execute(DeleteEventListInputData inputData);
 }

@@ -4,19 +4,31 @@ import java.util.List;
 
 import entity.Event;
 
+/**
+ * Data access interface for retrieving events from an external source.
+ * Provides a filtered list of events based on search parameters.
+ */
 public interface EventDataAccessInterface {
-    // Why is this file here? Should be at SearchEvents instead?
+
     /**
-     * Returns the events associated with the given parameters.
-     * @param keyword          The keyword or artist name string from the UI.
-     * @param artist             The artist string (e.g, the exact name of artist).
-     * @param startDateTime    The start date string (e.g., "YYYY-MM-DD").
-     * @param endDateTime     The end date string (e.g., "YYYY-MM-DD").
-     * @param country            The name of the country with proper spelling
-     * @param city           The name of the city (e.g, Toronto).
-     * @param genre          The genre of event.
-     * @return get a list of event that satisfies given conditions.
+     * Returns a list of events matching the provided search filters.
+     *
+     * @param keyword       the general search keyword
+     * @param artist        the artist name filter
+     * @param country       the country filter
+     * @param city          the city filter
+     * @param startDateTime the start of the date range (inclusive)
+     * @param endDateTime   the end of the date range (inclusive)
+     * @param genre         the music genre filter
+     * @return a list of events that satisfy the given parameters
      */
-    List<Event> getEvents(String keyword, String artist, String country, String city, String startDateTime,
-                          String endDateTime, String genre);
+    List<Event> getEvents(
+            String keyword,
+            String artist,
+            String country,
+            String city,
+            String startDateTime,
+            String endDateTime,
+            String genre
+    );
 }

@@ -1,23 +1,31 @@
 package use_case.delete_event_list;
 
+/**
+ * Data access interface for the Delete Event List use case.
+ * Provides methods for checking list existence and deleting lists.
+ */
 public interface DeleteEventListDataAccessInterface {
+
     /**
-     * To determine whether the MasterList or eventList is existing by using id of the user.
-     * @param listId the id of target eventList/MasterList
-     * @return whether the MasterList/EventList existing
+     * Returns whether a list with the given ID exists for the current user.
+     *
+     * @param listId the ID of the list to check
+     * @return true if a list with this ID exists, false otherwise
      */
     boolean existsById(String listId);
 
     /**
-     * To check whether the MasterList's id is same as provided.
-     * @param listId target id of MasterList
-     * @return whether the id of MasterList has same id as provided.
+     * Returns whether the given ID corresponds to the master list, which cannot be deleted.
+     *
+     * @param listId the list ID to check
+     * @return true if the list is the master list, false otherwise
      */
     boolean isMasterList(String listId);
 
     /**
-     * Delete a eventList by given listId.
-     * @param listId target eventList id.
+     * Deletes the list associated with the given ID.
+     *
+     * @param listId the ID of the list to delete
      */
     void deleteById(String listId);
 }

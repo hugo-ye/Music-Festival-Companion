@@ -1,18 +1,23 @@
 package use_case.delete_event_list;
 
+/**
+ * Output boundary for the Delete Event List use case.
+ * The presenter implements this interface to format the response model
+ * for the UI layer.
+ */
 public interface DeleteEventListOutputBoundary {
-    // Implemented by the presenter in interface adapter
+
     /**
-     * Prepares the success view for the user gallery.
+     * Prepares the view to display a successful deletion.
      *
-     * @param outputData the data to be sent to the Search Results view.
+     * @param outputData the response model containing details about the deleted list
      */
     void prepareSuccessView(DeleteEventListOutputData outputData);
 
     /**
-     * Prepares the failure view for the user gallery.
+     * Prepares the view to display an error message when deletion fails.
      *
-     * @param errorMessage the data to be sent to the Search Results view.
+     * @param errorMessage a readable description of why the deletion operation failed
      */
     void prepareFailView(String errorMessage);
 }

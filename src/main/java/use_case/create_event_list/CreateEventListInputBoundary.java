@@ -1,13 +1,11 @@
 package use_case.create_event_list;
 
 public interface CreateEventListInputBoundary {
+
     /**
-     * Executes the "create event list" use case.
-     * This method performs all the following validation steps: ensures the list name is not empty, the list
-     * name is different from the Master list, and finally, it ensures the list name is unique.
+     * Executes the Create Event List use case.
      *
-     * @param input the input data containing the user-provided list name
+     * @param inputData the input data required to create an event list
      */
-    void execute(CreateEventListInputData input);
-    // Blueprint for class no code implemented here
+    void execute(CreateEventListInputData inputData);
 }
