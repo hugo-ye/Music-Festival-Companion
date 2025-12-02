@@ -12,23 +12,42 @@ import org.json.JSONObject;
 import entity.Event;
 import entity.EventBuilder;
 
+/**
+ * Interactor for the SearchEvent use case.
+ *
+ * <p>
+ * The class implements {@link SearchEventInputBoundary} and is responsible for retrieving event data from
+ * {@link SearchEventDataAccessInterface} and parsing it into domain entities {@link Event}.
+ * </p>
+ */
 public class SearchEventInteractor implements SearchEventInputBoundary {
 
     private static final int DEFAULT_PRICE = -1;
     private static final String NOT_AVAILABLE = "N/A";
     private static final String UNNAMED_EVENT = "Unnamed Event";
-    private static final String UNDEFINED_GENRE = "Undefined";
     private static final String NAME_KEY = "name";
     private static final String EMBEDDED_KEY = "_embedded";
     private final SearchEventDataAccessInterface dataAccess;
     private final SearchEventOutputBoundary presenter;
 
+    /**
+     * Constructs a SearchEventInteractor.
+     *
+     * @param dataAccess The data access object for searching events.
+     * @param presenter  The presenter for handling the output.
+     */
     public SearchEventInteractor(final SearchEventDataAccessInterface dataAccess,
                                  final SearchEventOutputBoundary presenter) {
         this.dataAccess = dataAccess;
         this.presenter = presenter;
     }
 
+    /**
+     * Retrieves event data from the DAO, parses it into {@link Event} objects,
+     * and passes it to the presenter.
+     *
+     * @param inputData the input data containing the search criteria.
+     */
     @Override
     public void execute(final SearchEventInputData inputData) {
         final String eventsJson = this.dataAccess.search(
@@ -44,6 +63,13 @@ public class SearchEventInteractor implements SearchEventInputBoundary {
         this.presenter.prepareSuccessView(outputData);
     }
 
+    /**
+     * Parses a raw JSON string into a list of {@link Event} objects.
+     *
+     * @param dataJson the raw JSON string.
+     * @return a list of Events. An empty list if the dataJson is null or empty.
+     * @throws RuntimeException if the JSON parsing fails.
+     */
     public List<Event> createEventsFromJson(final String dataJson) {
         final JSONObject base = new JSONObject(dataJson);
         final List<Event> events = new ArrayList<>();
@@ -60,6 +86,12 @@ public class SearchEventInteractor implements SearchEventInputBoundary {
         return events;
     }
 
+    /**
+     * Converts a single JSON object into an {@link Event}.
+     *
+     * @param jsonEvent the JSON representation of the event.
+     * @return an {@link Event}.
+     */
     public Event eventFromJson(final JSONObject jsonEvent) {
         final List<Integer> priceRange = this.extractPriceFromJson(jsonEvent);
 
@@ -79,6 +111,11 @@ public class SearchEventInteractor implements SearchEventInputBoundary {
                 .build();
     }
 
+    /**
+     * Extracts the embedded object in the {@link JSONObject}.
+     * @param jsonEvent a root JSON object of TICKETMASTER API
+     * @return the embedded object
+     */
     private JSONObject getEmbedded(final JSONObject jsonEvent) {
         return jsonEvent.getJSONObject(EMBEDDED_KEY);
     }
@@ -88,18 +125,32 @@ public class SearchEventInteractor implements SearchEventInputBoundary {
         return venues.getJSONObject(0);
     }
 
+    /**
+     * Extracts the date from an event JSON object.
+     *
+     * @param jsonEvent The event JSON object.
+     * @return The date of the event, or null if not available or parsing fails.
+     */
     public LocalDate extractDateFromJson(final JSONObject jsonEvent) {
         final JSONObject dates = jsonEvent.getJSONObject("dates");
         final JSONObject start = dates.getJSONObject("start");
         final String startDateTimeStr = start.optString("dateTime", "");
-
+        final LocalDate result;
         if (!startDateTimeStr.isEmpty()) {
-            return LocalDate.parse(startDateTimeStr.split("T")[0]);
-        } else {
-            return null;
+            result = LocalDate.parse(startDateTimeStr.split("T")[0]);
         }
+        else {
+            result = null;
+        }
+        return result;
     }
 
+    /**
+     * Extracts the price range from an event JSON object.
+     *
+     * @param jsonEvent The event JSON object.
+     * @return A list containing the minimum and maximum price. Returns DEFAULT_PRICE if not available.
+     */
     public List<Integer> extractPriceFromJson(final JSONObject jsonEvent) {
         int priceMin = DEFAULT_PRICE;
         int priceMax = DEFAULT_PRICE;
@@ -114,9 +165,15 @@ public class SearchEventInteractor implements SearchEventInputBoundary {
         return List.of(priceMin, priceMax);
     }
 
+    /**
+     * Extracts the artists names from an event Json object.
+     *
+     * @param jsonEvent the event JSON object
+     * @return a list of artist names, empty list if not available.
+     */
     public List<String> extractArtists(final JSONObject jsonEvent) {
         final List<String> artists = new ArrayList<>();
-        List<String> result = new ArrayList<>();
+        final List<String> result;
         final JSONObject embedded = this.getEmbedded(jsonEvent);
         final JSONArray artistArray = embedded.optJSONArray("attractions");
 
@@ -126,18 +183,31 @@ public class SearchEventInteractor implements SearchEventInputBoundary {
                 artists.add(artist.optString(NAME_KEY, ""));
             }
             result = artists;
-        } else {
+        }
+        else {
             result = new ArrayList<>();
         }
         return result;
     }
 
+    /**
+     * Extracts the venue name from an event JSON Object.
+     *
+     * @param jsonEvent the event JSON object.
+     * @return the venue name, or "N/A" if not available.
+     */
     public String extractVenueName(final JSONObject jsonEvent) {
         final JSONObject embedded = this.getEmbedded(jsonEvent);
         final JSONObject venue = this.getVenue(embedded);
         return venue.optString(NAME_KEY, NOT_AVAILABLE);
     }
 
+    /**
+     * Extracts the city name from an event JSON object.
+     *
+     * @param jsonEvent the event JSON object.
+     * @return the city name, "N/A" if not available.
+     */
     public String extractCity(final JSONObject jsonEvent) {
         final JSONObject embedded = this.getEmbedded(jsonEvent);
         final JSONObject venue = this.getVenue(embedded);
@@ -145,6 +215,12 @@ public class SearchEventInteractor implements SearchEventInputBoundary {
         return cityObj.optString(NAME_KEY, NOT_AVAILABLE);
     }
 
+    /**
+     * Extracts the country from an event JSON object.
+     *
+     * @param jsonEvent the event JSON object.
+     * @return the country name, return "N/A" if not available.
+     */
     public String extractCountry(final JSONObject jsonEvent) {
         final JSONObject embedded = this.getEmbedded(jsonEvent);
         final JSONObject venue = this.getVenue(embedded);
@@ -152,6 +228,12 @@ public class SearchEventInteractor implements SearchEventInputBoundary {
         return countryObj.optString(NAME_KEY, NOT_AVAILABLE);
     }
 
+    /**
+     * Extracts the genres and subgenres from an event JSON object.
+     *
+     * @param jsonEvent the event JSON object
+     * @return a list of genres, returns an empty list if none are found.
+     */
     public List<String> extractGenres(final JSONObject jsonEvent) {
         final Set<String> genres = new LinkedHashSet<>();
         final JSONArray classifications = jsonEvent.optJSONArray("classifications");
@@ -165,6 +247,12 @@ public class SearchEventInteractor implements SearchEventInputBoundary {
         return new ArrayList<>(genres);
     }
 
+    /**
+     * Adds genre name to genres if classification at the key is valid.
+     * @param genres list of genres
+     * @param classification classification JSON object
+     * @param key key of the genre
+     */
     private void addGenreIfValid(final Set<String> genres, final JSONObject classification, final String key) {
         final JSONObject genreObj = classification.optJSONObject(key);
         if (genreObj != null) {
@@ -173,8 +261,14 @@ public class SearchEventInteractor implements SearchEventInputBoundary {
         }
     }
 
+    /**
+     * Extracts the URL of the first image from an event JSON object.
+     *
+     * @param jsonEvent the event JSON object.
+     * @return the URL of the first image, if available, otherwise an empty string.
+     */
     public String extractImageUrl(final JSONObject jsonEvent) {
-        String result = "";
+        final String result;
         final JSONArray images = jsonEvent.optJSONArray("images");
         final JSONObject firstImage = images.getJSONObject(0);
         result = firstImage.optString("url", "");
