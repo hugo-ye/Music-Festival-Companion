@@ -1,10 +1,11 @@
 package interface_adapter.search_event;
 
-import entity.Event;
 import java.util.List;
 
+import entity.Event;
+
 public class SearchEventState {
-    private String search_keyword = "";
+    private String searchKeyword = "";
     private String country = "";
     private String city = "";
     private List<String> genres = List.of();
@@ -18,8 +19,9 @@ public class SearchEventState {
     public String getUsername() {
         return username;
     }
-    public String getSearch_keyword() {
-        return search_keyword;
+
+    public String getSearchKeyword() {
+        return searchKeyword;
     }
 
     public String getCountry() {
@@ -46,8 +48,8 @@ public class SearchEventState {
         return endDate;
     }
 
-    public void setSearch_keyword(String search_keyword) {
-        this.search_keyword = search_keyword;
+    public void setSearchKeyword(String searchKeyword) {
+        this.searchKeyword = searchKeyword;
     }
 
     public void setCountry(String country) {
@@ -61,9 +63,11 @@ public class SearchEventState {
     public void setGenre(List<String> genres) {
         this.genres = genres;
     }
+
     public void setUsername(String username) {
         this.username = username;
     }
+
     public void setArtist(String artist) {
         this.artist = artist;
     }

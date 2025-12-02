@@ -289,7 +289,7 @@ public class SearchView extends JPanel implements PropertyChangeListener {
             final SearchEventState currentState = searchViewModel.getState();
 
             controller.execute(
-                    currentState.getSearch_keyword(),
+                    currentState.getSearchKeyword(),
                     currentState.getArtist(),
                     currentState.getCountry(),
                     currentState.getCity(),
@@ -423,7 +423,7 @@ public class SearchView extends JPanel implements PropertyChangeListener {
         searchField.getDocument().addDocumentListener(new DocumentListener() {
             private void update() {
                 final SearchEventState currentState = searchViewModel.getState();
-                currentState.setSearch_keyword(searchField.getText());
+                currentState.setSearchKeyword(searchField.getText());
                 searchViewModel.setState(currentState);
             }
 
@@ -477,8 +477,8 @@ public class SearchView extends JPanel implements PropertyChangeListener {
             usernameLabel.setText("Logged in as: " + state.getUsername());
         }
 
-        if (!searchField.getText().equals(state.getSearch_keyword())) {
-            searchField.setText(state.getSearch_keyword());
+        if (!searchField.getText().equals(state.getSearchKeyword())) {
+            searchField.setText(state.getSearchKeyword());
         }
         if (!countriesField.getText().equals(state.getCountry())) {
             countriesField.setText(state.getCountry());
