@@ -27,7 +27,7 @@ public class AttendEventPresenter implements AttendEventOutputBoundary {
      */
     @Override
     public void prepareSuccessView(AttendEventOutputData outputData) {
-        DisplayEventState state = displayEventViewModel.getState();
+        final DisplayEventState state = displayEventViewModel.getState();
 
         // Update the message in the state
         state.setAttendMessage("Successfully attending: " + outputData.getEventName());
@@ -44,7 +44,7 @@ public class AttendEventPresenter implements AttendEventOutputBoundary {
      */
     @Override
     public void prepareFailView(String error_message) {
-        DisplayEventState state = displayEventViewModel.getState();
+        final DisplayEventState state = displayEventViewModel.getState();
 
         state.setAttendMessage("Error: " + error_message);
 
