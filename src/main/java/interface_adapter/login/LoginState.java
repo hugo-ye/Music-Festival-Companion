@@ -8,12 +8,15 @@ public class LoginState {
     public String getUsername() {
         return username;
     }
+
     public String getPassword() {
         return password;
     }
+
     public String getErrorMessage() {
         return errorMessage;
     }
+
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
     }
