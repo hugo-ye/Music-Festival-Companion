@@ -4,7 +4,7 @@ import use_case.create_event_list.CreateEventListInputBoundary;
 import use_case.create_event_list.CreateEventListInputData;
 
 /**
- * Controller responsible for create_event_list use case
+ * Controller responsible for create_event_list use case.
  *
  * <p>
  * This class recieves input from the UI, and packages it into a {CreateEventListInputData} object before
@@ -27,7 +27,7 @@ public class CreateEventListController {
      */
 
     public void execute(String name) {
-        CreateEventListInputData inputData = new CreateEventListInputData(name);
+        final CreateEventListInputData inputData = new CreateEventListInputData(name);
         interactor.execute(inputData);
     }
 }
