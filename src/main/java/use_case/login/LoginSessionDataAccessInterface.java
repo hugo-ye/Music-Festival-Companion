@@ -3,11 +3,11 @@ package use_case.login;
 import entity.User;
 
 /**
- * DAO for loginSession
+ * DAO for loginSession.
  */
 public interface LoginSessionDataAccessInterface {
     /**
-     * sets the specified {@link User} as the current logged in user.
+     * Sets the specified {@link User} as the current logged in user.
      * @param user the user to set as the current user.
      */
     void setCurrentUser(User user);

@@ -10,7 +10,7 @@ import entity.User;
  * or prepareSuccessView, if the user exists and the password isn't wrong.
  * 
  */
-public class LoginInteractor implements LoginInputBoundary{
+public class LoginInteractor implements LoginInputBoundary {
     private final LoginUserDataAccessInterface loginDataAccessObject;
     private final LoginOutputBoundary loginPresenter;
     private final LoginSessionDataAccessInterface currentUserDataAccessObject;
@@ -20,7 +20,7 @@ public class LoginInteractor implements LoginInputBoundary{
                            LoginSessionDataAccessInterface loginSessionDataAccessInterface) {
         this.loginDataAccessObject = loginDataAccessInterface;
         this.loginPresenter = loginOutputBoundary;
-        this.currentUserDataAccessObject= loginSessionDataAccessInterface;
+        this.currentUserDataAccessObject = loginSessionDataAccessInterface;
     }
 
     /**
@@ -32,22 +32,22 @@ public class LoginInteractor implements LoginInputBoundary{
      * @param loginInputData the input data containing the username and password to validate
      */
     @Override
-    public void execute(LoginInputData loginInputData){
+    public void execute(LoginInputData loginInputData) {
         final String username = loginInputData.getUsername();
         final String password = loginInputData.getPassword();
 
-        if (!loginDataAccessObject.existsByUsername(username)){
+        if (!loginDataAccessObject.existsByUsername(username)) {
             loginPresenter.prepareFailView("User does not exist.");
         }
         else {
             final User user = loginDataAccessObject.getByUsername(username);
             final String userPassword = user.getPassword();
-            if (!userPassword.equals(password)){
+            if (!userPassword.equals(password)) {
                 loginPresenter.prepareFailView("Incorrect password.");
             }
             else {
                 currentUserDataAccessObject.setCurrentUser(user);
-                LoginOutputData loginOutputData = new LoginOutputData(user.getUsername());
+                final LoginOutputData loginOutputData = new LoginOutputData(user.getUsername());
                 loginPresenter.prepareSuccessView(loginOutputData);
             }
         }
