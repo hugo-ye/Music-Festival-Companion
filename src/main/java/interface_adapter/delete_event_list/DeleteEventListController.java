@@ -10,8 +10,13 @@ public class DeleteEventListController {
     public DeleteEventListController(DeleteEventListInputBoundary interactor) {
         this.interactor = interactor;
     }
+
+    /**
+     * Executes the Delete Event List use case using the provided listID.
+     * @param listID target eventList id
+     */
     public void execute(String listID) {
-        DeleteEventListInputData inputData = new DeleteEventListInputData(listID);
+        final DeleteEventListInputData inputData = new DeleteEventListInputData(listID);
         interactor.execute(inputData);
     }
 }
