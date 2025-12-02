@@ -29,8 +29,8 @@ public class DisplayNotificationsInteractor implements DisplayNotificationsInput
     public void execute(DisplayNotificationsInputData inputData) {
         final LocalDate currDate = inputData.getLocalDate();
         final List<Event> allEvents = dataAccess.getMasterListEvents();
-        if (allEvents == null) {
-            return;
+        if (allEvents != null) {
+            executeHelper(allEvents, currDate);
         }
     }
 
