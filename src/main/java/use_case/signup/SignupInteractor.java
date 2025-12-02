@@ -11,22 +11,28 @@ import entity.User;
  * If all the checks fail, the interactor creates a new User object and saves it.
  */
 public class SignupInteractor implements SignupInputBoundary {
-    public final SignupDataAccessInterface signUpDataAccessObject;
+    private final SignupDataAccessInterface signUpDataAccessObject;
     private final SignupOutputBoundary signupPresenter;
+
     public SignupInteractor(SignupDataAccessInterface signupDataAccessInterface,
                             SignupOutputBoundary signupOutputBoundary) {
         this.signUpDataAccessObject = signupDataAccessInterface;
         this.signupPresenter = signupOutputBoundary;
 
     }
+
+    /**
+     * Signup method similar as done in code example.
+     * @param signupInputData inputData
+     */
     public void execute(SignupInputData signupInputData) {
-        if (signUpDataAccessObject.existsByUsername(signupInputData.getUsername())){
+        if (signUpDataAccessObject.existsByUsername(signupInputData.getUsername())) {
             signupPresenter.prepareFailView("User already exists.");
         }
-        else if (!signupInputData.getPassword().equals(signupInputData.getRepeatPassword())){
+        else if (!signupInputData.getPassword().equals(signupInputData.getRepeatPassword())) {
             signupPresenter.prepareFailView("Passwords do not match.");
         }
-        else if (signupInputData.getUsername().isEmpty() || signupInputData.getPassword().isEmpty()){
+        else if (signupInputData.getUsername().isEmpty() || signupInputData.getPassword().isEmpty()) {
             signupPresenter.prepareFailView("Please fill in a username and a password.");
         }
         else {
