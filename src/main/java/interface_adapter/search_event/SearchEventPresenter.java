@@ -7,14 +7,15 @@ import use_case.search_event.SearchEventOutputBoundary;
 import use_case.search_event.SearchEventOutputData;
 
 /**
- * Presenter for the SearchEvent use case
+ * Presenter for the SearchEvent use case.
  */
 public class SearchEventPresenter implements SearchEventOutputBoundary {
     private final SearchEventViewModel viewModel;
     private final DisplaySearchResultsViewModel resultViewModel;
-    private ViewManagerModel viewManagerModel;
+    private final ViewManagerModel viewManagerModel;
 
-    public SearchEventPresenter(SearchEventViewModel viewModel, ViewManagerModel viewManagerModel, DisplaySearchResultsViewModel resultViewModel) {
+    public SearchEventPresenter(SearchEventViewModel viewModel, ViewManagerModel viewManagerModel,
+                                DisplaySearchResultsViewModel resultViewModel) {
         this.viewModel = viewModel;
         this.viewManagerModel = viewManagerModel;
         this.resultViewModel = resultViewModel;
