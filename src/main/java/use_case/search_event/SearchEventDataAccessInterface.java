@@ -1,7 +1,7 @@
 package use_case.search_event;
 
 /**
- * DAO for the SearchEvent use case
+ * DAO for the SearchEvent use case.
  */
 public interface SearchEventDataAccessInterface {
     /**

@@ -1,15 +1,16 @@
 package use_case.search_event;
 
-import entity.Event;
-import entity.EventBuilder;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import entity.Event;
+import entity.EventBuilder;
 
 /**
  * Interactor for the SearchEvent use case
@@ -42,7 +43,7 @@ public class SearchEventInteractor implements SearchEventInputBoundary {
                 input.getEndDate(),
                 input.getGenre()
         );
-        SearchEventOutputData outputData = new SearchEventOutputData(createEventsFromJson(events));
+        final SearchEventOutputData outputData = new SearchEventOutputData(createEventsFromJson(events));
         presenter.prepareSuccessView(outputData);
     }
 
@@ -73,10 +74,9 @@ public class SearchEventInteractor implements SearchEventInputBoundary {
                     events.add(event);
                 }
             }
-
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        }
+        catch (Exception exception) {
+            throw new RuntimeException(exception);
         }
 
         return events;
