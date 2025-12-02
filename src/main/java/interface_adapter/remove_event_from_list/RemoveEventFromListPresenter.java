@@ -7,7 +7,6 @@ public class RemoveEventFromListPresenter implements RemoveEventFromListOutputBo
 
     private final RemoveEventFromListViewModel viewModel;
 
-
     public RemoveEventFromListPresenter(RemoveEventFromListViewModel viewModel) {
         this.viewModel = viewModel;
     }
