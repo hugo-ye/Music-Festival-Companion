@@ -19,7 +19,7 @@ public class DisplayEventController {
      * Executes the DisplayEvent action by passing the given event to the interactor.
      * @param event the event that is going to be displayed.
      */
-    public void execute(Event event){
+    public void execute(Event event) {
         final DisplayEventInputData inputData = new DisplayEventInputData(event);
         displayEventInteractor.execute(inputData);
     }
