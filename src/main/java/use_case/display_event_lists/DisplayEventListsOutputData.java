@@ -1,10 +1,10 @@
 package use_case.display_event_lists;
 
-import entity.EventList;
-import interface_adapter.create_event_list.EventListSummary;
-
 import java.util.List;
 import java.util.stream.Collectors;
+
+import entity.EventList;
+import interface_adapter.create_event_list.EventListSummary;
 
 public class DisplayEventListsOutputData {
     private final List<EventList> eventLists;

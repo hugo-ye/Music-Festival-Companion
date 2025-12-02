@@ -1,11 +1,11 @@
 package use_case.display_event_lists;
 
-import entity.EventList;
-
 import java.util.List;
 
+import entity.EventList;
+
 /**
- * the {@code DisplayEventListsInteractor} Retrieves all event lists and passes them to the presenter for display.
+ * The {@code DisplayEventListsInteractor} Retrieves all event lists and passes them to the presenter for display.
  */
 public class DisplayEventListsInteractor {
     private final DisplayEventListsDataAccessInterface displayEventListsDataAccess;
