@@ -1,6 +1,7 @@
 package app.use_case.save_event_to_list;
 
 import entity.Event;
+import entity.EventBuilder;
 import entity.EventList;
 import org.junit.jupiter.api.Test;
 import use_case.save_event_to_list.*;
@@ -35,20 +36,11 @@ class SaveEventToListInteractorTest {
     }
 
     public Event getOneEvent(){
-        return new Event(
-                "E001",
-                "Coldplay World Tour",
-                List.of("Coldplay"),
-                "Rogers Centre",
-                "Toronto",
-                "Canada",
-                LocalDate.of(2025, 7, 15),
-                120,
-                350,
-                "https://ticketmaster.com/coldplay/toronto",
-                List.of("Rock", "Pop"),
-                "https://images.example.com/coldplay.jpg"
-        );
+        return new EventBuilder().id("E001").name("Coldplay World Tour").artists(List.of("Coldplay"))
+                .venue("Rogers Centre").city("Toronto").country("Canada")
+                .date(LocalDate.of(2025, 7, 15))
+                .priceMax(350).priceMin(120).ticketUrl("https://ticketmaster.com/coldplay/toronto")
+                .genres(List.of("Rock", "Pop")).imageURL( "https://images.example.com/coldplay.jpg").build();
     }
 
     @Test
