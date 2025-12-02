@@ -29,7 +29,7 @@ public class CreateEventListInteractor implements CreateEventListInputBoundary {
     @Override
     public void execute(CreateEventListInputData inputData) {
         final String masterListName = "Master List";
-        final String rawName = inputData.getListName(); // Cleaned according to Abdullah's suggestion
+        final String rawName = inputData.getListName();
         final String name = rawName.trim();
 
         if (name.isEmpty()) {
@@ -42,7 +42,6 @@ public class CreateEventListInteractor implements CreateEventListInputBoundary {
             return;
         }
 
-        // List names must be unique
         if (dataAccess.existsByName(name)) {
             presenter.prepareFailView("A list with this name already exists.");
             return;

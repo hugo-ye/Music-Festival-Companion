@@ -5,10 +5,8 @@ import use_case.create_event_list.CreateEventListInputData;
 
 /**
  * Controller responsible for create_event_list use case
- *
- * <p>
  * This class recieves input from the UI, and packages it into a {CreateEventListInputData} object before
- *  * handing it off to the use-case interactor.
+ *  * forwarding it to the use-case interactor.
  */
 public class CreateEventListController {
 
@@ -19,15 +17,13 @@ public class CreateEventListController {
     }
     /**
      * Executes the Create Event List use case using the provided list name.
-     *
-     * <p>
      * This method is called by the UI when a user attempts to create
      * a new list.
      * @param name the name of the new event list to be created
      */
 
     public void execute(String name) {
-        CreateEventListInputData inputData = new CreateEventListInputData(name);
+        final CreateEventListInputData inputData = new CreateEventListInputData(name);
         interactor.execute(inputData);
     }
 }
