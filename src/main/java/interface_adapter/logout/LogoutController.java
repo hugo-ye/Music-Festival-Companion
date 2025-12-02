@@ -19,7 +19,7 @@ public class LogoutController {
      * This method creates a {@link LogoutInputData} object (which is empty) and passes it to the interactor for
      * processing.
      */
-    public void execute(){
+    public void execute() {
         logoutInteractor.execute(new LogoutInputData());
     }
 }
