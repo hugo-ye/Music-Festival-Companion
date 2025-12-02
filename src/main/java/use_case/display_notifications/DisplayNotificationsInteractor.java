@@ -27,13 +27,18 @@ public class DisplayNotificationsInteractor implements DisplayNotificationsInput
      */
     @Override
     public void execute(DisplayNotificationsInputData inputData) {
-        final LocalDate currDate = inputData.getLocalDate();
+        final LocalDate eventDate = inputData.getLocalDate();
         final List<Event> allEvents = dataAccess.getMasterListEvents();
         if (allEvents != null) {
-            executeHelper(allEvents, currDate);
+            executeHelper(allEvents, eventDate);
         }
     }
 
+    /**
+     * Helper method for executing the display_notifications use case.
+     * @param allEvents the list of all events.
+     * @param currDate the current date.
+     */
     private void executeHelper(List<Event> allEvents, LocalDate currDate) {
         final SortEventsByDate dateSorter = new SortEventsByDate();
         allEvents.sort(SortEventsOrder.ASCENDING.apply(dateSorter));
