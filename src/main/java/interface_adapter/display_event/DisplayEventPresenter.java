@@ -26,7 +26,7 @@ public class DisplayEventPresenter implements DisplayEventOutputBoundary {
     public void prepareSuccessView(DisplayEventOutputData outputData) {
         final String date = getDate(outputData);
         final String price;
-        if (outputData.getHasPrice()) {
+        if (outputData.hasPrice()) {
             price = String.format("Min: %d, Max: %d", outputData.getPriceMin(), outputData.getPriceMax());
         }
         else {

@@ -82,7 +82,7 @@ public class DisplayEventOutputData {
         return ticketUrl;
     }
 
-    public boolean isHasPrice() {
+    public boolean hasPrice() {
         return hasPrice;
     }
 
