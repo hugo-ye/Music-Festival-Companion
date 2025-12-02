@@ -8,6 +8,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -27,7 +28,6 @@ import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
@@ -45,11 +45,7 @@ import interface_adapter.search_event.SearchEventViewModel;
 public class SearchView extends JPanel implements PropertyChangeListener {
     private final String viewName = "search event";
 
-    String[] genre = {
-            "alternative", "ballads/romantic", "blues", "chanson francaise",
-            "children's music", "classical", "country", "dance/electronic",
-            "folk", "hip-hop/rap", "holiday", "jazz", "medieval/renaissance",
-            "metal", "new age", "other", "pop", "r&b", "reggae", "religious"
+    private final String[] genre = {"alternative", "ballads/romantic", "blues", "chanson francaise", "children's music", "classical", "country", "dance/electronic", "folk", "hip-hop/rap", "holiday", "jazz", "medieval/renaissance", "metal", "new age", "other", "pop", "r&b", "reggae", "religious"
     };
 
     private SearchEventController controller;
@@ -87,15 +83,21 @@ public class SearchView extends JPanel implements PropertyChangeListener {
     private final JButton findButton = new JButton("Find Events");
     private final JLabel systemInfoLabel = new JLabel();
 
-    public SearchView(SearchEventViewModel searchViewModel,
-                      ViewManagerModel viewManagerModel) {
+    /**
+     * Constructs a new SearchView.
+     *
+     * @param searchViewModel  The view model for the search event use case.
+     * @param viewManagerModel The view manager model.
+     */
+    public SearchView(final SearchEventViewModel searchViewModel,
+                      final ViewManagerModel viewManagerModel) {
 
         this.searchViewModel = searchViewModel;
         this.viewManagerModel = viewManagerModel;
 
         this.searchViewModel.addPropertyChangeListener(this);
 
-        genreField = new JList<>(genre);
+        this.genreField = new JList<>(this.genre);
 
         this.setLayout(new BorderLayout());
         this.setBackground(ViewStyle.WINDOW_BACKGROUND);
@@ -104,16 +106,16 @@ public class SearchView extends JPanel implements PropertyChangeListener {
         // Header panel
         final JPanel headerPanel = ViewStyle.createSectionPanel(new BorderLayout());
 
-        ViewStyle.applyHeaderStyle(usernameLabel);
-        ViewStyle.applyButtonStyle(logoutButton);
-        ViewStyle.applyButtonStyle(listsButton);
+        ViewStyle.applyHeaderStyle(this.usernameLabel);
+        ViewStyle.applyButtonStyle(this.logoutButton);
+        ViewStyle.applyButtonStyle(this.listsButton);
 
         final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         buttonPanel.setOpaque(false);
-        buttonPanel.add(listsButton);
-        buttonPanel.add(logoutButton);
+        buttonPanel.add(this.listsButton);
+        buttonPanel.add(this.logoutButton);
 
-        headerPanel.add(usernameLabel, BorderLayout.WEST);
+        headerPanel.add(this.usernameLabel, BorderLayout.WEST);
         headerPanel.add(buttonPanel, BorderLayout.EAST);
         this.add(headerPanel, BorderLayout.NORTH);
 
@@ -127,50 +129,50 @@ public class SearchView extends JPanel implements PropertyChangeListener {
         gbc.anchor = GridBagConstraints.WEST;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        styleComponents();
+        this.styleComponents();
 
         // Row 1: Keyword
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 1;
         gbc.weightx = 0;
-        formPanel.add(searchLabel, gbc);
+        formPanel.add(this.searchLabel, gbc);
 
         gbc.gridx = 1;
         gbc.weightx = 1.0;
         gbc.gridwidth = 3;
-        formPanel.add(searchField, gbc);
+        formPanel.add(this.searchField, gbc);
 
         // Row 2: Location
         gbc.gridwidth = 1;
         gbc.weightx = 0;
         gbc.gridx = 0;
         gbc.gridy = 1;
-        formPanel.add(countriesLabel, gbc);
+        formPanel.add(this.countriesLabel, gbc);
 
         gbc.gridx = 1;
         gbc.weightx = 0.5;
-        formPanel.add(countriesField, gbc);
+        formPanel.add(this.countriesField, gbc);
 
         gbc.gridx = 2;
         gbc.weightx = 0;
-        formPanel.add(cityLabel, gbc);
+        formPanel.add(this.cityLabel, gbc);
 
         gbc.gridx = 3;
         gbc.weightx = 0.5;
-        formPanel.add(cityField, gbc);
+        formPanel.add(this.cityField, gbc);
 
         // Row 3: Artist
         gbc.gridx = 0;
         gbc.gridy = 2;
         gbc.weightx = 0;
         gbc.gridwidth = 1;
-        formPanel.add(artistLabel, gbc);
+        formPanel.add(this.artistLabel, gbc);
 
         gbc.gridx = 1;
         gbc.gridwidth = 3;
         gbc.weightx = 1.0;
-        formPanel.add(artistField, gbc);
+        formPanel.add(this.artistField, gbc);
 
         // Row 4: Genre
         gbc.gridx = 0;
@@ -178,7 +180,7 @@ public class SearchView extends JPanel implements PropertyChangeListener {
         gbc.gridwidth = 1;
         gbc.weightx = 0;
         gbc.anchor = GridBagConstraints.NORTHWEST;
-        formPanel.add(genreLabel, gbc);
+        formPanel.add(this.genreLabel, gbc);
 
         gbc.gridx = 1;
         gbc.gridwidth = 3;
@@ -186,11 +188,11 @@ public class SearchView extends JPanel implements PropertyChangeListener {
         gbc.anchor = GridBagConstraints.WEST;
 
         // Apply List Style
-        ViewStyle.applyListStyle(genreField);
-        genreField.setVisibleRowCount(4);
-        genreField.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        ViewStyle.applyListStyle(this.genreField);
+        this.genreField.setVisibleRowCount(4);
+        this.genreField.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
-        final JScrollPane genreScroll = new JScrollPane(genreField);
+        final JScrollPane genreScroll = new JScrollPane(this.genreField);
         ViewStyle.applyScrollPaneStyle(genreScroll);
         formPanel.add(genreScroll, gbc);
 
@@ -199,7 +201,7 @@ public class SearchView extends JPanel implements PropertyChangeListener {
         gbc.gridy = 4;
         gbc.gridwidth = 1;
         gbc.weightx = 0;
-        formPanel.add(dateLabel, gbc);
+        formPanel.add(this.dateLabel, gbc);
 
         gbc.gridx = 1;
         gbc.gridwidth = 3;
@@ -212,9 +214,9 @@ public class SearchView extends JPanel implements PropertyChangeListener {
         toLabel.setFont(ViewStyle.BODY_FONT);
         toLabel.setForeground(ViewStyle.TEXT_SECONDARY);
 
-        datePanel.add(startDatePicker);
+        datePanel.add(this.startDatePicker);
         datePanel.add(toLabel);
-        datePanel.add(endDatePicker);
+        datePanel.add(this.endDatePicker);
         formPanel.add(datePanel, gbc);
 
         final JScrollPane mainScroll = new JScrollPane(formPanel);
@@ -227,69 +229,84 @@ public class SearchView extends JPanel implements PropertyChangeListener {
         bottomPanel.setBackground(ViewStyle.WINDOW_BACKGROUND);
         bottomPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
 
-        ViewStyle.applyPrimaryButtonStyle(findButton);
-        findButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        ViewStyle.applyPrimaryButtonStyle(this.findButton);
+        this.findButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        systemInfoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        systemInfoLabel.setFont(ViewStyle.SMALL_FONT);
-        systemInfoLabel.setForeground(ViewStyle.ERROR_COLOR);
+        this.systemInfoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        this.systemInfoLabel.setFont(ViewStyle.SMALL_FONT);
+        this.systemInfoLabel.setForeground(ViewStyle.ERROR_COLOR);
 
-        bottomPanel.add(findButton);
+        bottomPanel.add(this.findButton);
         bottomPanel.add(Box.createVerticalStrut(10));
-        bottomPanel.add(systemInfoLabel);
+        bottomPanel.add(this.systemInfoLabel);
 
         this.add(bottomPanel, BorderLayout.SOUTH);
 
-        setupListeners();
+        this.setupListeners();
     }
 
-    public void setDisplayEventListsController(DisplayEventListsController displayEventListsController) {
+    /**
+     * Sets the controller for displaying event lists.
+     *
+     * @param displayEventListsController The controller to set.
+     */
+    public void setDisplayEventListsController(final DisplayEventListsController displayEventListsController) {
         this.displayEventListsController = displayEventListsController;
     }
 
-    public void setLogoutController(LogoutController logoutController) {
+    /**
+     * Sets the controller for logging out.
+     *
+     * @param logoutController The controller to set.
+     */
+    public void setLogoutController(final LogoutController logoutController) {
         this.logoutController = logoutController;
     }
 
-    public void setController(SearchEventController controller) {
+    /**
+     * Sets the controller for searching events.
+     *
+     * @param controller The controller to set.
+     */
+    public void setController(final SearchEventController controller) {
         this.controller = controller;
     }
 
     private void styleComponents() {
-        ViewStyle.applyLabelStyle(searchLabel);
-        ViewStyle.applyLabelStyle(countriesLabel);
-        ViewStyle.applyLabelStyle(cityLabel);
-        ViewStyle.applyLabelStyle(artistLabel);
-        ViewStyle.applyLabelStyle(genreLabel);
-        ViewStyle.applyLabelStyle(dateLabel);
+        ViewStyle.applyLabelStyle(this.searchLabel);
+        ViewStyle.applyLabelStyle(this.countriesLabel);
+        ViewStyle.applyLabelStyle(this.cityLabel);
+        ViewStyle.applyLabelStyle(this.artistLabel);
+        ViewStyle.applyLabelStyle(this.genreLabel);
+        ViewStyle.applyLabelStyle(this.dateLabel);
 
-        ViewStyle.applyTextFieldStyle(searchField);
-        ViewStyle.applyTextFieldStyle(countriesField);
-        ViewStyle.applyTextFieldStyle(cityField);
-        ViewStyle.applyTextFieldStyle(artistField);
+        ViewStyle.applyTextFieldStyle(this.searchField);
+        ViewStyle.applyTextFieldStyle(this.countriesField);
+        ViewStyle.applyTextFieldStyle(this.cityField);
+        ViewStyle.applyTextFieldStyle(this.artistField);
     }
 
     private void setupListeners() {
-        addArtistListener();
-        addCountriesListener();
-        addCityListener();
-        addKeywordListener();
-        addDateListeners();
+        this.addArtistListener();
+        this.addCountriesListener();
+        this.addCityListener();
+        this.addKeywordListener();
+        this.addDateListeners();
 
-        genreField.addListSelectionListener(e -> {
+        this.genreField.addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
-                List<String> selectedGenres = genreField.getSelectedValuesList();
-                SearchEventState currentState = searchViewModel.getState();
+                final List<String> selectedGenres = this.genreField.getSelectedValuesList();
+                final SearchEventState currentState = this.searchViewModel.getState();
                 currentState.setGenre(selectedGenres);
-                searchViewModel.setState(currentState);
+                this.searchViewModel.setState(currentState);
             }
         });
 
-        findButton.addActionListener(e -> {
-            final SearchEventState currentState = searchViewModel.getState();
+        this.findButton.addActionListener(e -> {
+            final SearchEventState currentState = this.searchViewModel.getState();
 
-            controller.execute(
-                    currentState.getSearch_keyword(),
+            this.controller.execute(
+                    currentState.getSearchKeyword(),
                     currentState.getArtist(),
                     currentState.getCountry(),
                     currentState.getCity(),
@@ -299,32 +316,31 @@ public class SearchView extends JPanel implements PropertyChangeListener {
             );
         });
 
-        logoutButton.addActionListener(e -> {
-            logoutController.execute();
-        });
+        this.logoutButton.addActionListener(e -> this.logoutController.execute());
 
-        listsButton.addActionListener(e -> {
-            displayEventListsController.execute();
-        });
+        this.listsButton.addActionListener(e -> this.displayEventListsController.execute());
     }
 
+    /**
+     * A custom formatter for date fields.
+     */
     static class DateLabelFormatter extends JFormattedTextField.AbstractFormatter {
         private final String datePattern = "yyyy-MM-dd";
-        private final SimpleDateFormat dateFormatter = new SimpleDateFormat(datePattern);
+        private final SimpleDateFormat dateFormatter = new SimpleDateFormat(this.datePattern);
 
         @Override
-        public Object stringToValue(String text) throws java.text.ParseException {
-            return dateFormatter.parse(text);
+        public Object stringToValue(final String text) throws ParseException {
+            return this.dateFormatter.parse(text);
         }
 
         @Override
-        public String valueToString(Object value) {
+        public String valueToString(final Object value) {
             if (value != null) {
                 if (value instanceof Calendar) {
-                    return dateFormatter.format(((Calendar) value).getTime());
+                    return this.dateFormatter.format(((Calendar) value).getTime());
                 }
                 if (value instanceof Date) {
-                    return dateFormatter.format(value);
+                    return this.dateFormatter.format(value);
                 }
             }
             return "";
@@ -343,168 +359,171 @@ public class SearchView extends JPanel implements PropertyChangeListener {
 
 
     private void addDateListeners() {
-        startDatePicker.getModel().addChangeListener(e -> {
-            final Date selectedDate = (Date) startDatePicker.getModel().getValue();
-            final SearchEventState currentState = searchViewModel.getState();
+        this.startDatePicker.getModel().addChangeListener(e -> {
+            final Date selectedDate = (Date) this.startDatePicker.getModel().getValue();
+            final SearchEventState currentState = this.searchViewModel.getState();
             if (selectedDate != null) {
-                currentState.setStartDate(dateFormat.format(selectedDate));
-            }
-            else {
+                currentState.setStartDate(this.dateFormat.format(selectedDate));
+            } else {
                 currentState.setStartDate("");
             }
-            searchViewModel.setState(currentState);
+            this.searchViewModel.setState(currentState);
         });
 
         // Listener for End Date
-        endDatePicker.getModel().addChangeListener(e -> {
-            final Date selectedDate = (Date) endDatePicker.getModel().getValue();
-            final SearchEventState currentState = searchViewModel.getState();
+        this.endDatePicker.getModel().addChangeListener(e -> {
+            final Date selectedDate = (Date) this.endDatePicker.getModel().getValue();
+            final SearchEventState currentState = this.searchViewModel.getState();
             if (selectedDate != null) {
-                currentState.setEndDate(dateFormat.format(selectedDate));
-            }
-            else {
+                currentState.setEndDate(this.dateFormat.format(selectedDate));
+            } else {
                 currentState.setEndDate("");
             }
-            searchViewModel.setState(currentState);
+            this.searchViewModel.setState(currentState);
         });
     }
 
     private void addCountriesListener() {
-        countriesField.getDocument().addDocumentListener(new DocumentListener() {
+        this.countriesField.getDocument().addDocumentListener(new DocumentListener() {
             private void update() {
-                final SearchEventState currentState = searchViewModel.getState();
-                currentState.setCountry(countriesField.getText());
-                searchViewModel.setState(currentState);
+                final SearchEventState currentState = SearchView.this.searchViewModel.getState();
+                currentState.setCountry(SearchView.this.countriesField.getText());
+                SearchView.this.searchViewModel.setState(currentState);
             }
 
             @Override
-            public void insertUpdate(DocumentEvent e) {
-                update();
+            public void insertUpdate(final DocumentEvent e) {
+                this.update();
             }
 
             @Override
-            public void removeUpdate(DocumentEvent e) {
-                update();
+            public void removeUpdate(final DocumentEvent e) {
+                this.update();
             }
 
             @Override
-            public void changedUpdate(DocumentEvent e) {
-                update();
+            public void changedUpdate(final DocumentEvent e) {
+                this.update();
             }
         });
     }
 
     private void addCityListener() {
-        cityField.getDocument().addDocumentListener(new DocumentListener() {
+        this.cityField.getDocument().addDocumentListener(new DocumentListener() {
             private void update() {
-                final SearchEventState currentState = searchViewModel.getState();
-                currentState.setCity(cityField.getText());
-                searchViewModel.setState(currentState);
+                final SearchEventState currentState = SearchView.this.searchViewModel.getState();
+                currentState.setCity(SearchView.this.cityField.getText());
+                SearchView.this.searchViewModel.setState(currentState);
             }
 
             @Override
-            public void insertUpdate(DocumentEvent e) {
-                update();
+            public void insertUpdate(final DocumentEvent e) {
+                this.update();
             }
 
             @Override
-            public void removeUpdate(DocumentEvent e) {
-                update();
+            public void removeUpdate(final DocumentEvent e) {
+                this.update();
             }
 
             @Override
-            public void changedUpdate(DocumentEvent e) {
-                update();
+            public void changedUpdate(final DocumentEvent e) {
+                this.update();
             }
         });
     }
 
     private void addKeywordListener() {
-        searchField.getDocument().addDocumentListener(new DocumentListener() {
+        this.searchField.getDocument().addDocumentListener(new DocumentListener() {
             private void update() {
-                final SearchEventState currentState = searchViewModel.getState();
-                currentState.setSearch_keyword(searchField.getText());
-                searchViewModel.setState(currentState);
+                final SearchEventState currentState = SearchView.this.searchViewModel.getState();
+                currentState.setSearchKeyword(SearchView.this.searchField.getText());
+                SearchView.this.searchViewModel.setState(currentState);
             }
 
             @Override
-            public void insertUpdate(DocumentEvent e) {
-                update();
+            public void insertUpdate(final DocumentEvent e) {
+                this.update();
             }
 
             @Override
-            public void removeUpdate(DocumentEvent e) {
-                update();
+            public void removeUpdate(final DocumentEvent e) {
+                this.update();
             }
 
             @Override
-            public void changedUpdate(DocumentEvent e) {
-                update();
+            public void changedUpdate(final DocumentEvent e) {
+                this.update();
             }
         });
     }
 
     private void addArtistListener() {
-        artistField.getDocument().addDocumentListener(new DocumentListener() {
+        this.artistField.getDocument().addDocumentListener(new DocumentListener() {
             private void update() {
-                final SearchEventState currentState = searchViewModel.getState();
-                currentState.setArtist(artistField.getText());
-                searchViewModel.setState(currentState);
+                final SearchEventState currentState = SearchView.this.searchViewModel.getState();
+                currentState.setArtist(SearchView.this.artistField.getText());
+                SearchView.this.searchViewModel.setState(currentState);
             }
 
             @Override
-            public void insertUpdate(DocumentEvent e) {
-                update();
+            public void insertUpdate(final DocumentEvent e) {
+                this.update();
             }
 
             @Override
-            public void removeUpdate(DocumentEvent e) {
-                update();
+            public void removeUpdate(final DocumentEvent e) {
+                this.update();
             }
 
             @Override
-            public void changedUpdate(DocumentEvent e) {
-                update();
+            public void changedUpdate(final DocumentEvent e) {
+                this.update();
             }
         });
     }
 
     @Override
-    public void propertyChange(PropertyChangeEvent evt) {
+    public void propertyChange(final PropertyChangeEvent evt) {
         final SearchEventState state = (SearchEventState) evt.getNewValue();
 
         if (state.getUsername() != null) {
-            usernameLabel.setText("Logged in as: " + state.getUsername());
+            this.usernameLabel.setText("Logged in as: " + state.getUsername());
         }
 
-        if (!searchField.getText().equals(state.getSearch_keyword())) {
-            searchField.setText(state.getSearch_keyword());
+        if (!this.searchField.getText().equals(state.getSearchKeyword())) {
+            this.searchField.setText(state.getSearchKeyword());
         }
-        if (!countriesField.getText().equals(state.getCountry())) {
-            countriesField.setText(state.getCountry());
+        if (!this.countriesField.getText().equals(state.getCountry())) {
+            this.countriesField.setText(state.getCountry());
         }
-        if (!cityField.getText().equals(state.getCity())) {
-            cityField.setText(state.getCity());
+        if (!this.cityField.getText().equals(state.getCity())) {
+            this.cityField.setText(state.getCity());
         }
-        if (!artistField.getText().equals(state.getArtist())) {
-            artistField.setText(state.getArtist());
+        if (!this.artistField.getText().equals(state.getArtist())) {
+            this.artistField.setText(state.getArtist());
         }
 
-        systemInfoLabel.setText(state.getErrorMessage());
+        this.systemInfoLabel.setText(state.getErrorMessage());
 
         if (state.getStartDate() == null || state.getStartDate().isEmpty()) {
-            startDatePicker.getModel().setValue(null);
+            this.startDatePicker.getModel().setValue(null);
         }
         if (state.getEndDate() == null || state.getEndDate().isEmpty()) {
-            endDatePicker.getModel().setValue(null);
+            this.endDatePicker.getModel().setValue(null);
         }
 
         if (state.getGenre().isEmpty()) {
-            genreField.clearSelection();
+            this.genreField.clearSelection();
         }
     }
 
+    /**
+     * Gets the name of the view.
+     *
+     * @return The name of the view.
+     */
     public String getViewName() {
-        return viewName;
+        return this.viewName;
     }
 }

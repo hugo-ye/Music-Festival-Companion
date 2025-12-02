@@ -1,8 +1,5 @@
 package use_case.search_event;
 
-import java.time.LocalDate;
-import java.util.List;
-
 public class SearchEventInputData {
     private final String keyword;
     private final String country;
@@ -12,7 +9,7 @@ public class SearchEventInputData {
     private final String endDate;
 
     public SearchEventInputData(String keyword, String country,
-                                String city, String genreIds, String startDate, String endDate){
+                                String city, String genreIds, String startDate, String endDate) {
         // Artist is included in keyword
         this.keyword = keyword;
         this.country = country;
