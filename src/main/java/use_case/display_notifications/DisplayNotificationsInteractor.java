@@ -9,8 +9,7 @@ import use_case.sort_events.SortEventsOrder;
 import use_case.sort_events.strategies.SortEventsByDate;
 
 /**
- * The {@code DisplayNotificationsInteractor} generates notification messages for upcoming events based on the current
- * date.
+ * The interactor for the display_notifications use case.
  */
 public class DisplayNotificationsInteractor implements DisplayNotificationsInputBoundary {
     private final DisplayNotificationsDataAccessInterface dataAccess;
@@ -24,17 +23,14 @@ public class DisplayNotificationsInteractor implements DisplayNotificationsInput
 
     /**
      * Executes the display_notifications use case.
-     * The method does the following: Fetches all events from the master list, sorts them by date, Builds a message for
-     * events occurring within the reminder window, and Sends an empty message if no reminders apply.
-     *
      * @param inputData contains the date.
      */
     @Override
     public void execute(DisplayNotificationsInputData inputData) {
         final LocalDate currDate = inputData.getLocalDate();
         final List<Event> allEvents = dataAccess.getMasterListEvents();
-        if (allEvents != null) {
-            executeHelper(allEvents, currDate);
+        if (allEvents == null) {
+            return;
         }
     }
 

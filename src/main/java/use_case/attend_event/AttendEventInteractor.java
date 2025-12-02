@@ -3,8 +3,8 @@ package use_case.attend_event;
 import entity.Event;
 
 /**
- * The {@code AttendEventInteractor} checks whether the user
- * is already attending a given event and,
+ * Interactor for the Attend Event Use Case
+ * Checks whether the user is already attending a given event and,
  * based on the results, updates the MasterList.
  */
 public class AttendEventInteractor implements AttendEventInputBoundary {
@@ -18,12 +18,12 @@ public class AttendEventInteractor implements AttendEventInputBoundary {
     }
 
     /**
-     * saves an event to the master list.
-     * @param inputData the event to add
+     * saves an event to the Master List.
+     * @param input the event to add
      */
     @Override
-    public void execute(AttendEventInputData inputData) {
-        final Event event = inputData.getEvent();
+    public void execute(AttendEventInputData input) {
+        final Event event = input.getEvent();
         final boolean added = !attendEventDataAccessInterface.alreadyAttends(event);
 
         final AttendEventOutputData outputData = new AttendEventOutputData(event);
@@ -34,5 +34,4 @@ public class AttendEventInteractor implements AttendEventInputBoundary {
             attendEventOutputBoundary.prepareFailView("Event already Attended");
         }
     }
-
 }

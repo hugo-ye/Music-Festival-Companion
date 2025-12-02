@@ -18,32 +18,28 @@ public class DeleteEventListInteractor implements DeleteEventListInputBoundary {
     /**
      *
      * Executes the delete event list use case.
-     * The method performs the following steps: Trims and validates the input data(list id), Fails if the list does not
+     * The method performs the following steps:
+     * Trims and validates the input data (list id), Fails if the list does not
      * exist or is the Master List, and Deletes the list and reports success otherwise.
      *
-     * @param inputData contains the ID of the list to delete.
+     * @param input contains the ID of the list to delete.
      */
     @Override
-    public void execute(DeleteEventListInputData inputData) {
+    public void execute(DeleteEventListInputData input) {
 
-        final String rawId = inputData.getListId();
-        final String listId = rawId.trim(); // Fixed
+        final String rawId = input.getListId();
+        final String listId = rawId.trim();
 
-        // Check list exists
         if (!dataAccess.existsById(listId)) {
             presenter.prepareFailView("List does not exist.");
-            return; // Safety Check, won't actually be used unless UI is bugged
+            return;
         }
-
-        // Master List cannot be deleted
         if (dataAccess.isMasterList(listId)) {
             presenter.prepareFailView("Master List cannot be deleted.");
             return;
         }
-        // Delete
         dataAccess.deleteById(listId);
 
-        // call presenter
         final DeleteEventListOutputData outputData =
                 new DeleteEventListOutputData(listId);
         presenter.prepareSuccessView(outputData);
