@@ -8,5 +8,4 @@ public class SaveEventToListViewModel extends ViewModel<SaveEventToListState> {
         super("save_event");
         setState(new SaveEventToListState());
     }
-
 }
