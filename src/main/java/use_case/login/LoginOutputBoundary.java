@@ -5,7 +5,6 @@ import interface_adapter.login.LoginViewModel;
 public interface LoginOutputBoundary {
     /**
      * Prepares the success view after a successful login attempt.
-     * This method updates the LoginViewModel and SearchEventViewModel
      * @param outputData the output data containing the username of the logged in user.
      */
     void prepareSuccessView(LoginOutputData outputData);

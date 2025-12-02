@@ -1,13 +1,10 @@
 package use_case.remove_event_from_list;
 
-import entity.Event;
-import entity.EventList;
-
 public class RemoveEventFromListOutputData {
     private final String message;
-    private final String targetListId; // NEW FIELD
+    private final String targetListId;
 
-    public RemoveEventFromListOutputData(String message, String targetListId) { // UPDATED CONSTRUCTOR
+    public RemoveEventFromListOutputData(String message, String targetListId) {
         this.message = message;
         this.targetListId = targetListId;
     }
@@ -17,6 +14,6 @@ public class RemoveEventFromListOutputData {
     }
 
     public String getTargetListId() {
-        return targetListId; // NEW GETTER
+        return targetListId;
     }
 }
