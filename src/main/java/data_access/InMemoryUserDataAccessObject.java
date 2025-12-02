@@ -30,10 +30,12 @@ public class InMemoryUserDataAccessObject implements
 
     private User currentUser;
 
+    @Override
     public User getCurrentUser() {
         return currentUser;
     }
 
+    @Override
     public void setCurrentUser(User currentUser) {
         this.currentUser = currentUser;
     }
@@ -41,6 +43,7 @@ public class InMemoryUserDataAccessObject implements
     /**
      * A method that clear up the InMemoryDataAccessObject.
      */
+    @Override
     public void clearCurrentUser() {
         this.currentUser = null;
     }
@@ -70,6 +73,7 @@ public class InMemoryUserDataAccessObject implements
      *
      * @param event the event to add
      */
+    @Override
     public void saveEventToMasterList(Event event) {
         currentUser.getMasterList().addEvent(event);
     }
@@ -80,6 +84,7 @@ public class InMemoryUserDataAccessObject implements
      * @param event the event to check
      * @return whether event is already in MasterList.
      */
+    @Override
     public boolean alreadyAttends(Event event) {
         return currentUser.getMasterList().getEvents().contains(event);
     }
@@ -104,6 +109,7 @@ public class InMemoryUserDataAccessObject implements
      * @param listName name of the target list.
      * @return whether the list is existing.
      */
+    @Override
     public boolean existsByName(String listName) {
         boolean result = false;
         final User user = getCurrentUser();
