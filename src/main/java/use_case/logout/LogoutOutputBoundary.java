@@ -3,13 +3,13 @@ package use_case.logout;
 public interface LogoutOutputBoundary {
     /**
      * Prepares the success view after a successful login attempt.
-     * @param outputData the output data containing the username of the logged in user.
+     * @param outputData the output data
      */
     void prepareSuccessView(LogoutOutputData outputData);
 
     /**
      * Prepares the failure view after a successful login attempt.
-     * @param errorMessage the output data containing the username of the logged in user.
+     * @param errorMessage the output data
      */
     void prepareFailView(String errorMessage);
 }
