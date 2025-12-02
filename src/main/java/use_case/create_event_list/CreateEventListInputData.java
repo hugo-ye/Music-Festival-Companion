@@ -11,5 +11,3 @@ public class CreateEventListInputData {
         return listName;
     }
 }
-
-// Users only has to provide list name for creating an Event List
