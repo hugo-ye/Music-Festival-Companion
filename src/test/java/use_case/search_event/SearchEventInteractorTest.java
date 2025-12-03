@@ -1,8 +1,7 @@
-package use_case;
+package use_case.search_event;
 
 import entity.Event;
 import org.junit.jupiter.api.Test;
-import use_case.search_event.*;
 
 import java.time.LocalDate;
 import java.util.List;
