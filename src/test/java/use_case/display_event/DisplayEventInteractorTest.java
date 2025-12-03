@@ -1,10 +1,10 @@
-package use_case;
+package use_case.display_event;
 import data_access.InMemoryUserDataAccessObject;
 import entity.Event;
 import entity.EventBuilder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import use_case.display_event.*;
+
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;

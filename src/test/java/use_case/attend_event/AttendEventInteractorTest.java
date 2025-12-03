@@ -1,4 +1,4 @@
-package use_case;
+package use_case.attend_event;
 
 import data_access.InMemoryUserDataAccessObject;
 import entity.Event;
@@ -6,7 +6,7 @@ import entity.EventBuilder;
 import entity.User;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
-import use_case.attend_event.*;
+
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
