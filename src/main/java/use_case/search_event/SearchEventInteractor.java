@@ -1,15 +1,12 @@
 package use_case.search_event;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import entity.Event;
@@ -28,7 +25,6 @@ public class SearchEventInteractor implements SearchEventInputBoundary {
     private static final int DEFAULT_PRICE = -1;
     private static final String NOT_AVAILABLE = "N/A";
     private static final String UNNAMED_EVENT = "Unnamed Event";
-    private static final String UNDEFINED_GENRE = "Undefined";
     private static final String NAME_KEY = "name";
     private static final String EMBEDDED_KEY = "_embedded";
     private final SearchEventDataAccessInterface dataAccess;
@@ -65,7 +61,6 @@ public class SearchEventInteractor implements SearchEventInputBoundary {
         final List<Event> events = this.createEventsFromJson(eventsJson);
         final SearchEventOutputData outputData = new SearchEventOutputData(events);
         this.presenter.prepareSuccessView(outputData);
-
     }
 
     /**
@@ -76,29 +71,18 @@ public class SearchEventInteractor implements SearchEventInputBoundary {
      * @throws RuntimeException if the JSON parsing fails.
      */
     public List<Event> createEventsFromJson(final String dataJson) {
-        final List<Event> events;
-        if (dataJson == null || dataJson.isEmpty()) {
-            events = Collections.emptyList();
-        }
-        else {
-            events = new ArrayList<>();
-            try {
-                final JSONObject base = new JSONObject(dataJson);
+        final JSONObject base = new JSONObject(dataJson);
+        final List<Event> events = new ArrayList<>();
+        final JSONObject embedded = base.optJSONObject(EMBEDDED_KEY);
 
-                if (base.has(EMBEDDED_KEY) && base.getJSONObject(EMBEDDED_KEY).has("events")) {
-                    final JSONArray eventsArray = base.getJSONObject(EMBEDDED_KEY).getJSONArray("events");
-                    for (int i = 0; i < eventsArray.length(); i++) {
-                        final JSONObject jsonEvent = eventsArray.getJSONObject(i);
-                        final Event event = this.eventFromJson(jsonEvent);
-                        events.add(event);
-                    }
-                }
-            }
-            catch (final JSONException jsonException) {
-                throw new RuntimeException("Failed to parse JSON data: " + jsonException.getMessage(), jsonException);
+        if (embedded != null) {
+            final JSONArray eventsArray = embedded.getJSONArray("events");
+            for (int i = 0; i < eventsArray.length(); i++) {
+                final JSONObject jsonEvent = eventsArray.getJSONObject(i);
+                final Event event = this.eventFromJson(jsonEvent);
+                events.add(event);
             }
         }
-
         return events;
     }
 
@@ -127,23 +111,18 @@ public class SearchEventInteractor implements SearchEventInputBoundary {
                 .build();
     }
 
+    /**
+     * Extracts the embedded object in the {@link JSONObject}.
+     * @param jsonEvent a root JSON object of TICKETMASTER API
+     * @return the embedded object
+     */
     private JSONObject getEmbedded(final JSONObject jsonEvent) {
-        JSONObject result = null;
-        if (jsonEvent != null && jsonEvent.has(EMBEDDED_KEY)) {
-            result = jsonEvent.getJSONObject(EMBEDDED_KEY);
-        }
-        return result;
+        return jsonEvent.getJSONObject(EMBEDDED_KEY);
     }
 
     private JSONObject getVenue(final JSONObject embedded) {
-        JSONObject result = null;
-        if (embedded != null && embedded.has("venues")) {
-            final JSONArray venues = embedded.getJSONArray("venues");
-            if (!venues.isEmpty()) {
-                result = venues.getJSONObject(0);
-            }
-        }
-        return result;
+        final JSONArray venues = embedded.getJSONArray("venues");
+        return venues.getJSONObject(0);
     }
 
     /**
@@ -153,20 +132,17 @@ public class SearchEventInteractor implements SearchEventInputBoundary {
      * @return The date of the event, or null if not available or parsing fails.
      */
     public LocalDate extractDateFromJson(final JSONObject jsonEvent) {
-        LocalDate date = null;
-        try {
-            if (jsonEvent.has("dates")) {
-                final JSONObject start = jsonEvent.getJSONObject("dates").getJSONObject("start");
-                final String startDateTimeStr = start.optString("dateTime");
-                if (startDateTimeStr != null && !startDateTimeStr.isEmpty()) {
-                    date = LocalDate.parse(startDateTimeStr.split("T")[0]);
-                }
-            }
+        final JSONObject dates = jsonEvent.getJSONObject("dates");
+        final JSONObject start = dates.getJSONObject("start");
+        final String startDateTimeStr = start.optString("dateTime", "");
+        final LocalDate result;
+        if (!startDateTimeStr.isEmpty()) {
+            result = LocalDate.parse(startDateTimeStr.split("T")[0]);
         }
-        catch (final JSONException | DateTimeParseException runtimeException) {
-            // Parsing failed, return default null
+        else {
+            result = null;
         }
-        return date;
+        return result;
     }
 
     /**
@@ -179,18 +155,11 @@ public class SearchEventInteractor implements SearchEventInputBoundary {
         int priceMin = DEFAULT_PRICE;
         int priceMax = DEFAULT_PRICE;
 
-        try {
-            if (jsonEvent.has("priceRanges")) {
-                final JSONArray prices = jsonEvent.getJSONArray("priceRanges");
-                if (!prices.isEmpty()) {
-                    final JSONObject priceRange = prices.getJSONObject(0);
-                    priceMin = priceRange.optInt("min", DEFAULT_PRICE);
-                    priceMax = priceRange.optInt("max", DEFAULT_PRICE);
-                }
-            }
-        }
-        catch (final JSONException jsonException) {
-            // Parsing failed, return defaults
+        final JSONArray prices = jsonEvent.optJSONArray("priceRanges");
+        if (prices != null) {
+            final JSONObject priceRange = prices.getJSONObject(0);
+            priceMin = priceRange.optInt("min", DEFAULT_PRICE);
+            priceMax = priceRange.optInt("max", DEFAULT_PRICE);
         }
 
         return List.of(priceMin, priceMax);
@@ -204,15 +173,21 @@ public class SearchEventInteractor implements SearchEventInputBoundary {
      */
     public List<String> extractArtists(final JSONObject jsonEvent) {
         final List<String> artists = new ArrayList<>();
+        final List<String> result;
         final JSONObject embedded = this.getEmbedded(jsonEvent);
-        if (embedded != null && embedded.has("attractions")) {
-            final JSONArray artistArray = embedded.getJSONArray("attractions");
+        final JSONArray artistArray = embedded.optJSONArray("attractions");
+
+        if (artistArray != null) {
             for (int i = 0; i < artistArray.length(); i++) {
                 final JSONObject artist = artistArray.getJSONObject(i);
-                artists.add(artist.getString(NAME_KEY));
+                artists.add(artist.optString(NAME_KEY, ""));
             }
+            result = artists;
         }
-        return artists;
+        else {
+            result = new ArrayList<>();
+        }
+        return result;
     }
 
     /**
@@ -224,13 +199,7 @@ public class SearchEventInteractor implements SearchEventInputBoundary {
     public String extractVenueName(final JSONObject jsonEvent) {
         final JSONObject embedded = this.getEmbedded(jsonEvent);
         final JSONObject venue = this.getVenue(embedded);
-        String venueName = NOT_AVAILABLE;
-
-        if (venue != null) {
-            venueName = venue.optString(NAME_KEY, NOT_AVAILABLE);
-        }
-
-        return venueName;
+        return venue.optString(NAME_KEY, NOT_AVAILABLE);
     }
 
     /**
@@ -242,13 +211,8 @@ public class SearchEventInteractor implements SearchEventInputBoundary {
     public String extractCity(final JSONObject jsonEvent) {
         final JSONObject embedded = this.getEmbedded(jsonEvent);
         final JSONObject venue = this.getVenue(embedded);
-        String city = NOT_AVAILABLE;
-
-        if (venue != null && venue.has("city")) {
-            city = venue.getJSONObject("city").optString(NAME_KEY, NOT_AVAILABLE);
-        }
-
-        return city;
+        final JSONObject cityObj = venue.getJSONObject("city");
+        return cityObj.optString(NAME_KEY, NOT_AVAILABLE);
     }
 
     /**
@@ -260,13 +224,8 @@ public class SearchEventInteractor implements SearchEventInputBoundary {
     public String extractCountry(final JSONObject jsonEvent) {
         final JSONObject embedded = this.getEmbedded(jsonEvent);
         final JSONObject venue = this.getVenue(embedded);
-        String country = NOT_AVAILABLE;
-
-        if (venue != null && venue.has("country")) {
-            country = venue.getJSONObject("country").optString(NAME_KEY, NOT_AVAILABLE);
-        }
-
-        return country;
+        final JSONObject countryObj = venue.getJSONObject("country");
+        return countryObj.optString(NAME_KEY, NOT_AVAILABLE);
     }
 
     /**
@@ -277,25 +236,28 @@ public class SearchEventInteractor implements SearchEventInputBoundary {
      */
     public List<String> extractGenres(final JSONObject jsonEvent) {
         final Set<String> genres = new LinkedHashSet<>();
+        final JSONArray classifications = jsonEvent.optJSONArray("classifications");
 
-        if (jsonEvent.has("classifications")) {
-            final JSONArray classifications = jsonEvent.getJSONArray("classifications");
-
-            for (int i = 0; i < classifications.length(); i++) {
-                final JSONObject classification = classifications.getJSONObject(i);
-                this.addGenreIfValid(genres, classification, "genre");
-                this.addGenreIfValid(genres, classification, "subGenre");
-            }
+        for (int i = 0; i < classifications.length(); i++) {
+            final JSONObject classification = classifications.getJSONObject(i);
+            this.addGenreIfValid(genres, classification, "genre");
+            this.addGenreIfValid(genres, classification, "subGenre");
         }
+
         return new ArrayList<>(genres);
     }
 
+    /**
+     * Adds genre name to genres if classification at the key is valid.
+     * @param genres list of genres
+     * @param classification classification JSON object
+     * @param key key of the genre
+     */
     private void addGenreIfValid(final Set<String> genres, final JSONObject classification, final String key) {
-        if (classification.has(key)) {
-            final String name = classification.getJSONObject(key).optString(NAME_KEY);
-            if (name != null && !name.isEmpty() && !UNDEFINED_GENRE.equalsIgnoreCase(name)) {
-                genres.add(name.trim());
-            }
+        final JSONObject genreObj = classification.optJSONObject(key);
+        if (genreObj != null) {
+            final String name = genreObj.optString(NAME_KEY, "");
+            genres.add(name.trim());
         }
     }
 
@@ -306,13 +268,10 @@ public class SearchEventInteractor implements SearchEventInputBoundary {
      * @return the URL of the first image, if available, otherwise an empty string.
      */
     public String extractImageUrl(final JSONObject jsonEvent) {
-        String url = "";
-        if (jsonEvent.has("images")) {
-            final JSONArray images = jsonEvent.getJSONArray("images");
-            if (!images.isEmpty()) {
-                url = images.getJSONObject(0).getString("url");
-            }
-        }
-        return url;
+        final String result;
+        final JSONArray images = jsonEvent.optJSONArray("images");
+        final JSONObject firstImage = images.getJSONObject(0);
+        result = firstImage.optString("url", "");
+        return result;
     }
 }
